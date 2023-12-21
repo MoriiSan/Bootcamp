@@ -7,14 +7,15 @@ interface User{
     bankId: string;
     userId: string;
 }
-
-
-class Bank{
+interface Bank{
     bankName: string;
     outsideWithdrawalCharge: number;
     outsideBalanceCheckCharge: number;
-    tempPin=0;
-    // currentUser: User | null = null;
+}
+
+class Bank{
+    cPin = 0;
+    cUser = "";
 
     constructor(bankName: string, outsideWithdrawalCharge: number,
         outsideBalanceCheckCharge: number){
@@ -23,31 +24,28 @@ class Bank{
         this.outsideBalanceCheckCharge = outsideBalanceCheckCharge;
         }
 
-        pickBank(user: User, pin: number): void{
+        inputPin(user: User, userId: string, pin: number): void{
             console.log("");
             console.log(this.bankName);
 
-            // if (user.userId !== this.currentUser?.userId) {
-            //     console.log("INVALID USER");
-            //     this.currentUser = user;
-            // }else{
-            //     console.log("Welcome ", this.currentUser.userId)
-            // }
-
-            if(user.pin !== pin){
+            if(user.userId !== userId){
+                console.log("INVALID USER");
+                this.cUser = userId;
+            }else if(user.pin !== pin){
                 console.log("INVALID PIN");
-                this.tempPin = pin;
-            }else{
-                console.log("PIN: ****");
-             }
+                this.cPin = pin;
+            }
+            else{
+                console.log("Welcome", user.userId);
+            }
         }
 
-
         deposit(user: User, inputDeposit: number): void {
-            if(this.tempPin == 0){
+            if(this.cPin == 0 && this.cUser == ""){
                 console.log("");
-                console.log("DEPOSIT");
+                console.log("DEPOSIT [",this.bankName,",",user.userId,"]:");
                 if (inputDeposit <= 0) {
+                    console.log("Amount Error:", inputDeposit)
                     console.log("Deposit must be higher than 0.")
                 }
                 else{  
@@ -57,9 +55,9 @@ class Bank{
           }
 
         checkBalance(user: User): void {
-            if(this.tempPin == 0){
+            if(this.cPin == 0 && this.cUser == ""){
                 console.log("");
-                console.log("CHECK BALANCE");
+                console.log("CHECK BALANCE [",this.bankName,",",user.userId,"]:");
                 if (user.bankId !== this.bankName) {
                     if((user.balance - this.outsideBalanceCheckCharge) >= this.outsideBalanceCheckCharge ){
                         console.log("Outside bank balance check fee will be applied which is ", this.outsideBalanceCheckCharge, ".")
@@ -74,12 +72,14 @@ class Bank{
             }
 
         withdraw(user: User, inputWithdraw: number): void {
-            if(this.tempPin == 0){
+            if(this.cPin == 0 && this.cUser == ""){
                 console.log("");
-                console.log("WITHDRAW");
+                console.log("WITHDRAW [",this.bankName,",",user.userId,"]:");
                 if((inputWithdraw + this.outsideWithdrawalCharge) > user.balance) {
+                    console.log("Amount Error:", inputWithdraw)
                     console.log("Insufficient Balance")
                 }else if(inputWithdraw < 0){
+                    console.log("Amount Error:", inputWithdraw)
                     console.log("Invalid amount")
                 }else{
                     if (user.bankId !== this.bankName) {
@@ -95,51 +95,119 @@ class Bank{
         }
 }
 
-const bankList = BankData;
-const bankUserList = userData;
+const bankList = BankData; const bankUserList = userData;
 
-const pnbBank = new Bank
-(
-    bankList.bank01.bankName,
-    bankList.bank01.outsideWithdrawalCharge,
-    bankList.bank01.outsideBalanceCheckCharge,
-  );
+const bank01 = bankList.bank01;
+const PNB01 = new Bank(
+    bank01.bankName, bank01.outsideWithdrawalCharge, bank01.outsideBalanceCheckCharge
+);
+const PNB02 = new Bank(
+    bank01.bankName, bank01.outsideWithdrawalCharge, bank01.outsideBalanceCheckCharge
+);
+const bank02 = bankList.bank02;
+const BPI01 = new Bank(
+    bank02.bankName, bank02.outsideWithdrawalCharge, bank02.outsideBalanceCheckCharge
+);
+const BPI02 = new Bank(
+    bank02.bankName, bank02.outsideWithdrawalCharge, bank02.outsideBalanceCheckCharge
+);
 
-  const bdoBank = new Bank(
-    bankList.bank02.bankName,
-    bankList.bank02.outsideWithdrawalCharge,
-    bankList.bank02.outsideBalanceCheckCharge,
 
-  );
+const user01 = bankUserList.users.user01; const user02 = bankUserList.users.user02;
 
-  const secBank = new Bank(
-    bankList.bank03.bankName,
-    bankList.bank03.outsideWithdrawalCharge,
-    bankList.bank03.outsideBalanceCheckCharge,
+const negInput = -5000;
+const highInput = 50000;
 
-  );
 
-    const user01 = bankUserList.user01;
-    const user02 = bankUserList.user02;
-    const user03 = bankUserList.user03;
+// WHICH USER OR WHAT PIN
+const userId = "user01";
+const userPin = 1111;
 
-    // //Normal Flow - same bank
-    // pnbBank.pickBank(user02, user02.pin);
-    // pnbBank.checkBalance(user01);
-    // pnbBank.deposit(user01, -5000 );
-    // pnbBank.checkBalance(user01);
-    // pnbBank.withdraw(user02, 30000);
-    // pnbBank.checkBalance(user02);
+//for test case #17
+const userId01 = "user01"; const userPin01 = 1111;
+const userId02 = "user02"; const userPin02 = 2222;
 
-    //Multiple Users
-    pnbBank.pickBank(user01, user01.pin)
-    pnbBank.pickBank(user02, user02.pin)
-    pnbBank.deposit(user01, 5000)
-    pnbBank.checkBalance(user02)
-    pnbBank.checkBalance(user01)
-    pnbBank.deposit(user02, 10000)
-    pnbBank.checkBalance(user01)
-    pnbBank.checkBalance(user02)
 
+//////////////////TEST CASES///////////////////////////////
+
+    // //#1
+    // PNB01.inputPin(user01, userId, userPin);
+
+    // //#2
+    // PNB02.inputPin(user02, userId, userPin);
+
+    // //#3
+    // PNB01.inputPin(user01, "user14", userPin);
+
+    // //#4 
+    // PNB01.inputPin(user01, userId, userPin);
+    // PNB01.deposit(user01, 5000);
+    // PNB01.checkBalance(user01);
+
+    // //#5
+    // PNB02.inputPin(user02, userId, userPin);
+    // PNB02.deposit(user02, negInput );
+    // PNB02.checkBalance(user02);
+
+    // //#6
+    // PNB01.inputPin(user01, userId, userPin);
+    // PNB01.withdraw(user01, negInput);
+    // PNB01.checkBalance(user01);
+
+    // //#7
+    // PNB01.inputPin(user01, userId, userPin);
+    // PNB01.withdraw(user01, 50000);
+    // PNB01.checkBalance(user01);
+
+    // //#8
+    // PNB02.inputPin(user02, userId, userPin);
+    // PNB02.withdraw(user02, 15000);
+    // PNB02.checkBalance(user02);
+
+    // //#9
+    // BPI02.inputPin(user02, userId, userPin);
+
+    // //#10
+    // BPI01.inputPin(user01, userId, userPin);
+
+    // //#11
+    // BPI02.inputPin(user02, userId, userPin);
+    // BPI02.withdraw(user02, 15000);
+    // BPI02.checkBalance(user02);
+
+    // //#12
+    // BPI01.inputPin(user01, userId, userPin);
+    // BPI01.withdraw(user01, negInput)
+
+    // //#13
+    // BPI01.inputPin(user01, userId, userPin);
+    // BPI01.withdraw(user01, 30000);
+
+    // //#14
+    // BPI02.inputPin(user02, userId, userPin);
+    // BPI02.withdraw(user02, 30000);
+
+    // //#15
+    // BPI01.inputPin(user01, userId, userPin);
+    // BPI01.checkBalance(user01)
+
+    // //#16
+    // BPI02.inputPin(user02, userId, userPin);
+    // BPI02.checkBalance(user02); //change balance to less than 3
+
+    // //#17
+    // BPI01.inputPin(user01, userId01, userPin01); BPI02.inputPin(user02, userId02, userPin02);
+    // BPI01.withdraw(user01, 15000); BPI02.withdraw(user02, 15000);
+    // BPI01.checkBalance(user01); BPI02.checkBalance(user02);
+
+    // //#18
+    // //same bank
+    // PNB01.inputPin(user01, userId, userPin);
+    // PNB01.withdraw(user01, 5000);
+    // PNB01.checkBalance(user01);
+    // //different bank
+    // PNB02.inputPin(user01, userId, userPin);
+    // PNB02.withdraw(user01, 5000);
+    // PNB02.checkBalance(user01);
 
 

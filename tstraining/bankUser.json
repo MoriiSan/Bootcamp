@@ -1,20 +1,16 @@
 {
-    "user01": {
+    "users": {
+        "user01": {
         "pin": 1111,
         "balance": 20000,
         "bankId": "PNB",
         "userId": "user01"
-    },
+        },
     "user02": {
         "pin": 2222,
         "balance": 30000,
-        "bankId": "BPI",
+        "bankId": "PNB",
         "userId": "user02"
-    },
-    "user03": {
-        "pin": 3333,
-        "balance": 40000,
-        "bankId": "Security Bank",
-        "userId": "user03"
+        }
     }
 }
