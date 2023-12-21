@@ -212,7 +212,7 @@ const userId02 = "user02"; const userPin02 = 2222;
     // BPI01.checkBalance(u1card01); BPI02.checkBalance(u2card01);
 
     // //#18
-    // //same bank
+    // //same bank // two users
     // PNB01.inputPin(u1card01, userId, userPin);
     // PNB01.withdraw(u1card01, 5000);
     // PNB01.checkBalance(u1card01);
