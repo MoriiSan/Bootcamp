@@ -113,10 +113,10 @@ const BPI02 = new Bank(
 );
 
 
-const user01 = bankUserList.users.user01; const user02 = bankUserList.users.user02;
-
-const negInput = -5000;
-const highInput = 50000;
+const u1card01 = bankUserList.users.user01.card01;
+const u1card02 = bankUserList.users.user01.card02;
+const u2card01 = bankUserList.users.user02.card01;
+const u2card02 = bankUserList.users.user02.card02;
 
 
 // WHICH USER OR WHAT PIN
@@ -128,86 +128,106 @@ const userId01 = "user01"; const userPin01 = 1111;
 const userId02 = "user02"; const userPin02 = 2222;
 
 
+
+// PNB01.inputPin(u1card01, userId, userPin);
+// PNB01.withdraw(u1card01, 5000);
+// PNB01.checkBalance(u1card01);
+
+// PNB01.inputPin(u1card02, userId, userPin);
+// PNB01.withdraw(u1card02, 5000);
+// PNB01.checkBalance(u1card02);
+
+
+
 //////////////////TEST CASES///////////////////////////////
 
     // //#1
-    // PNB01.inputPin(user01, userId, userPin);
+    // PNB01.inputPin(u1card01, userId, userPin);
 
     // //#2
-    // PNB02.inputPin(user02, userId, userPin);
+    // PNB02.inputPin(u1card01, userId, userPin);
 
     // //#3
-    // PNB01.inputPin(user01, "user14", userPin);
+    // PNB01.inputPin(u1card01, "user14", userPin);
 
     // //#4 
-    // PNB01.inputPin(user01, userId, userPin);
-    // PNB01.deposit(user01, 5000);
-    // PNB01.checkBalance(user01);
+    // PNB01.inputPin(u1card01, userId, userPin);
+    // PNB01.deposit(u1card01, 5000);
+    // PNB01.checkBalance(u1card01);
 
     // //#5
-    // PNB02.inputPin(user02, userId, userPin);
-    // PNB02.deposit(user02, negInput );
-    // PNB02.checkBalance(user02);
+    // PNB02.inputPin(u2card01, userId, userPin);
+    // PNB02.deposit(u2card01, -5000 );
+    // PNB02.checkBalance(u2card01);
 
     // //#6
-    // PNB01.inputPin(user01, userId, userPin);
-    // PNB01.withdraw(user01, negInput);
-    // PNB01.checkBalance(user01);
+    // PNB01.inputPin(u1card01, userId, userPin);
+    // PNB01.withdraw(u1card01, -5000);
+    // PNB01.checkBalance(u1card01);
 
     // //#7
-    // PNB01.inputPin(user01, userId, userPin);
-    // PNB01.withdraw(user01, 50000);
-    // PNB01.checkBalance(user01);
+    // PNB01.inputPin(u1card01, userId, userPin);
+    // PNB01.withdraw(u1card01, 50000);
+    // PNB01.checkBalance(u1card01);
 
     // //#8
-    // PNB02.inputPin(user02, userId, userPin);
-    // PNB02.withdraw(user02, 15000);
-    // PNB02.checkBalance(user02);
+    // PNB02.inputPin(u2card01, userId, userPin);
+    // PNB02.withdraw(u2card01, 15000);
+    // PNB02.checkBalance(u2card01);
 
     // //#9
-    // BPI02.inputPin(user02, userId, userPin);
+    // BPI02.inputPin(u2card01, userId, userPin);
 
     // //#10
-    // BPI01.inputPin(user01, userId, userPin);
+    // BPI01.inputPin(u2card01, userId, userPin);
 
     // //#11
-    // BPI02.inputPin(user02, userId, userPin);
-    // BPI02.withdraw(user02, 15000);
-    // BPI02.checkBalance(user02);
+    // BPI02.inputPin(u2card01, userId, userPin);
+    // BPI02.withdraw(u2card01, 15000);
+    // BPI02.checkBalance(u2card01);
 
     // //#12
-    // BPI01.inputPin(user01, userId, userPin);
-    // BPI01.withdraw(user01, negInput)
+    // BPI01.inputPin(u1card01, userId, userPin);
+    // BPI01.withdraw(u1card01, -5000);
 
     // //#13
-    // BPI01.inputPin(user01, userId, userPin);
-    // BPI01.withdraw(user01, 30000);
+    // BPI01.inputPin(u1card01, userId, userPin);
+    // BPI01.withdraw(u1card01, 30000);
 
     // //#14
-    // BPI02.inputPin(user02, userId, userPin);
-    // BPI02.withdraw(user02, 30000);
+    // BPI02.inputPin(u2card01, userId, userPin);
+    // BPI02.withdraw(u2card01, 30000);
 
     // //#15
-    // BPI01.inputPin(user01, userId, userPin);
-    // BPI01.checkBalance(user01)
+    // BPI01.inputPin(u1card01, userId, userPin);
+    // BPI01.checkBalance(u1card01)
 
     // //#16
-    // BPI02.inputPin(user02, userId, userPin);
-    // BPI02.checkBalance(user02); //change balance to less than 3
+    // BPI02.inputPin(u2card01, userId, userPin);
+    // BPI02.checkBalance(u2card01); //change balance to less than 3
 
     // //#17
-    // BPI01.inputPin(user01, userId01, userPin01); BPI02.inputPin(user02, userId02, userPin02);
-    // BPI01.withdraw(user01, 15000); BPI02.withdraw(user02, 15000);
-    // BPI01.checkBalance(user01); BPI02.checkBalance(user02);
+    // BPI01.inputPin(u1card01, userId01, userPin01); BPI02.inputPin(u2card01, userId02, userPin02);
+    // BPI01.withdraw(u1card01, 15000); BPI02.withdraw(u2card01, 15000);
+    // BPI01.checkBalance(u1card01); BPI02.checkBalance(u2card01);
 
     // //#18
     // //same bank
-    // PNB01.inputPin(user01, userId, userPin);
-    // PNB01.withdraw(user01, 5000);
-    // PNB01.checkBalance(user01);
+    // PNB01.inputPin(u1card01, userId, userPin);
+    // PNB01.withdraw(u1card01, 5000);
+    // PNB01.checkBalance(u1card01);
     // //different bank
-    // PNB02.inputPin(user01, userId, userPin);
-    // PNB02.withdraw(user01, 5000);
-    // PNB02.checkBalance(user01);
+    // PNB02.inputPin(u1card01, userId, userPin);
+    // PNB02.withdraw(u1card01, 5000);
+    // PNB02.checkBalance(u1card01);
+
+    // //new case // one user // two accounts
+    // PNB01.inputPin(u1card01, userId, userPin);
+    // PNB01.withdraw(u1card01, 5000);
+    // PNB01.checkBalance(u1card01);
+
+    // PNB01.inputPin(u1card02, userId, userPin);
+    // PNB01.withdraw(u1card02, 5000);
+    // PNB01.checkBalance(u1card02);
 
 

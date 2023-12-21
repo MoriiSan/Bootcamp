@@ -1,16 +1,32 @@
 {
     "users": {
         "user01": {
-        "pin": 1111,
-        "balance": 20000,
-        "bankId": "PNB",
-        "userId": "user01"
+            "card01": {
+                "pin": 1111,
+                "balance": 20000,
+                "bankId": "PNB",
+                "userId": "user01"
+            },
+            "card02": {
+                "pin": 1111,
+                "balance": 25000,
+                "bankId": "BPI",
+                "userId": "user01"
+            }
         },
-    "user02": {
-        "pin": 2222,
-        "balance": 30000,
-        "bankId": "PNB",
-        "userId": "user02"
+        "user02": {
+            "card01": {
+                "pin": 2222,
+                "balance": 30000,
+                "bankId": "PNB",
+                "userId": "user02"
+            },
+            "card02": {
+                "pin": 2222,
+                "balance": 35000,
+                "bankId": "BPI",
+                "userId": "user02"
+            }
         }
     }
 }
