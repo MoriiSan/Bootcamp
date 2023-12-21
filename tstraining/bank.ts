@@ -43,7 +43,7 @@ class Bank{
         deposit(user: User, inputDeposit: number): void {
             if(this.cPin == 0 && this.cUser == ""){
                 console.log("");
-                console.log("DEPOSIT [",this.bankName,",",user.userId,"]:");
+                console.log("DEPOSIT [",user.bankId,"card,",user.userId,"]:");
                 if (inputDeposit <= 0) {
                     console.log("Amount Error:", inputDeposit)
                     console.log("Deposit must be higher than 0.")
@@ -57,7 +57,7 @@ class Bank{
         checkBalance(user: User): void {
             if(this.cPin == 0 && this.cUser == ""){
                 console.log("");
-                console.log("CHECK BALANCE [",this.bankName,",",user.userId,"]:");
+                console.log("CHECK BALANCE [",user.bankId,"card,",user.userId,"]:");
                 if (user.bankId !== this.bankName) {
                     if((user.balance - this.outsideBalanceCheckCharge) >= this.outsideBalanceCheckCharge ){
                         console.log("Outside bank balance check fee will be applied which is ", this.outsideBalanceCheckCharge, ".")
@@ -74,7 +74,7 @@ class Bank{
         withdraw(user: User, inputWithdraw: number): void {
             if(this.cPin == 0 && this.cUser == ""){
                 console.log("");
-                console.log("WITHDRAW [",this.bankName,",",user.userId,"]:");
+                console.log("WITHDRAW [",user.bankId,"card,",user.userId,"]:");
                 if((inputWithdraw + this.outsideWithdrawalCharge) > user.balance) {
                     console.log("Amount Error:", inputWithdraw)
                     console.log("Insufficient Balance")
@@ -217,10 +217,11 @@ const userId02 = "user02"; const userPin02 = 2222;
     // PNB01.withdraw(u1card01, 5000);
     // PNB01.checkBalance(u1card01);
     // //different bank
-    // PNB02.inputPin(u1card01, userId, userPin);
-    // PNB02.withdraw(u1card01, 5000);
-    // PNB02.checkBalance(u1card01);
+    // BPI01.inputPin(u1card02, userId, userPin);
+    // BPI01.withdraw(u1card02, 5000);
+    // BPI01.checkBalance(u1card02);
 
+    // // #19 
     // //new case // one user // two accounts
     // PNB01.inputPin(u1card01, userId, userPin);
     // PNB01.withdraw(u1card01, 5000);
