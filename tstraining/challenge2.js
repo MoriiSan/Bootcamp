@@ -1,0 +1,18 @@
+var x1 = 0;
+var y1 = 1;
+var x2 = 1;
+var y2 = 0;
+var example = (Math.pow(((x2 - x1) ^ 2 + (y2 - y1) ^ 2), 0.5));
+console.log(example);
+var x11 = 0;
+var y11 = 0;
+var x22 = 5;
+var y22 = 10;
+var case2 = Math.sqrt(Math.pow(x22 - x11, 2) + Math.pow(y22 - y11, 2));
+console.log(case2);
+var x111 = -1;
+var y111 = 2;
+var x222 = 3;
+var y222 = -2;
+var case3 = Math.sqrt(Math.pow(x222 - x111, 2) + Math.pow(y222 - y111, 2));
+console.log(case3);

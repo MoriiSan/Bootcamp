@@ -1,0 +1,19 @@
+{
+    "bank01": {
+        "bankName": "PNB",
+        "outsideWithdrawalCharge": 18,
+        "outsideBalanceCheckCharge": 2
+    },
+    "bank02": {
+        "bankName": "BDO",
+        "outsideWithdrawalCharge": 20,
+        "outsideBalanceCheckCharge": 3
+    },
+    "bank03": {
+        "bankName": "Security Bank",
+        "outsideWithdrawalCharge": 15,
+        "outsideBalanceCheckCharge": 2
+    }
+    
+}
+

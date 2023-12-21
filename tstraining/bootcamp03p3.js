@@ -1,0 +1,10 @@
+"use strict";
+// import * as Pkmn from 'pokemon';
+Object.defineProperty(exports, "__esModule", { value: true });
+// const pk1 = Pkmn.all();
+// console.log("your pokemon is", pk1);
+var pkm = require("./pokemon");
+pkm.all();
+pkm.random();
+pkm.getName(147);
+pkm.getID('dratini');
