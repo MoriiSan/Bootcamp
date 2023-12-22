@@ -17,31 +17,31 @@ class Bank{
     cPin = 0;
     cUser = "";
 
-    constructor(bankName: string, outsideWithdrawalCharge: number,
+    constructor (bankName: string, outsideWithdrawalCharge: number,
         outsideBalanceCheckCharge: number){
         this.bankName = bankName;
         this.outsideWithdrawalCharge = outsideWithdrawalCharge;
         this.outsideBalanceCheckCharge = outsideBalanceCheckCharge;
-        }
+    }
 
-        inputPin(user: User, userId: string, pin: number): void{
-            console.log("");
-            console.log(this.bankName);
+    inputPin(user: User, userId: string, pin: number): void{
+        console.log("");
+        console.log(this.bankName);
 
-            if(user.userId !== userId){
-                console.log("INVALID USER");
-                this.cUser = userId;
-            }else if(user.pin !== pin){
-                console.log("INVALID PIN");
-                this.cPin = pin;
-            }
-            else{
-                console.log("Welcome", user.userId);
-            }
+        if(user.userId !== userId){
+            console.log("INVALID USER");
+            this.cUser = userId;
+        }else if(user.pin !== pin){
+            console.log("INVALID PIN");
+            this.cPin = pin;
         }
+        else{
+            console.log("Welcome", user.userId);
+            }
+    }
 
         deposit(user: User, inputDeposit: number): void {
-            if(this.cPin == 0 && this.cUser == ""){
+            if(this.cPin == 0 && !this.cUser){
                 console.log("");
                 console.log("DEPOSIT [",user.bankId,"card,",user.userId,"]:");
                 if (inputDeposit <= 0) {
@@ -59,7 +59,7 @@ class Bank{
                 console.log("");
                 console.log("CHECK BALANCE [",user.bankId,"card,",user.userId,"]:");
                 if (user.bankId !== this.bankName) {
-                    if((user.balance - this.outsideBalanceCheckCharge) >= this.outsideBalanceCheckCharge ){
+                    if((user.balance) >= this.outsideBalanceCheckCharge ){
                         console.log("Outside bank balance check fee will be applied which is ", this.outsideBalanceCheckCharge, ".")
                         console.log("Current balance: ", user.balance -= this.outsideBalanceCheckCharge);
                     }else{
@@ -129,13 +129,14 @@ const userId02 = "user02"; const userPin02 = 2222;
 
 
 
-// PNB01.inputPin(u1card01, userId, userPin);
-// PNB01.withdraw(u1card01, 5000);
-// PNB01.checkBalance(u1card01);
+PNB01.inputPin(u1card01, userId, userPin);
+PNB01.inputPin(u1card02, userId, userPin);
+PNB01.withdraw(u1card01, 5000);
+PNB01.checkBalance(u1card01);
 
-// PNB01.inputPin(u1card02, userId, userPin);
-// PNB01.withdraw(u1card02, 5000);
-// PNB01.checkBalance(u1card02);
+PNB01.inputPin(u1card02, userId, userPin);
+PNB01.withdraw(u1card02, 5000);
+PNB01.checkBalance(u1card02);
 
 
 
