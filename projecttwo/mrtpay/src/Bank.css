@@ -1,0 +1,49 @@
+/* Bank.css */
+
+div {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Optional: centers items horizontally */
+}
+
+/* Style for the h1 element */
+h1 {
+    font-family: 'Impact';
+    font-size: 2.5rem;
+    font-weight: normal;
+    text-decoration: none;
+    color: blue;
+    padding: 10px;
+  }
+  
+  /* Style for the input element and its placeholder */
+  input {
+    font-family: 'Arial';
+    font-size: 1rem;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid black;
+    margin-bottom: 15px;
+  }
+  
+  /* Style for the placeholder text */
+  input::placeholder {
+    color: gray;
+    font-style: italic;
+  }
+
+  button {
+    font-family: 'Arial';
+    font-size: 1rem;
+    padding: 10px 15px; /* Adjust padding values */
+    border: none;
+    border-radius: 4px;
+    background-color: #378805;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: darkgreen;
+}
+  
