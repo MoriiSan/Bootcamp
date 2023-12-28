@@ -33,8 +33,8 @@ function MRTPay() {
                         <div className='text3 font-normal text-black px-2'>FARE: {Fare} PHP</div>
                     </div>
                 </div>
-                <div className="thirdLine p-3 flex justify-between pb-0">
-                    <div className="text5 font-semibold"> 29 Dec</div>
+                <div className="thirdLine p-6 flex justify-between pb-0">
+                    <div className="text5 font-normal"> 29 Dec</div>
                 </div>
             </div>
         </div>
