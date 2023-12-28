@@ -1,0 +1,24 @@
+.container{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: row;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    width: 400px; 
+    height: 250px;
+}
+
+.leftSide{
+    display: flex;
+    flex-direction: column;
+}
+
+.rightSide{
+    display: flex;
+    flex-direction: column;
+}

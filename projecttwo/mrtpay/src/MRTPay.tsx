@@ -1,7 +1,5 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import MrtMap from './components/mrtMap';
+// import './MRTPay.css';
 
 const UID = 123456789;
 const Bal = 500;
@@ -12,9 +10,6 @@ const loc = "Ayala Station";
 function MRTPay() {
     return (
         <div>
-            <div className="map-background">
-              <MrtMap />
-            </div>
             <div className="LOGO font-sans text-8xl font-bold text-black absolute left-12 top-6">MRT</div>
             <div className= "flex flex-wrap flex-col absolute top-20 right-48"> 
                 <div className="currentLoc font-sans text-6xl "> You are currently in</div>

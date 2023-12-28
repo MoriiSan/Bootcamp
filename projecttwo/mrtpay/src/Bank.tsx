@@ -22,7 +22,7 @@ const Bank = () => {
 
     return (
         <div>
-            <Navigation/>
+            <Navigation></Navigation>
 
             <h1> WELCOME, {tempFname} {tempLname}!</h1>
 
@@ -36,7 +36,7 @@ const Bank = () => {
                 Submit
             </button>
 
-            <div>Footer</div>
+            {/* <div>Footer</div> */}
         </div>
     )
 }
