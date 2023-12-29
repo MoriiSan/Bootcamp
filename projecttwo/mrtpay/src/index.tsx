@@ -1,18 +1,38 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import Bank from './Bank';
-import MRTPay from './MRTPay';
+// import Home from './screens/home';
+import MRTPay from './App';
 import MrtMap from './components/mrtMap';
+import Station from './station';
+
+const router = createBrowserRouter([
+  {
+    path: "/homepage",
+    element: <App />,
+  },
+  // {
+  //   path: "/contact",
+  //   element: < Contact />
+  // },
+  // {
+  //   path: "/path",
+  //   element: </>
+  // }
+]);
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <App/>
+    <RouterProvider router={router}/>
   </React.StrictMode>
 );
 

@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
-import './Bank.css';
-import Navigation from './components/Navigation';
+import './index.css';
+import Navigation from '../../components/Navigation';
  
-const Bank = () => {
+const Home = () => {
     // const [name, setName] = useState("John Doe");
 
     const [firstName, setFirstName] = useState("");
@@ -41,4 +41,4 @@ const Bank = () => {
     )
 }
  
-export default Bank;
+export default Home;
