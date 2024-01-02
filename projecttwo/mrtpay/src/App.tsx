@@ -28,7 +28,7 @@ const MRTPay = () => {
     };
 
     const arrowStyle: React.CSSProperties = {
-        backgroundColor: 'white',
+        backgroundColor: '#e2edec',
         color: '#415b5c',
         fontSize: '30px',
         lineHeight: '36px',
@@ -96,8 +96,30 @@ const MRTPay = () => {
         display: open ? 'inline' : 'none',
     };
 
+    const cardStyle: React.CSSProperties = {
+        backgroundColor: '#e2edec',
+        display: 'flex',
+        height: '12rem',
+        width: '19rem',
+        borderRadius: '0.5rem',
+        padding: '0.5rem',
+        marginTop: '1.5rem',
+        boxShadow: '1px 1px 4px #415959',
+    };
+
+    const mapContainer: React.CSSProperties = {
+        backgroundColor: '#ffffff',
+        height: '93.3svh',
+        width: '161svh',
+        borderRadius: '0.5rem',
+        margin: '1.5rem',
+        padding: '1rem',
+        // boxShadow: '2px 2px 8px #415959',
+
+    }
+
     return (
-        <main className="flex">
+        <main className="flex bg-custom-light-green">
             <div style={sidebarStyle}>
                 <div style={arrowStyle} onClick={() => setOpen(!open)}><BsArrowLeftShort /></div>
                 <div className="inline-flex">
@@ -108,12 +130,14 @@ const MRTPay = () => {
                     <div style={hashStyle}><BsHash /></div>
                     <input placeholder="type UID" style={inputStyle}></input>
                 </div>
+                <div style={cardStyle}></div>
             </div>
 
-            <div></div>
+            
 
-            <div className="p-7">
-                <h1 className="text-2xl font-semibold">Home Page</h1>
+            <div style={mapContainer}>
+                <MrtMap/>
+                {/* <h1 className="text-2xl font-semibold">Home Page</h1> */}
             </div>
         </main>
     );
