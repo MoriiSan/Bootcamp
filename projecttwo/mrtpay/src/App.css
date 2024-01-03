@@ -1,3 +1,49 @@
+.leaflet-container{
+  width: 100%;
+  height: 100vh;
+  z-index: 0;
+}
+
+/* .sidebarStyle {
+  background-color: #415b5c;
+  height: 100svh;
+  padding: 20px;
+  position: relative;
+  width: 33.3%;
+  transition: width 0.3s ease;
+};
+.sidebarStyle.closed {
+  width: 6rem;
+}
+
+.arrowStyle {
+  background-color: #e2edec;
+  color: #415b5c;
+  font-size: 30px;
+  line-height: 36px;
+  border-radius: 50%;
+  position: absolute;
+  right: -12px;
+  top: 36px;
+  border: 2px solid #415b5c;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+};
+.arrowStyle.transformed {
+  transform: rotate(180deg);
+} */
+
+
+
+
+
+
+
+
+
+
+
+
 .App {
   text-align: center;
 }
@@ -12,13 +58,6 @@
     animation: App-logo-spin infinite 20s linear;
   }
 }
-
-.leaflet-container{
-  width: 100%;
-  height: 100vh;
-  z-index: 0;
-}
-
 
 .App-header {
   background-color: #282c34;

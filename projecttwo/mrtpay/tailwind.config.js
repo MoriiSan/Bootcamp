@@ -8,7 +8,7 @@ module.exports = {
       colors: {
         "custom-dark-green": "#415b5c",
         "custom-light-green": "#e2edec",
-        "custom-yellow": "#c69e24",
+        "custom-yellow": "#d7a30f",
       }
     },
   },

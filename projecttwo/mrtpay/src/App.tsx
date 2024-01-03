@@ -23,7 +23,7 @@ const MRTPay = () => {
         height: '100svh',
         padding: '20px',
         position: 'relative',
-        width: open ? '18rem' : '6rem',
+        width: open ? '33.3%' : '6rem',
         transition: 'width 0.3s ease',
     };
 
@@ -39,11 +39,12 @@ const MRTPay = () => {
         border: '2px solid #415b5c',
         cursor: 'pointer',
         transform: !open ? 'rotate(180deg)' : 'none',
-        transition: 'transform 0.3s ease'
+        transition: 'transform 0.3s ease',
+        // zIndex: 1,
     };
 
     const logoStyle: React.CSSProperties = {
-        backgroundColor: '#c69e24',
+        backgroundColor: '#d7a30f',
         color: '#415b5c',
         fontSize: '2.25rem',
         // lineHeight: '2.25rem',
@@ -71,7 +72,7 @@ const MRTPay = () => {
         display: 'flex',
         alignItems: 'center',
         borderRadius: '0.5rem',
-        border: '2px solid #c69e24',
+        border: '2px solid #d7a30f',
         marginTop: '1.5rem',
         paddingLeft: !open ? '0.875rem' : '1rem',
         paddingRight: !open ? '0.875rem' : '1rem',
@@ -80,7 +81,7 @@ const MRTPay = () => {
     };
 
     const hashStyle: React.CSSProperties = {
-        color: '#c69e24',
+        color: '#d7a30f',
         fontSize: '1.5rem',
         display: 'inline-block',
         float: 'left',
@@ -90,6 +91,7 @@ const MRTPay = () => {
 
     const inputStyle: React.CSSProperties = {
         backgroundColor: 'transparent',
+        fontSize: '1.2rem',
         width: '100%',
         color: '#e2edec',
         outline: 'none',
@@ -97,26 +99,30 @@ const MRTPay = () => {
     };
 
     const cardStyle: React.CSSProperties = {
-        backgroundColor: '#e2edec',
+        backgroundColor: '#ffffff',
         display: 'flex',
-        height: '12rem',
-        width: '19rem',
+        position: 'fixed',
+        height: '30%',
+        width: '22%',
         borderRadius: '0.5rem',
         padding: '0.5rem',
         marginTop: '1.5rem',
-        boxShadow: '1px 1px 4px #415959',
+        boxShadow: '-2px 2px 6px #1a2424',
+        zIndex: 1,
+        bottom: open ? '44%' : '1.5rem',
+        left: open ? '1.35rem' : '1.35rem',
+        transition: 'bottom 0.5s linear, left 0.5s linear',
     };
 
     const mapContainer: React.CSSProperties = {
         backgroundColor: '#ffffff',
         height: '93.3svh',
-        width: '161svh',
+        width: '100%',
         borderRadius: '0.5rem',
-        margin: '1.5rem',
-        padding: '1rem',
-        // boxShadow: '2px 2px 8px #415959',
-
-    }
+        // margin: '0.7rem',
+        // padding: '0.7rem',
+        top: 0,
+    };
 
     return (
         <main className="flex bg-custom-light-green">
