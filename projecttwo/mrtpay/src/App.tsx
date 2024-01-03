@@ -121,7 +121,6 @@ const MRTPay = () => {
         borderRadius: '0.5rem',
         // margin: '0.7rem',
         // padding: '0.7rem',
-        top: 0,
     };
 
     return (
