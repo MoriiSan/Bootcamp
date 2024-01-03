@@ -40,7 +40,7 @@ const handleMarkerMouseOver = (e: LeafletMouseEvent) => {
 function MrtMap() {
     return(
       <div className="mrt-map-container">
-        <MapContainer center={[14.541792, 121.019492]} zoom={15} scrollWheelZoom={true} minZoom={3} maxZoom={19} zoomControl={false}>
+        <MapContainer center={[14.537586, 121.001584]} zoom={15} scrollWheelZoom={true} minZoom={3} maxZoom={19} zoomControl={false}>
           {/* <div className="map-overlay absolute top-0 left-0 w-full h-20vh bg-gradient-to-b from-transparent to-white pointer-events-none"></div> */}
           <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
