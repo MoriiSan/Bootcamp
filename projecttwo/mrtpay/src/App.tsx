@@ -24,10 +24,10 @@ const MRTPay = () => {
             <SideBar></SideBar>
             <div style={mapContainer}>
                 <MrtMap/>
-                {/* <h1 className="text-2xl font-semibold">Home Page</h1> */}
             </div>
         </main>
     );
 }
 
 export default MRTPay;
+

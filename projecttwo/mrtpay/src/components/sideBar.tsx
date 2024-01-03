@@ -99,6 +99,7 @@ const SideBar = () => {
     const inputStyle: React.CSSProperties = {
         backgroundColor: 'transparent',
         fontSize: '1.2rem',
+        fontWeight: '500',
         width: '100%',
         color: '#e2edec',
         outline: 'none',
@@ -138,16 +139,16 @@ const SideBar = () => {
         backgroundColor: '#e2edec',
         display: 'flex',
         position: 'fixed',
-        height: '30%',
-        width: '22.1%',
+        height: open ? '30%' : '40%',
+        width: open ? '22.1%' : '32.1%',
         borderRadius: '0.5rem',
         padding: '0.5rem',
         marginTop: '1.5rem',
         boxShadow: '2px 2px 6px #1a2424',
         zIndex: 1,
-        bottom: open ? '28%' : '1.5rem',
-        left: open ? '1.35rem' : '1.35rem',
-        transition: 'bottom 0.3s linear, left 0.3s linear',
+        bottom: '1.5rem',
+        left: '1.35rem',
+        transition: 'height 0.3s linear, width 0.3s linear',
     };
 
     return(
@@ -161,7 +162,7 @@ const SideBar = () => {
         <div style={locationStyle}>
             {open ? (
                 <>
-                    {loc}
+                    Welcome to {loc}
                 </>
             ) : (
                 <div style={hashStyle} onClick={() => setOpen(!open)}><BsPinMapFill /></div>
@@ -182,7 +183,11 @@ const SideBar = () => {
         </div>
 
 
-        <div style={cardStyle}>
+        <div style={cardStyle} className="flex flex-col">
+            <div>UID</div>
+            <div>BAL</div>
+            <div>FARE</div>
+            <div>DISTANCE</div>
         </div>
     </div>
     )   
