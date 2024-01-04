@@ -6,7 +6,7 @@ const SideBar = () => {
     const loc = "Taft Avenue".toUpperCase();
 
     const sidebarStyle: React.CSSProperties = {
-        backgroundColor: '#394d3b',
+        backgroundColor: '#566254',
         borderRadius: '0 0.5rem 0.5rem 0',
         height: '100svh',
         padding: '20px',
@@ -17,14 +17,14 @@ const SideBar = () => {
 
     const arrowStyle: React.CSSProperties = {
         backgroundColor: '#e2edec', //#c7c7b4
-        color: '#394d3b',
+        color: '#566254',
         fontSize: '30px',
         lineHeight: '36px',
         borderRadius: '50%',
         position: 'absolute',
         right: '-12px',
         top: '36px',
-        border: '2px solid #394d3b',
+        border: '2px solid #566254',
         cursor: 'pointer',
         transform: !open ? 'rotate(180deg)' : 'none',
         transition: 'transform 0.3s ease',
@@ -58,7 +58,7 @@ const SideBar = () => {
         flexDirection:'column',
         flex: '1 0 100%',
         textAlign: 'center',
-        backgroundColor: '#4d5f4f',
+        backgroundColor: '#697467',
         borderRadius: '0.5rem',
         marginTop: '0.5rem',
         paddingLeft: !open ? '0.875rem' : '1rem',
