@@ -1,12 +1,11 @@
 import React from 'react';
 import './App.css';
-import MrtMap from './components/mrtMap';
-import SideBar from './components/sideBar';
-import Card from './components/card';
+import MrtMap from './mrtMap';
+import SideBar from './sideBar';
 
 const MRTPay = () => {
 
-    const UID = 123456789;
+    const UID = 123456789; 
     const Bal = 500;
     const Fare = 13;
     const distance = 11;
@@ -23,7 +22,6 @@ const MRTPay = () => {
     return (
         <main className="flex bg-custom-light-green">
             <SideBar></SideBar>
-            <Card></Card>
             <div style={mapContainer}>
                 <MrtMap/>
             </div>
@@ -32,4 +30,3 @@ const MRTPay = () => {
 }
 
 export default MRTPay;
-
