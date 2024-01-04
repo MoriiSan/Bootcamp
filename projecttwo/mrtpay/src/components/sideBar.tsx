@@ -6,7 +6,7 @@ const SideBar = () => {
     const loc = "Taft Avenue".toUpperCase();
 
     const sidebarStyle: React.CSSProperties = {
-        backgroundColor: '#3b5555',
+        backgroundColor: '#394d3b',
         borderRadius: '0 0.5rem 0.5rem 0',
         height: '100svh',
         padding: '20px',
@@ -16,15 +16,15 @@ const SideBar = () => {
     };
 
     const arrowStyle: React.CSSProperties = {
-        backgroundColor: '#e2edec',
-        color: '#3b5555',
+        backgroundColor: '#e2edec', //#c7c7b4
+        color: '#394d3b',
         fontSize: '30px',
         lineHeight: '36px',
         borderRadius: '50%',
         position: 'absolute',
         right: '-12px',
         top: '36px',
-        border: '2px solid #3b5555',
+        border: '2px solid #394d3b',
         cursor: 'pointer',
         transform: !open ? 'rotate(180deg)' : 'none',
         transition: 'transform 0.3s ease',
@@ -35,7 +35,6 @@ const SideBar = () => {
         backgroundColor: '#d7a30f',
         color: '#415b5c',
         fontSize: '2.25rem',
-        marginTop: '',
         marginRight: '0.5rem',
         borderRadius: '0.5rem',
         display: 'inline-block',
@@ -58,10 +57,10 @@ const SideBar = () => {
         display: 'flex',
         flexDirection:'column',
         flex: '1 0 100%',
-        alignItems: 'center',
-        backgroundColor: '#546b6c',
+        textAlign: 'center',
+        backgroundColor: '#4d5f4f',
         borderRadius: '0.5rem',
-        marginTop: '0.1rem',
+        marginTop: '0.5rem',
         paddingLeft: !open ? '0.875rem' : '1rem',
         paddingRight: !open ? '0.875rem' : '1rem',
         paddingTop: '0.625rem',
@@ -78,8 +77,8 @@ const SideBar = () => {
         flex: '1 0 100%',
         alignItems: 'center',
         borderRadius: '0.5rem',
-        border: '2px solid #d7a30f',
-        // marginTop: '1.5rem',
+        border: '1px solid #d7a30f',
+        marginTop: '0.5rem',
         paddingLeft: !open ? '0.875rem' : '1rem',
         paddingRight: !open ? '0.875rem' : '1rem',
         paddingTop: '0.625rem',
@@ -92,6 +91,8 @@ const SideBar = () => {
     const hashStyle: React.CSSProperties = {
         color: '#d7a30f',
         fontSize: '1.5rem',
+        alignItems: 'center',
+        justifyContent: 'center',
         cursor: 'pointer',
         marginRight: open ? '0.5rem' : '0',
     };
@@ -108,14 +109,20 @@ const SideBar = () => {
 
     const buttonStyle: React.CSSProperties = {
         display: 'flex',
+        // flex: '1 0 100%',
         flexDirection: 'row',
-        flex: '1 0 100%',
+        // flexWrap: 'wrap',
+        marginTop: '0.5rem',
         opacity: open ? 1 : 0,
         transition: 'opacity 0.3s ease',
-        
+        width: '100%', 
     };
 
     const resetButtonStyle: React.CSSProperties = {
+        display: 'flex',
+        flex: '1 0 50%',
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: '#e2edec',
         borderRadius: '0.5rem 0 0 0.5rem',
         paddingTop: '0.625rem',
@@ -126,6 +133,10 @@ const SideBar = () => {
     };
     
     const submitButtonStyle: React.CSSProperties = {
+        display: 'flex',
+        flex: '1 0 50%',
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: '#d7a30f',
         borderRadius: '0 0.5rem 0.5rem 0',
         borderLeft: '1px solid #415b5c',
@@ -161,9 +172,10 @@ const SideBar = () => {
         <div className="flex-container">
         <div style={locationStyle}>
             {open ? (
-                <>
-                    Welcome to {loc}
-                </>
+                <div>
+                Welcome to <br />
+                {loc}
+              </div>
             ) : (
                 <div style={hashStyle} onClick={() => setOpen(!open)}><BsPinMapFill /></div>
             )}

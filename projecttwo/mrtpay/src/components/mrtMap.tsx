@@ -53,7 +53,7 @@ function MrtMap() {
                 </Marker>
               ))}
             </div>
-            <ZoomControl position="bottomleft" />
+            <ZoomControl position="bottomright" />
         </MapContainer>
         </div>
       )
