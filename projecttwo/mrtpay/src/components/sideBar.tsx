@@ -9,48 +9,48 @@ const SideBar = () => {
     const loc = "Taft Avenue".toUpperCase();
     const [isHovered, setIsHovered] = useState(false);
 
-    const sidebarStyle: React.CSSProperties = {
+    const sidebarStyle = {
         width: open ? '33.3%' : '6rem',
     };
 
-    const arrowStyle: React.CSSProperties = {
+    const arrowStyle = {
         transform: !open ? 'rotate(180deg)' : 'none',
     };
 
-    const logoStyle: React.CSSProperties = {
+    const logoStyle = {
         transform: open ? 'rotate(360deg)' : 'none',
     };
 
-    const logoTitle: React.CSSProperties = {
+    const logoTitle = {
         transform: !open ? 'scale(0)' : 'none',
     };
 
-    const locationStyle: React.CSSProperties = {
+    const locationStyle = {
         paddingLeft: !open ? '0.875rem' : '1rem',
         paddingRight: !open ? '0.875rem' : '1rem',
         transform: !open ? 'rotate(360deg)' : 'none',
 
     }
 
-    const borderStyle: React.CSSProperties = {
+    const borderStyle = {
         paddingLeft: !open ? '0.875rem' : '1rem',
         paddingRight: !open ? '0.875rem' : '1rem',
         transform: !open ? 'rotate(360deg)' : 'none',
     };
 
-    const hashStyle: React.CSSProperties = {
+    const hashStyle = {
         marginRight: open ? '0.5rem' : '0',
     };
 
-    const inputStyle: React.CSSProperties = {
+    const inputStyle = {
         display: open ? 'inline' : 'none',
     };
 
-    const buttonStyle: React.CSSProperties = {
+    const buttonStyle = {
         opacity: open ? 1 : 0,
     };
     
-    const submitButtonStyle: React.CSSProperties = {
+    const submitButtonStyle = {
         backgroundColor: isHovered ? '#e2edec' : '#dfb53f',
     };
 

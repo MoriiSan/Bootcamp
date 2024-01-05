@@ -6,7 +6,7 @@ import Card from './components/card';
 
 const MRTPay = () => {
 
-    const mapContainer: React.CSSProperties = {
+    const mapContainer = {
         // backgroundColor: '#ffffff',
         // height: '93.3svh',
         width: '100%',

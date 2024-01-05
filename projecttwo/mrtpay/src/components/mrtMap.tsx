@@ -48,7 +48,7 @@ function MrtMap() {
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-          <Polyline positions={polylinePositions} color="red" weight={5}/>
+          <Polyline positions={polylinePositions} color="red" weight={7}/>
 
           <div className="rotateIcon">
             {markersData.map((marker, index) => (
