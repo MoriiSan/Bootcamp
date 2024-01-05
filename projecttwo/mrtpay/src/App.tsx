@@ -6,14 +6,6 @@ import Card from './components/card';
 
 const MRTPay = () => {
 
-    const UID = 123456789;
-    const Bal = 500;
-    const Fare = 13;
-    const distance = 11;
-
-    const currentDate = new Date();
-    const formattedDate = `${currentDate.getDate()} ${currentDate.toLocaleString('default', { month: 'short' })}`;
-
     const mapContainer: React.CSSProperties = {
         // backgroundColor: '#ffffff',
         // height: '93.3svh',

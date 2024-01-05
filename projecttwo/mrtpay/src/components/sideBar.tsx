@@ -1,6 +1,7 @@
 import React, {useState}  from 'react';
 import { BsArrowLeftShort, BsFillTrainFrontFill, BsHash, BsPinMapFill } from "react-icons/bs";
 import { useNavigate } from 'react-router-dom';
+import './sideBar.css';
 
 const SideBar = () => {
     const navigate = useNavigate();
@@ -9,179 +10,83 @@ const SideBar = () => {
     const [isHovered, setIsHovered] = useState(false);
 
     const sidebarStyle: React.CSSProperties = {
-        backgroundColor: '#566254',
-        borderRadius: '0 0.5rem 0.5rem 0',
-        height: '100svh',
-        padding: '20px',
-        position: 'relative',
         width: open ? '33.3%' : '6rem',
-        transition: 'width 0.3s ease',
     };
 
     const arrowStyle: React.CSSProperties = {
-        backgroundColor: '#e2edec', //#c7c7b4
-        color: '#566254',
-        fontSize: '30px',
-        lineHeight: '36px',
-        borderRadius: '50%',
-        position: 'absolute',
-        right: '-12px',
-        top: '36px',
-        border: '2px solid #566254',
-        cursor: 'pointer',
         transform: !open ? 'rotate(180deg)' : 'none',
-        transition: 'transform 0.3s ease',
-        zIndex: 1,
     };
 
     const logoStyle: React.CSSProperties = {
-        backgroundColor: '#dfb53f',
-        color: '#415b5c',
-        fontSize: '2.25rem',
-        marginRight: '0.5rem',
-        borderRadius: '0.5rem',
-        display: 'inline-block',
-        float: 'left',
         transform: open ? 'rotate(360deg)' : 'none',
-        transition: 'transform 0.5s ease',
-        padding: '0.5rem',
     };
 
     const logoTitle: React.CSSProperties = {
-        color: '#e2edec',
-        transformOrigin: 'left',
-        fontWeight: '700',
-        fontSize: '2rem',
         transform: !open ? 'scale(0)' : 'none',
-        transition: 'transform 0.3s ease'
     };
 
     const locationStyle: React.CSSProperties = {
-        display: 'flex',
-        flexDirection:'column',
-        flex: '1 0 100%',
-        textAlign: 'center',
-        backgroundColor: '#697467',
-        borderRadius: '0.5rem',
-        marginTop: '0.5rem',
         paddingLeft: !open ? '0.875rem' : '1rem',
         paddingRight: !open ? '0.875rem' : '1rem',
-        paddingTop: '0.625rem',
-        paddingBottom: '0.625rem',
-        fontSize: '1.5rem',
-        fontWeight: '800', 
-        color: '#dfb53f',
         transform: !open ? 'rotate(360deg)' : 'none',
-        transition: 'transform 0.3s ease',
+
     }
 
     const borderStyle: React.CSSProperties = {
-        display: 'flex',
-        flex: '1 0 100%',
-        alignItems: 'center',
-        borderRadius: '0.5rem',
-        border: '1px solid #dfb53f',
-        marginTop: '0.5rem',
         paddingLeft: !open ? '0.875rem' : '1rem',
         paddingRight: !open ? '0.875rem' : '1rem',
-        paddingTop: '0.625rem',
-        paddingBottom: '0.625rem',
-        cursor: 'pointer',
         transform: !open ? 'rotate(360deg)' : 'none',
-        transition: 'transform 0.3s ease',
     };
 
     const hashStyle: React.CSSProperties = {
-        color: '#dfb53f',
-        fontSize: '1.5rem',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'pointer',
         marginRight: open ? '0.5rem' : '0',
     };
 
     const inputStyle: React.CSSProperties = {
-        backgroundColor: 'transparent',
-        fontSize: '1.2rem',
-        fontWeight: '400',
-        width: '100%',
-        color: '#e2edec',
-        outline: 'none',
         display: open ? 'inline' : 'none',
     };
 
     const buttonStyle: React.CSSProperties = {
-        display: 'flex',
-        // flex: '1 0 100%',
-        flexDirection: 'row',
-        // flexWrap: 'wrap',
-        marginTop: '0.5rem',
         opacity: open ? 1 : 0,
-        transition: 'opacity 0.3s ease',
-        width: '100%', 
-    };
-
-    const resetButtonStyle: React.CSSProperties = {
-        display: 'flex',
-        flex: '1 0 50%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#e2edec',
-        borderRadius: '0.5rem 0 0 0.5rem',
-        paddingTop: '0.625rem',
-        paddingBottom: '0.625rem',
-        paddingLeft: '0.875rem',
-        paddingRight: '0.875rem',
-        
     };
     
     const submitButtonStyle: React.CSSProperties = {
-        display: 'flex',
-        flex: '1 0 50%',
-        justifyContent: 'center',
-        alignItems: 'center',
         backgroundColor: isHovered ? '#e2edec' : '#dfb53f',
-        borderRadius: '0 0.5rem 0.5rem 0',
-        borderLeft: '1px solid #415b5c',
-        paddingTop: '0.625rem',
-        paddingBottom: '0.625rem',
-        paddingLeft: '0.875rem',
-        paddingRight: '0.875rem',
     };
 
     return(
-        <div style={sidebarStyle}>
-        <div style={arrowStyle} onClick={() => setOpen(!open)}><BsArrowLeftShort /></div>
-        <div className="inline-flex">
-            <div style={logoStyle}><BsFillTrainFrontFill /></div>
-            <h1 style={logoTitle} >MRT</h1>
-        </div>
-        <div className="flex-container">
-        <div style={locationStyle}>
-            {open ? (
-                <div>
-                Welcome to <br />
-                {loc}
-              </div>
-            ) : (
-                <div style={hashStyle} onClick={() => setOpen(!open)}><BsPinMapFill /></div>
-            )}
-        </div>
-            <div style={borderStyle}>
-                <div style={hashStyle} onClick={() => setOpen(!open)}><BsHash /></div>
-                <input placeholder="UID" style={inputStyle}></input>
+        <div style={sidebarStyle} className="sidebar">
+            <div style={arrowStyle} className="arrow" onClick={() => setOpen(!open)}><BsArrowLeftShort /></div>
+            <div className="inline-flex">
+                <div style={logoStyle} className="logo"><BsFillTrainFrontFill /></div>
+                <h1 style={logoTitle} className="logo-title">MRT</h1>
             </div>
-            <div style={buttonStyle}>
-                {open && (
-                    <>
-                        <button style={resetButtonStyle}>Reset</button>
-                        <button style={submitButtonStyle} 
-                                onMouseEnter={() => setIsHovered(true)} 
-                                onMouseLeave={() => setIsHovered(false)}>Submit</button>
-                    </>
+            <div className="flex-container">
+            <div style={locationStyle} className="location">
+                {open ? (
+                    <div>
+                    Welcome to <br />
+                    {loc}
+                </div>
+                ) : (
+                    <div className="cursor-pointer" onClick={() => setOpen(!open)}><BsPinMapFill /></div>
                 )}
             </div>
-        </div>
+                <div style={borderStyle} className="border-input">
+                    <div style={hashStyle} className="hash" onClick={() => setOpen(!open)}><BsHash /></div>
+                    <input placeholder="UID" style={inputStyle} className="input"></input>
+                </div>
+                <div style={buttonStyle} className="button">
+                    {open && (
+                        <>
+                            <button className="reset-button">Reset</button>
+                            <button style={submitButtonStyle} className="submit-button"
+                                    onMouseEnter={() => setIsHovered(true)} 
+                                    onMouseLeave={() => setIsHovered(false)}>Submit</button>
+                        </>
+                    )}
+                </div>
+            </div>
     </div>
     )   
     

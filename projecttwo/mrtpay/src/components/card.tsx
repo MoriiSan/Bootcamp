@@ -1,46 +1,25 @@
 import React, {useState}  from 'react';
 import { BsArrows } from "react-icons/bs";
+import lineBigImage from './lineBig.png';
+import './card.css';
 
 export default function Card() {
     const [open] = useState(true);
 
-    const cardStyle: React.CSSProperties = {
-        backgroundColor: '#e2edec',
-        display: 'flex',
-        position: 'fixed',
-        height: '40%',
-        width: '32.1%',
-        borderRadius: '0.5rem',
-        padding: '0.5rem',
-        marginTop: '1.5rem',
-        boxShadow: '2px 2px 6px #1a2424',
-        zIndex: 1,
-        bottom: '1.5rem',
-        left: '1.35rem',
-    };
-
-    const innerCard: React.CSSProperties = {
-        display: 'flex',
-        flexDirection: 'column',
-        margin: '',
-        backgroundColor: '#ccd4d4',
-        borderRadius: '0.5rem',
-        flexGrow: 1,
-    }
-
-    const rotatedIconStyle: React.CSSProperties = {
-        height: '40%',
-        width: '32.1%',
-        alignItems: 'center',
-        justifyContent: 'center',
-        transform: 'rotate(90deg)',
-      };
+    const UID = 123456789;
+    const Bal = 500;
+    const Fare = 13;
+    const distance = 11;
+    const loc = "Taft Avenue".toUpperCase();
+    const currentDate = new Date();
+    const formattedDate = `${currentDate.getDate()} ${currentDate.toLocaleString('default', { month: 'short' })}`;
 
     return(
-        <div style={cardStyle} className="flex flex-col">
+        <div className="card-container flex flex-col">
             <div className="flex flex-row ">
                 <div className="basis-1/2">
                     <div>UID</div>
+                    <div>{UID}</div>
                 </div>
                 <div className="basis-1/2">
                     <div className="flex flex-col">
@@ -49,16 +28,17 @@ export default function Card() {
                     </div>
                 </div>
             </div>
-            <div style={innerCard}>
-                <div>FROM</div>
-                <div>TO</div>
+            <div className="inner-card">
+                <div>FROM: {loc}</div>
+                <div className="location-arrow">
+                    <img src={lineBigImage} alt="line arrow"></img>
+                </div>
+                <div>TO: DESTINATION</div>
             </div>
 
 
 
-            {/* <div style={rotatedIconStyle}>
-                <BsArrows />
-            </div> */}
+            
             
                 {/* <div>DISTANCE</div> */}
         </div>
