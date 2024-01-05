@@ -1,7 +1,7 @@
 import React from "react";
 import "leaflet/dist/leaflet.css";
-import { MapContainer, Marker, Popup, TileLayer, ZoomControl} from 'react-leaflet';
-import { Icon, LeafletMouseEvent } from "leaflet";
+import { MapContainer, Marker, Popup, TileLayer, Polyline, ZoomControl} from 'react-leaflet';
+import { Icon, LeafletMouseEvent, LatLng } from "leaflet";
 import './mrtMap.css';
 
 interface MarkerData {
@@ -33,6 +33,8 @@ const markersData: MarkerData[] = [
   { position: [14.651902, 121.032569], popupContent: "North Avenue" }
 ];
 
+const polylinePositions: LatLng[] = markersData.map(marker => new LatLng(marker.position[0], marker.position[1]));
+
 const handleMarkerMouseOver = (e: LeafletMouseEvent) => {
   e.target.openPopup();
 };
@@ -40,22 +42,24 @@ const handleMarkerMouseOver = (e: LeafletMouseEvent) => {
 function MrtMap() {
     return(
       <div className="mrt-map-container">
-        <MapContainer center={[14.537586, 121.001584]} zoom={15} scrollWheelZoom={true} minZoom={3} maxZoom={19} zoomControl={false}>
+        <MapContainer center={[14.537586, 121.001584]} zoom={15} scrollWheelZoom={true} minZoom={3} maxZoom={18} zoomControl={false}>
           {/* <div className="map-overlay absolute top-0 left-0 w-full h-20vh bg-gradient-to-b from-transparent to-white pointer-events-none"></div> */}
           <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <div className="rotateIcon">
-              {markersData.map((marker, index) => (
-                <Marker key={index} position={marker.position} icon={customIcon} eventHandlers={{ mouseover: handleMarkerMouseOver }}>
-                  <Popup closeButton={false} className="custom-popup"> {marker.popupContent} </Popup>
-                </Marker>
-              ))}
-            </div>
-            <ZoomControl position="bottomright" />
+          <Polyline positions={polylinePositions} color="red" weight={5}/>
+
+          <div className="rotateIcon">
+            {markersData.map((marker, index) => (
+              <Marker key={index} position={marker.position} icon={customIcon} eventHandlers={{ mouseover: handleMarkerMouseOver }}>
+                <Popup closeButton={false} className="custom-popup"> {marker.popupContent} </Popup>
+              </Marker>
+            ))}
+          </div>
+          <ZoomControl position="bottomright" />
         </MapContainer>
-        </div>
+      </div>
       )
 }
 
