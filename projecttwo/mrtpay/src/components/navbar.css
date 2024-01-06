@@ -1,0 +1,52 @@
+.navbar {
+    /* position: menuOpen? 'absolute': 'sticky', */
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    width: -webkit-fill-available;
+    height: 50px;
+    padding: 1%;
+    box-shadow: 2px 2px 5px #888888;
+    background-color: white;
+    position: relative;
+}
+
+.logo-layout {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-right: 2px solid #ccc; /* Add a vertical line */
+    padding-right: 10px;
+}
+
+.logo-name {
+    padding: 2px 0px 0px 8px;
+    font-size: large;
+    font-weight: 800;
+}
+
+.options {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 3px 0px 0px 30px;
+    gap: 30px;
+    font-weight: 500;
+}
+
+.cards
+.stations {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+} 
+
+.logout {
+    cursor: pointer;
+    background-color: #F6EBDA;
+    border-radius: 4px;
+    padding: 0px 6px 0px 6px;
+    margin-left: auto;
+    font-weight: 400;
+}
+
