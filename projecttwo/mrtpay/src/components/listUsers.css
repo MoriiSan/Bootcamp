@@ -1,0 +1,12 @@
+.list {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    width: -webkit-fill-available;
+    height: 100svh;
+    padding: 1%;
+    background-color: white;
+    position: relative;
+    z-index:1;
+}

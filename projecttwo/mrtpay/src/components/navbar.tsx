@@ -3,7 +3,7 @@ import { BsTrainFront } from 'react-icons/bs';
 
 const Navbar = () => {
     return (
-        <div className="bg-gray-100 h-screen">
+        <div>
             <div className="navbar">
                 <div className="logo-layout">
                     <BsTrainFront size={30}></BsTrainFront>
