@@ -8,12 +8,9 @@ import {
   createRoutesFromElements,
   RouterProvider,
   BrowserRouter as Router,
-  
 } from "react-router-dom";
- 
-//components
-import Card from './components/card';
 
+ 
 //pages
 import App from './App';
 import Login from './pages/Login';
