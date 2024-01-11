@@ -7,7 +7,6 @@ import { NavLink, Outlet } from 'react-router-dom';
 const Navbar = () => {
     const [isCardHovered, setIsCardHovered] = useState(false);
     const [isStationHovered, setIsStationHovered] = useState(false);
-    const [isLogoutHovered, setIsLogoutHovered] = useState(false);
 
     const cardStyle = {
         color: !isCardHovered ? 'black' : '#FBC034',
@@ -49,8 +48,6 @@ const Navbar = () => {
                                 </div>
                     </div>
                 <div className="logout"
-                        onMouseEnter={() => setIsLogoutHovered(true)} 
-                        onMouseLeave={() => setIsLogoutHovered(false)}
                         onClick={handleLogout} >Logout</div>
             </div>
         </div>

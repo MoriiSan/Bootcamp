@@ -27,6 +27,7 @@ const router = createBrowserRouter(
         <Route path="users"  element={<Users />} />
         <Route path="stations" element={<Stations />} />
       </Route>
+      <Route path="mrt" element={<App />}></Route>
     </>
   )
 );
