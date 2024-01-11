@@ -15,16 +15,18 @@ import {
 import App from './App';
 import Login from './pages/Login';
 import About from './pages/About';
-import RootLayout from './components/rootLayout';
 import AdminPage from './pages/AdminPage';
+import Users from './components/users';
+import Stations from './components/stations';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<Login />} />
-      <Route path="adminpage" element={<AdminPage />} />
-      <Route path="mainpage" element={<App />} />
-      <Route path="about" element={<About />} />
+      <Route path="admin" element={<AdminPage />}>
+        <Route path="users"  element={<Users />} />
+        <Route path="stations" element={<Stations />} />
+      </Route>
     </>
   )
 );

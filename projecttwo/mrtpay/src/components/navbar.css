@@ -48,6 +48,11 @@
     color: black;
     font-weight: 400;
     margin-left: auto;
-
+    border: 1px solid #FBC034; /* Set initial border to be transparent */
+    background-color: transparent;
+    transition: border-color 0.3s; /* Add a smooth transition effect for the border color */
 }
 
+.logout:hover {
+    background-color: #FBC034;
+}

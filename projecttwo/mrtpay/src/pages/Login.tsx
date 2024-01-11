@@ -16,11 +16,11 @@ export default function Login() {
     const navigate = useNavigate();
     const { login, isAuthenticated } = useAuth();
  
-    useEffect(() => {
-        if (isAuthenticated()) {
-            navigate('/adminpage');
-        }
-    }, [isAuthenticated, navigate]);
+    // useEffect(() => {
+    //     if (isAuthenticated()) {
+    //         navigate('/adminpage');
+    //     }
+    // }, [isAuthenticated, navigate]);
 
     const handleLogin = async () => {
         try {
