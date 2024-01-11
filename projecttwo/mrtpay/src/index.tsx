@@ -16,15 +16,15 @@ import App from './App';
 import Login from './pages/Login';
 import About from './pages/About';
 import AdminPage from './pages/AdminPage';
-import Users from './components/users';
 import Stations from './components/stations';
+import UID from './components/uid';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<Login />} />
       <Route path="admin" element={<AdminPage />}>
-        <Route path="users"  element={<Users />} />
+        <Route path="uid"  element={<UID />} />
         <Route path="stations" element={<Stations />} />
       </Route>
       <Route path="mrt" element={<App />}></Route>

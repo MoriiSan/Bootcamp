@@ -1,10 +1,10 @@
-.row {
+.main-row {
     display: flex;
     flex-direction: row;
     justify-content: left;
     align-items: center;
     width: -webkit-fill-available;
-    height: 100px;
+    height: 10svh;
     padding: 1%;
     background-color: white;
     position: relative;
@@ -19,7 +19,7 @@
     justify-content: left;
     align-items: center;
     width: -webkit-fill-available;
-    height: 100svh;
+    height: 80svh;
     padding: 1%;
     background-color: white;
     position: relative;

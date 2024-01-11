@@ -18,6 +18,7 @@
     align-items: center;
     border-right: 2px solid #ccc; /* Add a vertical line */
     padding-right: 10px;
+    cursor: pointer;
 }
 
 .logo-name {
@@ -30,29 +31,48 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 3px 0px 0px 30px;
-    gap: 30px;
+    padding: 0px 0px 0px 25px;
+    gap: 25px;
     font-weight: 500;
 }
 
 .cards,
 .stations {
     cursor: pointer;
+    padding: 4px 10px 4px 10px;
+    border-radius: 5px;
     transition: background-color 0.3s ease;
 } 
+.cards.selected,
+.stations.selected {
+    background-color: #FBC034;
+    border: 1px solid transparent;
+    color: white;
+}
+.cards.selected:hover,
+.stations.selected:hover {
+    background-color: transparent;
+    border: 1px solid #FBC034;
+    color: black;
+}
+.cards:hover,
+.stations:hover {
+    color: #FBC034;
+}
 
 .logout {
     cursor: pointer;
-    padding: 5px 10px 5px 10px;
+    padding: 4px 10px 4px 10px;
     border-radius: 5px;
     color: black;
     font-weight: 400;
     margin-left: auto;
-    border: 1px solid #FBC034; /* Set initial border to be transparent */
+    border: 1px solid #FBC034;
     background-color: transparent;
-    transition: border-color 0.3s; /* Add a smooth transition effect for the border color */
 }
 
 .logout:hover {
     background-color: #FBC034;
+    font-weight: 500;
+    color: white;
 }

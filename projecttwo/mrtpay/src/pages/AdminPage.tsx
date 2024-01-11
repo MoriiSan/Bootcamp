@@ -1,8 +1,7 @@
 import React from 'react';
 import {useNavigate} from 'react-router-dom';
 import Navbar from '../components/navbar';
-import Users from '../components/users';
-import { NavLink, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
 const AdminPage = () => {
   return (

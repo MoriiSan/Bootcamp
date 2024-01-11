@@ -1,22 +1,20 @@
-import './navbar.css'
+import { useState } from 'react';
 import { BsTrainFront } from 'react-icons/bs';
 import {useAuth} from '../middlewares/authentication';
-import { useState } from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import './navbar.css'
+import { NavLink, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
-    const [isCardHovered, setIsCardHovered] = useState(false);
-    const [isStationHovered, setIsStationHovered] = useState(false);
+    const navigate = useNavigate();
+    const [isCardSelected, setIsCardSelected] = useState(false);
+    const [isStationSelected, setIsStationSelected] = useState(false);
 
-    const cardStyle = {
-        color: !isCardHovered ? 'black' : '#FBC034',
-        
-    };
-    const stationStyle = {
-        color: !isStationHovered ? 'black' : '#FBC034',
-        
-    };
+    const handleCardClick = () => {setIsCardSelected(true);setIsStationSelected(false);};   
+    const handleStationClick = () => {setIsCardSelected(false);setIsStationSelected(true);};
+    const handleLogoClick = () => {setIsCardSelected(false);setIsStationSelected(false);
+            navigate('/admin');};
     
+
     const {logout} = useAuth();
     const handleLogout = async () => {
         try {
@@ -29,24 +27,20 @@ const Navbar = () => {
     return (
         <div>
             <div className="navbar">
-                <div className="logo-layout">
+                <div className="logo-layout" onClick={handleLogoClick}>                  
                     <BsTrainFront size={30}></BsTrainFront>
                     <div className="logo-name"> MRT</div>     
                 </div>
                     <div className="options">
-                        <div className="cards"
-                                style={cardStyle}
-                                onMouseEnter={() => setIsCardHovered(true)} 
-                                onMouseLeave={() => setIsCardHovered(false)}
-                                ><NavLink to="users">Cards</NavLink>                               
+                        <div className={`cards ${isCardSelected ? 'selected' : ''}`}      
+                                onClick={handleCardClick}
+                                ><NavLink to="uid">Cards</NavLink>                               
                                 </div>
-                        <div className="stations"
-                                style={stationStyle}
-                                onMouseEnter={() => setIsStationHovered(true)} 
-                                onMouseLeave={() => setIsStationHovered(false)}
+                        <div className={`stations ${isStationSelected ? 'selected' : ''}`}
+                                onClick={handleStationClick}
                                 ><NavLink to="stations">Stations</NavLink>
                                 </div>
-                    </div>
+                        </div>
                 <div className="logout"
                         onClick={handleLogout} >Logout</div>
             </div>
