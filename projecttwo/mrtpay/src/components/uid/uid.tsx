@@ -45,13 +45,29 @@ const UID = () => {
 
     return (
         <div>
+            <div className='modal-container'>
+            {addUser && (
+                <div className='add-user'>
+                    <div className='overlay'>
+                    <div className='modal-content'>
+                        <div className='title'>HAKDOG</div>
+                        <input className='uid'
+                                placeholder='UID'
+                                ></input>
+                        <input className='bal'
+                                placeholder='Balance'
+                                ></input>                  
+                        <div className='close-modal' onClick={toggleAddUser}>Close</div>
+                        </div>
+                    </div>
+                </div>
+                 )}
+            </div>
             <div className="main-row">              
-                <div className="add-user" onClick={toggleAddUser} >
+                <div className="btn-add-user" onClick={toggleAddUser} >
                     + Add new user
                 </div>
-                {addUser && (
-                    <div>test</div>
-                )}
+                
                 <div className="search">
                     <div className="search-bar">
                         
@@ -69,26 +85,10 @@ const UID = () => {
                     <div className='count'>{count}</div>
                 </div>
             </div>
+            
             <div className="list">
-                <div>
-                    {/* <div className="row-headers">row headers
-                        <div>item 1</div>
-                        <div>item 2</div>
-                        <div>item 3</div>
-                    </div> */}
-                    List of UIDs
-                    {/* <ul className='card-list'>
-                        <li>
-                            <div>UID</div>
-                            <div>Bal</div>
-                        </li>
-                        {card.map((card) => (
-                            <li key={card.uid}>
-                                <div>{card.uid}</div>
-                                <div>{card.bal}</div>
-                            </li>
-                        ))}
-                    </ul> */}
+                <div>           
+                    List of UIDs       
                 </div>
             </div>
         </div>

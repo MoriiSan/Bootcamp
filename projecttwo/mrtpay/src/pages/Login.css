@@ -45,7 +45,9 @@
 }
 .username:focus,
 .password:focus {
-    outline: 1px solid #FBC034;
+    border-width: 1px;
+    outline: transparent;
+    border-color: #FBC034;
 } 
 
 .loginSubmit {

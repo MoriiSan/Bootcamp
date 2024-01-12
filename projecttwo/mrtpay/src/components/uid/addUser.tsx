@@ -25,14 +25,10 @@ const AddUser = () => {
             {addUserModal && (
             <div className='modal'>
                 <div className='overlay'>
-                <div className='modal-content'></div>
-                    <h2>Hello Modal</h2>
-                    <p>dflakdshf adfadhfa ldfadufaldf adlsfuadglfg
-                        afakdgfksdf sdkufgsd fakjdfg adfadfha fa a
-                        sasdkgaf adagsd akjsygda sdkayfygkafka sdk
-                        dasda gs dfgergsdfDgbn shsfgsr eg erg rg.
-                    </p>
+                <div className='modal-content'>
+                    <h2>HAKDOG </h2>                    
                     <button className='close-modal' onClick={toggleModal}>Close</button>
+                    </div>
                 </div>
             </div>
             )}

@@ -8,6 +8,7 @@ body.active-modal {
     margin: 100px auto 0;
     font-size: 18px;
     border: 1px solid #a5a5a5;
+    border-radius: 5px; 
 }
 
 .modal,
@@ -27,6 +28,8 @@ body.active-modal {
 }
 
 .modal-content {
+    display: flex;
+    flex-direction: column;
     position: absolute;
     top: 40%;
     left: 50%;
@@ -34,16 +37,13 @@ body.active-modal {
     line-height: 1.4;
     background-color: #f1f1f1;
     padding: 14px 28px;
-    border-radius: 3px;
-    max-width: 80%; /* Adjust as needed */
-    max-height: 80vh; /* Adjust as needed */
-    box-sizing: border-box;
+    border-radius: 5px; 
+    gap: 10px;
 }
 
 .close-modal {
-    position: absolute;
-    top: 10px;
-    right: 10px;
     padding: 5px 7px;
     border: 1px solid #a5a5a5;
+    align-self: center;
+    border-radius: 5px; 
 }
