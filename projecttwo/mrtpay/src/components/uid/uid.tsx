@@ -1,16 +1,57 @@
+import { useState } from 'react';
 import './uid.css'
 import { BsCardHeading, BsSearch } from "react-icons/bs";
-import { card } from '../db/cards';
+import { card } from '../../db/cards';
+
 
 const count = 121;
 
 const UID = () => {
+    //// add-user-modal
+    const [addUser, setAddUser] = useState(false);
+    const toggleAddUser = () => {
+        setAddUser(!addUser)
+    };
+
+    if(addUser) {
+        document.body.classList.add('active-modal')
+    }else {
+        document.body.classList.remove('active-modal')
+    }
+
+    // const createCard = async () => {
+    //     try {
+    //         // Make a fetch request to your backend API to create a new card
+    //         const response = await fetch('http://localhost:8080/cards', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify({ uid, bal}),
+    //         });
+
+    //         if (response.ok) {
+    //             console.log('Card created successfully!');
+    //         } else {
+    //             console.error('Failed to create card');
+    //         }
+    //     } catch (error) {
+    //         console.error('Error creating card:', error);
+    //     }
+    // };
+    // const handleAddUser = () => {
+    //     createCard();
+    // };
+
     return (
         <div>
             <div className="main-row">              
-                <div className="add-user">
+                <div className="add-user" onClick={toggleAddUser} >
                     + Add new user
                 </div>
+                {addUser && (
+                    <div>test</div>
+                )}
                 <div className="search">
                     <div className="search-bar">
                         

@@ -16,8 +16,9 @@ import App from './App';
 import Login from './pages/Login';
 import About from './pages/About';
 import AdminPage from './pages/AdminPage';
-import Stations from './components/stations';
-import UID from './components/uid';
+import Stations from './components/station/stations';
+import UID from './components/uid/uid';
+import AddUser from './components/uid/addUser';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -28,10 +29,10 @@ const router = createBrowserRouter(
         <Route path="stations" element={<Stations />} />
       </Route>
       <Route path="mrt" element={<App />}></Route>
+      <Route path="add-user" element={<AddUser />}></Route>
     </>
   )
 );
-
 
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);

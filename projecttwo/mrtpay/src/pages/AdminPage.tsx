@@ -2,6 +2,7 @@ import React from 'react';
 import {useNavigate} from 'react-router-dom';
 import Navbar from '../components/navbar';
 import { Outlet } from 'react-router-dom';
+import AddUser from '../components/uid/addUser';
 
 const AdminPage = () => {
   return (
