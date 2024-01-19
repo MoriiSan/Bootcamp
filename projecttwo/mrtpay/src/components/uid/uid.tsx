@@ -13,12 +13,6 @@ const UID = () => {
         setAddUser(!addUser)
     };
 
-    if(addUser) {
-        document.body.classList.add('active-modal')
-    }else {
-        document.body.classList.remove('active-modal')
-    }
-
     // const createCard = async () => {
     //     try {
     //         // Make a fetch request to your backend API to create a new card
