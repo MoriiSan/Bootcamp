@@ -44,14 +44,15 @@ const UID = () => {
                 <div className='add-user'>
                     <div className='overlay'>
                     <div className='modal-content'>
-                        <div className='title'>HAKDOG</div>
+                        <button className='close' onClick={toggleAddUser}>x</button>
+                        <div className='title'>+ ADD CARD</div>
                         <input className='uid'
                                 placeholder='UID'
                                 ></input>
                         <input className='bal'
                                 placeholder='Balance'
-                                ></input>                  
-                        <div className='close-modal' onClick={toggleAddUser}>Close</div>
+                                ></input>       
+                        <button>Generate card</button>           
                         </div>
                     </div>
                 </div>
