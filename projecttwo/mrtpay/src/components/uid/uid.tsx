@@ -203,7 +203,6 @@ const UID = () => {
             </div>
 
             <div className="list">
-                <div className="bg-style"></div>
                 {filteredCards.map((card, index) => (
                     <div className="mrt-card"
                         key={index}

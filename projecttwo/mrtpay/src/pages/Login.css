@@ -47,7 +47,7 @@
 .password:focus {
     border-width: 1px;
     outline: transparent;
-    border-color: #FBC034;
+    border-color: #ffb031;
 } 
 
 .loginSubmit {
@@ -55,7 +55,7 @@
     justify-content: center;
     padding: 5px 10px 5px 10px;
     border-radius: 5px;
-    background-color: #FBC034;
+    background-color: #ffb031;
     color: black;
     font-size: medium;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
