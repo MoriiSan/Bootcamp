@@ -10,7 +10,7 @@ import {
   BrowserRouter as Router,
 } from "react-router-dom";
 
- 
+
 //pages
 import App from './App';
 import Login from './pages/Login';
@@ -24,7 +24,7 @@ const router = createBrowserRouter(
     <>
       <Route path="/" element={<Login />} />
       <Route path="admin" element={<AdminPage />}>
-        <Route path="uid"  element={<UID />} />
+        <Route path="uid" element={<UID />} />
         <Route path="stations" element={<Stations />} />
       </Route>
       <Route path="mrt" element={<App />}></Route>
@@ -36,7 +36,7 @@ const router = createBrowserRouter(
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router}/>
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
 

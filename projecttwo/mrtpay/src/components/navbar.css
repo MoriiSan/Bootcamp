@@ -3,7 +3,7 @@
     flex-direction: row;
     justify-content: left;
     align-items: center;
-    width: -webkit-fill-available;
+    width: 100%;
     height: 50px;
     padding: 1%;
     box-shadow: 2px 2px 5px #888888;
@@ -45,19 +45,19 @@
 } 
 .cards.selected,
 .stations.selected {
-    background-color: #FBC034;
+    background-color: #ffb031;
     border: 1px solid transparent;
     color: white;
 }
 .cards.selected:hover,
 .stations.selected:hover {
     background-color: transparent;
-    border: 1px solid #FBC034;
+    border: 1px solid #ffb031;
     color: black;
 }
 .cards:hover,
 .stations:hover {
-    color: #FBC034;
+    color: #ffb031;
 }
 
 .logout {
@@ -67,12 +67,12 @@
     color: black;
     font-weight: 400;
     margin-left: auto;
-    border: 1px solid #FBC034;
+    border: 1px solid #ffb031;
     background-color: transparent;
 }
 
 .logout:hover {
-    background-color: #FBC034;
+    background-color: #ffb031;
     font-weight: 500;
     color: white;
 }
