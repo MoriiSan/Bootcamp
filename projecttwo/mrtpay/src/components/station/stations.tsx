@@ -7,6 +7,7 @@ const Stations = () => {
                 <div>
                     Stations
                 </div>
+                <div>Fare</div>
             </div>
             <div className="list">
                 <div>

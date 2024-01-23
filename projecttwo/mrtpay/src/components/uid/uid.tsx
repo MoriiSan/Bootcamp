@@ -73,6 +73,10 @@ const UID = () => {
     };
 
     const handleGenerate = async () => {
+        if (uid.length !== 16) {
+            console.error('UID must be 16 digits long');
+            return;
+        }
         await handleCreate();
         toggleAddUser();
     };
@@ -102,6 +106,11 @@ const UID = () => {
     }, [addUser, addLoad]);
 
     const handleAddBalance = async () => {
+        const parsedNewBalance = parseFloat(newBalance);
+        if (isNaN(parsedNewBalance) || parsedNewBalance <= 0) {
+            console.error('Amount must be a positive number');
+            return;
+        }
         try {
             const response = await fetch(`http://localhost:8080/cards/${selectedCard.uid}`, {
                 method: 'PATCH',
@@ -150,6 +159,28 @@ const UID = () => {
         }
     };
 
+    //AUTO GENERATE CARD VALUES
+    const generateRandomSixDigits = () => {
+        const randomNumber = Math.floor(1000000000 + Math.random() * 9000000000);
+        return randomNumber.toString();
+    };
+
+    const autoGenerateUid = () => {
+        const notGeneratedDigits = 637805;
+        const generatedUid = `${notGeneratedDigits}${generateRandomSixDigits()}`;
+        setUid(generatedUid);
+    };
+
+    const autoBalance = () => {
+        const autoBal = '70';
+        setBal(autoBal);
+    }
+
+    useEffect(() => {
+        autoGenerateUid();
+        autoBalance();
+    }, [addUser]);
+
     return (
         <div>
             <div className='modal-container'>
@@ -157,21 +188,32 @@ const UID = () => {
                     <div className='add-user'>
                         <div className='overlay'>
                             <div className='modal-content'>
-                                <button className='close' onClick={toggleAddUser}>
+                                {/* <button className='close' onClick={toggleAddUser}>
                                     <BsXSquareFill size={20} />
-                                </button>
+                                </button> */}
                                 <div className='title'>Create new card</div>
+                                {/* <button className='btn-generate-uid' onClick={autoGenerateUid}>
+                                    Auto-generate UID
+                                </button> */}
                                 <input className='uid'
+                                    value={uid}
                                     onChange={(e) => { setUid(e.target.value) }}
                                     placeholder='UID'
                                 ></input>
                                 <input className='bal'
+                                    value={bal}
                                     onChange={(e) => { setBal(e.target.value) }}
                                     placeholder='Balance'
                                 ></input>
-                                <button className="btn-generate"
-                                    onClick={handleGenerate}>
-                                    Generate card</button>
+                                <div className="card-btns">
+                                    <button className='btn-cancel'
+                                        onClick={toggleAddUser}>
+                                        Close
+                                        <BsXSquareFill size={20} /></button>
+                                    <button className="btn-generate"
+                                        onClick={handleGenerate}>
+                                        Generate card</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -187,7 +229,7 @@ const UID = () => {
 
                         <input type="text"
                             className="search-input"
-                            placeholder="Enter your search"
+                            placeholder="Enter UID"
                             value={searchQuery}
                             onChange={handleSearchInput}>
                         </input>
@@ -209,7 +251,7 @@ const UID = () => {
                         key={index}
                         onClick={() => handleSelect(card)}>
                         <div className="card-details">
-                            <div className="bal-card"><BsCashCoin size={30}/> {card.bal}</div>
+                            <div className="bal-card"><BsCashCoin size={30} /> {card.bal}</div>
                             <div className="uid-card">{card.uid}</div>
                         </div>
                         <div className="card-btns">
