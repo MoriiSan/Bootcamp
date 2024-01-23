@@ -1,7 +1,8 @@
 import { SetStateAction, useEffect, useState } from 'react';
 import './uid.css'
 import { BsCardHeading, BsSearch } from "react-icons/bs";
-import { BsXSquareFill, BsCardText, BsCash } from "react-icons/bs";
+import { BsXSquareFill, BsCardText, BsCashCoin, BsCash } from "react-icons/bs";
+//<BsCashCoin />
 //<BsCash />
 //<BsCardText />
 
@@ -207,8 +208,10 @@ const UID = () => {
                     <div className="mrt-card"
                         key={index}
                         onClick={() => handleSelect(card)}>
-                        <div className="uid-card">uid: {card.uid}</div>
-                        <div className="bal-card">bal: {card.bal}</div>
+                        <div className="card-details">
+                            <div className="bal-card"><BsCashCoin size={30}/> {card.bal}</div>
+                            <div className="uid-card">{card.uid}</div>
+                        </div>
                         <div className="card-btns">
                             <button className="btn-load"
                                 onClick={toggleAddLoad}>

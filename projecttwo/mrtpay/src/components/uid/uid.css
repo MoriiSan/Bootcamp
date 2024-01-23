@@ -194,12 +194,12 @@
 
 .bg-style {
     position: absolute;
-
 }
 
 .mrt-card {
     display: flex;
     flex-direction: column;
+    flex-wrap: wrap;
     justify-content:  space-between;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -209,8 +209,28 @@
     font-weight: 500;
 }
 
+.card-details {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: space-between;
+    font-weight: 600;
+    font-size: 24px;
+}
+
+.bal-card {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-weight: 1000;
+    gap: 10px;
+}
+
 .mrt-card:hover {
     border-color: #ffb031;
+    background-color: #ffb031;
+    color: white;
 }
 
 .card-btns {
@@ -221,17 +241,34 @@
     gap: 10px;
 }
 
-.btn-load {
+.btn-load:hover{
     background-color: #0d0d33;
+    border: 1px solid transparent;
+    color: white;
+}
+
+
+.btn-delete:hover {
+    background-color: #fe5e54;
+    border: 1px solid transparent;
+    color: white;
+}
+
+.btn-load {
+    background-color: transparent;
     width: 100%;
     border-radius: 5px;
+    border: 1px solid #0d0d33;
     padding-block: 5px;
+    color: black;
 }
 
 .btn-delete {
-    background-color: #fe5e54;
+    background-color: transparent;
     width: 100%;
     border-radius: 5px;
+    border: 1px solid #fe5e54;
+    color: black;
 }
 
 .load-btns {
