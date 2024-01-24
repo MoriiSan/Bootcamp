@@ -9,8 +9,66 @@
     background-color: white;
     position: relative;
     z-index:1;
-    border-bottom: 1px solid #ccc;
-    
+    border-bottom: 1px solid #ccc;   
+}
+
+.fare-container {
+    margin-left: auto;
+    display: flex;
+    flex-direction: row;
+    background-color: #ffb031;
+    border-radius: 5px 0 0 5px;
+    padding: 5px 8px 5px 8px;
+    gap: 5px;
+    color: white;
+    font-weight: 500;
+}
+
+.btn-edit-fare {
+    color: #ffb031;
+    border: 1px solid #ffb031;
+    border-radius: 0 5px 5px 0;
+    padding: 5px 8px 5px 8px;
+}
+
+.fare-details {
+    display: flex;
+    flex-direction: column;
+    gap:10px;
+}
+
+.fare-status {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.fare-value2 {
+    font-weight: 700;
+    color: #8FCA3A;
+}
+.edit-fare-container {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid #ccc;
+    border-radius: 5px;;
+}
+
+.fare-label {
+    padding: 5px 10px 5px 10px;
+    border-right: 1px solid #ccc;
+}
+.edit-fare {
+    padding: 5px 0 5px 10px;
+    width: 100%;
+}
+
+.fare-btns {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    color: white;
+    gap: 10px;
 }
 
 .list {

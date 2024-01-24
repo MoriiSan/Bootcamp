@@ -34,15 +34,14 @@ export default function Login() {
 
             if (response.ok) {
                 const data = await response.json();
-                // console.log(data)
                 const sessionToken = data.sessionToken;
                 login(sessionToken);
              
             } else {
-                console.error('Login failed');
+                alert('Username/Password is wrong.');
             }
         } catch (error) {
-            console.error('Error during login:', error);
+            alert(`Error during login: ${error}`);
         }
     };
         

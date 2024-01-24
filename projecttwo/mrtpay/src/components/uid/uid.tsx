@@ -1,12 +1,22 @@
 import { SetStateAction, useEffect, useState } from 'react';
 import './uid.css'
 import { BsCardHeading, BsSearch } from "react-icons/bs";
-import { BsXSquareFill, BsCardText, BsCashCoin, BsCash } from "react-icons/bs";
+import { BsXSquareFill, BsCardText, BsCashCoin, BsCash, BsCheckSquareFill } from "react-icons/bs";
 //<BsCashCoin />
 //<BsCash />
 //<BsCardText />
 
 const UID = () => {
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+    const showSuccessPopup = () => {
+        setShowSuccessMessage(true);
+
+        // Hide the success message after 2 seconds
+        // setTimeout(() => {
+        //     setShowSuccessMessage(false);
+        // }, 2000);
+    };
+
     //// add-user-modal
     const [addUser, setAddUser] = useState(false);
     const toggleAddUser = () => {
@@ -23,6 +33,7 @@ const UID = () => {
 
     const [uid, setUid] = useState('')
     const [bal, setBal] = useState('')
+    const [newBalance, setNewBalance] = useState('');
 
     const [selectedCard, setSelectedCard] = useState({ uid: 0, bal: 0 });
     const handleSelect = (card: SetStateAction<{ uid: number; bal: number; }>) => {
@@ -34,7 +45,6 @@ const UID = () => {
         uid: number;
         bal: number;
     }
-    const [newBalance, setNewBalance] = useState('');
 
     const [searchQuery, setSearchQuery] = useState('');
     const handleSearch = () => {
@@ -57,24 +67,23 @@ const UID = () => {
                 body: JSON.stringify({ uid, bal }),
             });
 
-            if (response.status === 201) {
+            if (response.ok) {
                 const newCard = await response.json();
-                console.log('Card created successfully:', newCard);
-            } else if (response.status === 400) {
-                console.error('Invalid request data');
-            } else if (response.status === 409) {
-                console.error('Card with the same UID already exists');
+                showSuccessPopup();
             } else {
                 console.error('Failed to create card');
+                alert(`Failed to create card`)
             }
         } catch (error) {
             console.error('Error creating card:', error);
+            alert(`Failed to create card`)
         }
     };
 
     const handleGenerate = async () => {
         if (uid.length !== 16) {
             console.error('UID must be 16 digits long');
+            alert(`UID must be 16 digits long`)
             return;
         }
         await handleCreate();
@@ -109,6 +118,8 @@ const UID = () => {
         const parsedNewBalance = parseFloat(newBalance);
         if (isNaN(parsedNewBalance) || parsedNewBalance <= 0) {
             console.error('Amount must be a positive number');
+            alert(`Amount must be above zero`)
+            setNewBalance('');
             return;
         }
         try {
@@ -129,8 +140,10 @@ const UID = () => {
                 );
                 toggleAddLoad();
                 setNewBalance('');
+                alert(`Added PHP ${newBalance} to UID ${selectedCard.uid}`)
             } else {
                 console.error('Failed to update balance');
+                alert(`Failed to update balance`)
             }
         } catch (error) {
             console.error('Error updating balance', error);
@@ -151,8 +164,10 @@ const UID = () => {
                     prevCards.filter((card) => card.uid !== selectedCard.uid)
                 );
                 toggleIsDelete();
+                alert(`Card ${selectedCard.uid} deleted.`)
             } else {
                 console.error('Failed to delete card');
+                alert(`Failed to delete card`)
             }
         } catch (error) {
             console.error('Error deleting card', error);
@@ -195,16 +210,22 @@ const UID = () => {
                                 {/* <button className='btn-generate-uid' onClick={autoGenerateUid}>
                                     Auto-generate UID
                                 </button> */}
-                                <input className='uid'
-                                    value={uid}
-                                    onChange={(e) => { setUid(e.target.value) }}
-                                    placeholder='UID'
-                                ></input>
-                                <input className='bal'
-                                    value={bal}
-                                    onChange={(e) => { setBal(e.target.value) }}
-                                    placeholder='Balance'
-                                ></input>
+                                <div className="detail-container">
+                                    <label className="label">UID:</label>
+                                    <input className='input-container'
+                                        value={uid}
+                                        onChange={(e) => { setUid(e.target.value) }}
+                                        placeholder='UID'
+                                    ></input>
+                                </div>
+                                <div className="detail-container">
+                                    <label className="label">BAL:</label>
+                                    <input className='input-container'
+                                        value={bal}
+                                        onChange={(e) => { setBal(e.target.value) }}
+                                        placeholder='Balance'
+                                    ></input>
+                                </div>
                                 <div className="card-btns">
                                     <button className='btn-cancel'
                                         onClick={toggleAddUser}>
@@ -213,6 +234,7 @@ const UID = () => {
                                     <button className="btn-generate"
                                         onClick={handleGenerate}>
                                         Generate card</button>
+
                                 </div>
                             </div>
                         </div>
@@ -251,8 +273,8 @@ const UID = () => {
                         key={index}
                         onClick={() => handleSelect(card)}>
                         <div className="card-details">
-                            <div className="bal-card"><BsCashCoin size={30} /> {card.bal}</div>
                             <div className="uid-card">{card.uid}</div>
+                            <div className="bal-card"><BsCashCoin size={30} /> {card.bal}</div>
                         </div>
                         <div className="card-btns">
                             <button className="btn-load"
@@ -271,15 +293,22 @@ const UID = () => {
                         <div className='overlay'>
                             <div className='modal-content'>
                                 <div className="load-details">
-                                    <label>UID: {selectedCard.uid}</label>
-                                    <label>BALANCE: {selectedCard.bal}</label>
-                                    <div className="add-bal-container">
-                                        <label className="amt-label">Amount:</label>
-                                        <input className="add-bal"
+                                    <div className="detail-container">
+                                        <label className="label">UID:</label>
+                                        <div className="input-container"> {selectedCard.uid}</div>
+                                    </div>
+                                    <div className="detail-container">
+                                        <label className="label">BAL:</label>
+                                        <div className="input-container"> {selectedCard.bal}</div>
+
+                                    </div>
+                                    <div className="detail-container">
+                                        <label className="label">Amount:</label>
+                                        <input className="input-container"
                                             type="number"
                                             value={newBalance}
                                             onChange={(e) => setNewBalance(e.target.value)}
-                                            placeholder='Input amount'></input>
+                                            placeholder='Add amount'></input>
                                     </div>
                                 </div>
                                 <div className="load-btns">
@@ -301,7 +330,11 @@ const UID = () => {
                     <div className='add-user'>
                         <div className='overlay'>
                             <div className='modal-content'>
-                                <label>UID: {selectedCard.uid}</label>
+                                <div className="detail-container">
+                                    <label className="label">UID:</label>
+                                    <div className="input-container">
+                                        {selectedCard.uid}</div>
+                                </div>
                                 <div className="load-btns">
                                     <button className='btn-cancel'
                                         onClick={toggleIsDelete}>
@@ -316,6 +349,21 @@ const UID = () => {
                     </div>
                 )}
             </div>
+
+            {showSuccessMessage && (
+                <div className="popup">
+                    <div className="popup-color"></div>
+                    <div className="popup-content">
+                        <div className="popup-icon">
+                            <BsCheckSquareFill size={30} />
+                        </div>
+                        <div>
+                            <div>header</div>
+                            <div>Card created successfully!</div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

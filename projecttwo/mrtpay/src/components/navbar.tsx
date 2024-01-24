@@ -40,13 +40,14 @@ const Navbar = () => {
                     <div className="logo-name"> MRT</div>
                 </div>
                 <div className="options">
-                    <div className={`cards ${isCardSelected ? 'selected' : ''}`}
-                        onClick={handleCardClick}
-                    ><NavLink to="uid">Cards</NavLink>
+                    <div 
+                    ><NavLink to="uid"
+                    className={`cards ${isCardSelected ? 'selected' : ''}`}
+                        onClick={handleCardClick}>Cards</NavLink>
                     </div>
-                    <div className={`stations ${isStationSelected ? 'selected' : ''}`}
-                        onClick={handleStationClick}
-                    ><NavLink to="stations">Stations</NavLink>
+                    <div><NavLink to="stations"
+                    className={`stations ${isStationSelected ? 'selected' : ''}`}
+                        onClick={handleStationClick}>Stations</NavLink>
                     </div>
                 </div>
                 <div className="logout"
