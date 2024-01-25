@@ -51,10 +51,9 @@ const Stations: React.FC = () => {
 
             if (response.ok) {
                 setFare(parsedNewFare)
-                alert(`Fare rate updated: ${parsedNewFare}`)
                 toggleEditFare();
                 setNewFare('');
-                
+                alert(`Fare rate updated: ${parsedNewFare}`)
             } else {
                 console.error('Failed to update fare');
             }

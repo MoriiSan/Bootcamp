@@ -40,15 +40,16 @@ const Navbar = () => {
                     <div className="logo-name"> MRT</div>
                 </div>
                 <div className="options">
-                    <div 
-                    ><NavLink to="uid"
-                    className={`cards ${isCardSelected ? 'selected' : ''}`}
-                        onClick={handleCardClick}>Cards</NavLink>
-                    </div>
-                    <div><NavLink to="stations"
-                    className={`stations ${isStationSelected ? 'selected' : ''}`}
-                        onClick={handleStationClick}>Stations</NavLink>
-                    </div>
+                    <NavLink
+                        to="uid"
+                        className={`cards ${isCardSelected ? 'selected' : ''}`}
+                        onClick={handleCardClick}>
+                        Cards</NavLink>
+                    <NavLink
+                        to="stations"
+                        className={`stations ${isStationSelected ? 'selected' : ''}`}
+                        onClick={handleStationClick}>
+                        Stations</NavLink>
                 </div>
                 <div className="logout"
                     onClick={handleLogout} >Logout</div>
