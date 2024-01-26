@@ -6,7 +6,6 @@ import 'react-notifications-component/dist/theme.css'
 import 'animate.css';
 
 const Stations: React.FC = () => {
-    const [initialFare, setInitialFare] = useState<number>();
     const [fare, setFare] = useState<number>();
     const [newFare, setNewFare] = useState('');
     const [editFare, setEditFare] = useState(false);
@@ -18,7 +17,7 @@ const Stations: React.FC = () => {
 
     const fetchFare = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/adminConfigs/fareId`, {
+            const response = await fetch(`${process.env.REACT_APP_URL}adminConfigs/fareId`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -56,7 +55,7 @@ const Stations: React.FC = () => {
             return;
         }
         try {
-            const response = await fetch(`http://localhost:8080/adminConfigs/${fareId}`, {
+            const response = await fetch(`${process.env.REACT_APP_URL}adminConfigs/${fareId}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

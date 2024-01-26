@@ -69,7 +69,7 @@ const UID = () => {
                 });
                 return;
             }
-            const response = await fetch('http://localhost:8080/cards', {
+            const response = await fetch(`${process.env.REACT_APP_URL}cards`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -135,7 +135,7 @@ const UID = () => {
 
     const fetchCards = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/cards?uid=${uid}&bal=${bal}`, {
+            const response = await fetch(`${process.env.REACT_APP_URL}cards?uid=${uid}&bal=${bal}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -195,7 +195,7 @@ const UID = () => {
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/cards/${selectedCard.uid}`, {
+            const response = await fetch(`${process.env.REACT_APP_URL}cards/${selectedCard.uid}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -246,7 +246,7 @@ const UID = () => {
 
     const handleDelete = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/cards/${selectedCard.uid}`, {
+            const response = await fetch(`${process.env.REACT_APP_URL}cards/${selectedCard.uid}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
