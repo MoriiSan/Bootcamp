@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import './stations.css'
 import { BsPencilSquare, BsXSquareFill } from "react-icons/bs";
+import { ReactNotifications, Store } from 'react-notifications-component'
+import 'react-notifications-component/dist/theme.css'
+import 'animate.css';
 
 const Stations: React.FC = () => {
     const [initialFare, setInitialFare] = useState<number>();
@@ -38,6 +41,18 @@ const Stations: React.FC = () => {
         const parsedNewFare = parseFloat(newFare);
         if (isNaN(parsedNewFare) || parsedNewFare <= 0) {
             console.error('Amount must be a positive number');
+            Store.addNotification({
+                title: "OOPS",
+                message: "Fare must not be zero or negative.",
+                type: "warning",
+                insert: "top",
+                container: "top-right",
+                animationIn: ["animate__animated animate__bounceIn"],
+                animationOut: ["animate__animated animate__slideOutRight"],
+                dismiss: {
+                    duration: 2000,
+                }
+            });
             return;
         }
         try {
@@ -53,7 +68,18 @@ const Stations: React.FC = () => {
                 setFare(parsedNewFare)
                 toggleEditFare();
                 setNewFare('');
-                alert(`Fare rate updated: ${parsedNewFare}`)
+                Store.addNotification({
+                    title: "NEW RATE!",
+                    message: "Fare rate updated!",
+                    type: "success",
+                    insert: "top",
+                    container: "top-right",
+                    animationIn: ["animate__animated animate__bounceIn"],
+                    animationOut: ["animate__animated animate__slideOutRight"],
+                    dismiss: {
+                        duration: 2000,
+                    }
+                });
             } else {
                 console.error('Failed to update fare');
             }
@@ -68,6 +94,9 @@ const Stations: React.FC = () => {
 
     return (
         <div>
+            <div className="app-container">
+                <ReactNotifications />
+            </div>
             <div className="main-row">
                 <div>
                     Stations
@@ -88,8 +117,8 @@ const Stations: React.FC = () => {
                             <div className='modal-content'>
                                 <div className="fare-details">
                                     <label className="fare-status">Fare per KM:
-                                    <div className="fare-value2"> {fare} PHP</div>
-                                     </label>
+                                        <div className="fare-value2"> {fare} PHP</div>
+                                    </label>
                                     <div className="edit-fare-container">
                                         <label className="fare-label">Amount:</label>
                                         <input className="edit-fare"

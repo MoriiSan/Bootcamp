@@ -50,7 +50,7 @@
     flex-direction: row;
     align-items: center;
     margin-left: auto;
-    gap: 20px;
+    gap: 10px;
 }
 
 .btn-add-user {
@@ -115,8 +115,39 @@
     color: white;
 }
 
+.view-mode {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 12px;
+}
+
+.list-view {
+    padding: 5px;
+    padding-inline: 8px;
+    border-right: 1px solid #ccc;
+    cursor: pointer;
+}
+.card-view {
+    padding: 5px;
+    padding-inline: 8px;
+    cursor: pointer;
+}
+
+.list-view:hover,
+.card-view:hover {
+    background-color: #ffb031;
+    color: white;
+}
 
 
+
+
+
+
+/* ////////////////// */
 .modal-container {
     position: absolute;
     z-index: 10;
@@ -202,11 +233,11 @@
     justify-content: center;
     padding: 5px 8px 5px 8px;
     border-radius: 5px;
-    color: white;
+    color: black;
     font-weight: 500;
     width: 60%;
     border: 1px solid transparent;
-    background-color: #0d0d33;
+    background-color: #ffb031;
 }
 
 /* ///////////////////////////  */
@@ -239,7 +270,7 @@
     justify-content: space-between;
     border: 1px solid #ccc;
     border-radius: 5px;
-    padding: 15px;
+    /* padding: 15px; */
     height: 200px;
     width: 400px;
     font-weight: 500;
@@ -249,9 +280,10 @@
     display: flex;
     flex-direction: column;
     flex: 1;
-    justify-content: space-evenly;
+    justify-content: space-between;
     font-weight: 600;
     font-size: 24px;
+    padding: 15px;
 }
 
 .uid-card {
@@ -269,11 +301,11 @@
     align-self: flex-end;
     gap: 10px;
     margin-right: 10px;
+    color: #204491;
 }
 
 .mrt-card:hover {
-    /* border-color: #ffb031; */
-    background-color: #d8d8d6;
+    background-color: #f7ebca;
     color: black;
 }
 
@@ -282,18 +314,13 @@
     flex-direction: row;
     justify-content: space-around;
     color: white;
-    gap: 10px;
+    height: 40px;
+    border-top: 1px solid #ccc;
 }
 
-.btn-load:hover {
-    background-color: #0d0d33;
-    border: 1px solid transparent;
-    color: white;
-}
-
-
+.btn-load:hover,
 .btn-delete:hover {
-    background-color: #fe5e54;
+    background-color: #ffb031;
     border: 1px solid transparent;
     color: white;
 }
@@ -301,8 +328,7 @@
 .btn-load {
     background-color: transparent;
     width: 100%;
-    border-radius: 5px;
-    border: 1px solid #0d0d33;
+    border-right: 1px solid #ccc;
     padding-block: 5px;
     color: black;
 }
@@ -310,8 +336,8 @@
 .btn-delete {
     background-color: transparent;
     width: 100%;
-    border-radius: 5px;
-    border: 1px solid #fe5e54;
+
+    /* border: 1px solid #fe5e54; */
     color: black;
 }
 
@@ -331,10 +357,10 @@
     width: 40%;
     padding: 5px 8px 5px 8px;
     border-radius: 5px;
-    color: white;
+    color: black;
     font-weight: 500;
-    border: 1px solid transparent;
-    background-color: #fe5e54;
+    border: 1px solid #ccc;
+    background-color: transparent;
 }
 
 .load-details {
