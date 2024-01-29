@@ -2,16 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../middlewares/authentication';
 import { ReactNotifications, Store } from 'react-notifications-component'
+import Loader from '../components/Loader'
 import 'react-notifications-component/dist/theme.css'
 import 'animate.css';
-
-
 import './Login.css';
 
 export default function Login() {
     const [isHovered, setIsHovered] = useState(false);
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [isLoading, setIsLoading] = useState(false);
 
     const loginButton = {
         backgroundColor: isHovered ? '#fccd5d' : '#FBC034',
@@ -27,6 +27,7 @@ export default function Login() {
     }, [isAuthenticated, navigate]);
 
     const handleLogin = async () => {
+        setIsLoading(true);
         try {
             const response = await fetch(`${process.env.REACT_APP_URL}auth/login`, {
                 method: 'POST',
@@ -54,14 +55,18 @@ export default function Login() {
                         duration: 2000,
                     }
                 });
+                setIsLoading(false);
             }
         } catch (error) {
             alert(`Error during login: ${error}`);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     return (
         <div className="page">
+            {isLoading && <Loader />}
             <div className="notif">
                 <div className="app-container">
                     <ReactNotifications />

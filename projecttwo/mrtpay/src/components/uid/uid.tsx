@@ -23,6 +23,16 @@ const UID = () => {
     const toggleIsDelete = () => {
         setIsDelete(!isDelete)
     };
+    const [isCardView, setIsCardView] = useState(true);
+    const toggleIsCardView = () => {
+        setIsCardView(true);
+        setIsListView(false);
+    };
+    const [isListView, setIsListView] = useState(false);
+    const toggleIsListView = () => {
+        setIsListView(true);
+        setIsCardView(false);
+    };
 
     const [uid, setUid] = useState('')
     const [bal, setBal] = useState('')
@@ -49,6 +59,15 @@ const UID = () => {
     const filteredCards = cards.filter((card) =>
         card.uid.toString().includes(searchQuery)
     );
+
+    /////////////////pagination
+    const [currentPage, setCurrentPage] = useState(1);
+    const cardsPerPage = 6;
+    const itemsPerPage = 8;
+
+
+
+    /////////////////////////////
 
     const handleCreate = async () => {
         try {
@@ -359,10 +378,8 @@ const UID = () => {
                 <div className="btn-add-user" onClick={toggleAddUser} >
                     + Add new card
                 </div>
-
                 <div className="search">
                     <div className="search-bar">
-
                         <input type="text"
                             className="search-input"
                             placeholder="Enter UID"
@@ -375,9 +392,26 @@ const UID = () => {
                         </button>
                     </div>
                 </div>
-                <div className="view-mode">
-                    <div className="list-view">List View</div>
-                    <div className="card-view">Card View</div>
+                <div className='view-options'>
+                    <div className="view-mode">
+                        <div className={`card-view ${isCardView ? 'selected' : ''}`}
+                            onClick={toggleIsCardView}>Card View</div>
+                        <div className={`list-view ${isListView ? 'selected' : ''}`}
+                            onClick={toggleIsListView}>List View</div>
+                    </div>
+                    <div className="pagination">
+                        <button onClick={() => setCurrentPage(currentPage - 1)}
+                        className='prev'
+                            disabled={currentPage === 1}>
+                            Prev
+                        </button>
+                        <span className="current-page">{currentPage}</span>
+                        <button onClick={() => setCurrentPage(currentPage + 1)}
+                        className='next'
+                            disabled={currentPage === Math.ceil(filteredCards.length / cardsPerPage)}>
+                            Next
+                        </button>
+                    </div>
                 </div>
                 <div className="tab-logo">
                     <div className='count'>{cards.length}</div>
@@ -385,26 +419,57 @@ const UID = () => {
                 </div>
             </div>
 
-            <div className="list">
-                {filteredCards.map((card, index) => (
-                    <div className="mrt-card"
-                        key={index}
-                        onClick={() => handleSelect(card)}>
-                        <div className="card-details">
-                            <div className="uid-card">{card.uid}</div>
-                            <div className="bal-card">PHP {card.bal}</div>
+            {isListView && (
+                <div className="list-list">
+                    <div className="list-header">
+                        <div className="header-details">
+                            <div className="uid-header">UID</div>
+                            <div className="bal-header">BALANCE</div>
                         </div>
-                        <div className="card-btns">
-                            <button className="btn-load"
-                                onClick={toggleAddLoad}>
-                                Load</button>
-                            <button className="btn-delete"
-                                onClick={toggleIsDelete}>
-                                Delete</button>
-                        </div>
+                        <div className="header-actions">ACTIONS</div>
                     </div>
-                ))}
-            </div>
+                    {filteredCards.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((card, index) => (
+                        <div className="mrt-list"
+                            key={index}
+                            onClick={() => handleSelect(card)}>
+                            <div className="list-details">
+                                <div className="uid-list">{card.uid}</div>
+                                <div className="bal-list">PHP {card.bal}</div>
+                            </div>
+                            <div className="list-btns">
+                                <button className="btn-load-list"
+                                    onClick={toggleAddLoad}>
+                                    Load</button>
+                                <button className="btn-delete-list"
+                                    onClick={toggleIsDelete}>
+                                    Delete</button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            {isCardView && (
+                <div className="list-card">
+                    {filteredCards.slice((currentPage - 1) * cardsPerPage, currentPage * cardsPerPage).map((card, index) => (
+                        <div className="mrt-card" key={index} onClick={() => handleSelect(card)}>
+                            <div className="card-details">
+                                <div className="uid-card">{card.uid}</div>
+                                <div className="bal-card">PHP {card.bal}</div>
+                            </div>
+                            <div className="card-btns">
+                                <button className="btn-load" onClick={toggleAddLoad}>
+                                    Load
+                                </button>
+                                <button className="btn-delete" onClick={toggleIsDelete}>
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+
             <div className='modal-container'>
                 {addLoad && (
                     <div className='add-load'>
