@@ -397,7 +397,7 @@ const UID = () => {
                         <div className={`card-view ${isCardView ? 'selected' : ''}`}
                             onClick={toggleIsCardView}>Card View</div>
                         <div className={`list-view ${isListView ? 'selected' : ''}`}
-                            onClick={toggleIsListView}>List View</div>
+                           /*  onClick={toggleIsListView} */>List View</div>
                     </div>
                     <div className="pagination">
                         <button onClick={() => setCurrentPage(currentPage - 1)}
