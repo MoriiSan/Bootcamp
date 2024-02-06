@@ -10,23 +10,25 @@ import MapAdmin from './mapAdmin';
 
 const animatedComponents = makeAnimated();
 
+
 const Stations: React.FC = () => {
     const [fare, setFare] = useState<number>();
     const [newFare, setNewFare] = useState('');
     const [editFare, setEditFare] = useState(false);
     const [stationsOptions, setStationsOptions] = useState([]);
-    const [addStationModal, setAddStationMOdal] = useState(false);
+    const [addStationModal, setAddStationModal] = useState(false);
     const [stationName, setStationName] = useState('');
     const [shortName, setShortName] = useState('');
     const [connections, setConnections] = useState([]);
 
     const toggleAddStationModal = () => {
-        setAddStationMOdal(!addStationModal);
+        setAddStationModal(!addStationModal);
     };
 
     const toggleEditFare = () => {
         setEditFare(!editFare)
     };
+
 
     ///// DOUBLE CLICK FUNCTION | set coordinates
     const [latitude, setLatitude] = useState<number>();
@@ -41,23 +43,6 @@ const Stations: React.FC = () => {
 
     const handleCreateStation = async () => {
         try {
-            if (connections.length === 0) {
-                console.error('At least one connection is required.');
-                Store.addNotification({
-                    title: "ERROR",
-                    message: "At least one connection is required.",
-                    type: "danger",
-                    insert: "top",
-                    container: "top-right",
-                    animationIn: ["animate__animated animate__bounceIn"],
-                    animationOut: ["animate__animated animate__slideOutRight"],
-                    dismiss: {
-                        duration: 2000,
-                    }
-                });
-                return;
-            }
-
             const stationData = {
                 shortName: shortName,
                 stationName: stationName,
@@ -90,6 +75,7 @@ const Stations: React.FC = () => {
                 setShortName('');
                 setConnections([]);
                 toggleAddStationModal();
+            
             } else {
                 console.error('Failed to create station');
                 Store.addNotification({
@@ -264,7 +250,7 @@ const Stations: React.FC = () => {
             </div>
 
             <div className="map-container">
-                <MapAdmin onMapDoubleClick={handleMapDoubleClick} />
+                <MapAdmin onMapDoubleClick={handleMapDoubleClick}/>
             </div>
 
             <div className="add-station">
@@ -333,9 +319,6 @@ const Stations: React.FC = () => {
                     </div>
                 )}
             </div>
-
-
-
 
         </div>
     )

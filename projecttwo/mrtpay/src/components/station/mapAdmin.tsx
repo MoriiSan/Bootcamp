@@ -3,18 +3,27 @@ import { MapContainer, Marker, Popup, TileLayer, Polyline, ZoomControl } from 'r
 import { Icon } from "leaflet";
 import GetLatLng from "../getLatLng";
 import { Store } from "react-notifications-component";
-import { BsExclamationTriangleFill } from "react-icons/bs";
+import { BsExclamationTriangleFill, BsFillXSquareFill } from "react-icons/bs";
+import Select from 'react-select';
+import makeAnimated from 'react-select/animated';
 
+const animatedComponents = makeAnimated();
 
 interface Markers {
+    _id: string;
     shortName: string;
     stationName: string;
     stationCoord: [number, number];
-    stationConn: [string];
+    stationConn: string[];
+}
+
+interface StationOption {
+    value: string;
+    label: string;
 }
 
 const customIcon = new Icon({
-    iconUrl: "https://cdn-icons-png.flaticon.com/512/2062/2062051.png",
+    iconUrl: "  https://cdn-icons-png.flaticon.com/512/821/821354.png ",
     iconSize: [40, 40]
 })
 
@@ -32,20 +41,36 @@ const MyMarker = ({ position, children, onDoubleClick }: any) => {
 
 interface StationsProps {
     onMapDoubleClick: (latlng: { lat: number; lng: number }) => void;
-    onDeleteStation: (shortName: string) => void;
 }
 
 ////////////////////////////////
 ////////////////////////////////
-const MapAdmin = ({ onMapDoubleClick, onDeleteStation }: any) => {
+const MapAdmin = ({ onMapDoubleClick }: any) => {
     const [stations, setStations] = useState<Markers[]>([]);
     const [deleteStationModal, setDeleteStationModal] = useState(false);
     const [selectedShortName, setSelectedShortName] = useState<string>("");
     const [selectedStationName, setSelectedStationName] = useState<string>("");
+    const [selectedLat, setSelectedLat] = useState<number>(0);
+    const [selectedLng, setSelectedLng] = useState<number>(0);
+    const [selectedConns, setSelectedConns] = useState<string[]>([]);
+    const [newShortName, setNewShortName] = useState('');
+    const [stationId, setStationId] = useState('');
+    const [selectedId, setSelectedId] = useState('');
+
+    const [stationsOptions, setStationsOptions] = useState<StationOption[]>([]);
+    const [editStationModal, setEditStationModal] = useState(false);
+    const [stationName, setStationName] = useState('');
+    const [shortName, setShortName] = useState('');
+    const [connections, setConnections] = useState([]);
+
+    const toggleEditStationModal = () => {
+        setEditStationModal(!editStationModal);
+    }
 
     const toggleDeleteStationModal = () => {
         setDeleteStationModal(!deleteStationModal);
     };
+
 
     const fetchStations = async () => {
         try {
@@ -58,6 +83,11 @@ const MapAdmin = ({ onMapDoubleClick, onDeleteStation }: any) => {
 
             if (response.ok) {
                 const fetchedStations = await response.json();
+                const options = fetchedStations.map((station: { shortName: string; stationName: string; }) => ({
+                    value: station.shortName,
+                    label: station.stationName,
+                }));
+                setStationsOptions(options);
                 setStations(fetchedStations);
             } else {
                 console.error('Failed to fetch stations');
@@ -128,6 +158,8 @@ const MapAdmin = ({ onMapDoubleClick, onDeleteStation }: any) => {
                     }
                 });
                 toggleDeleteStationModal();
+                setEditStationModal(false);
+                setSelectedId("");
             } else {
                 console.error('Failed to delete station');
             }
@@ -136,14 +168,111 @@ const MapAdmin = ({ onMapDoubleClick, onDeleteStation }: any) => {
         }
     };
 
+    const updateConnectedStationConn = async (stationId: string, updatedStationConn: string[]) => {
+        try {
+            const response = await fetch(`http://localhost:8080/stations/update-station/${stationId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ stationConn: updatedStationConn }),
+            });
+
+            if (response.ok) {
+                console.log(`Connections updated successfully for station with ${selectedShortName}`);
+                return true; // Indicate success
+            } else {
+                console.error(`Failed to update connections for station with ID ${stationId}`);
+                return false; // Indicate failure
+            }
+        } catch (error) {
+            console.error('Error updating connected station:', error);
+            return false; // Indicate failure
+        }
+    };
+
+    const handleStationUpdate = async () => {
+        const isWithin500m = selectedConns.some(conn => {
+            const connectedStation = stations.find(station => station.shortName === conn);
+            if (connectedStation) {
+                const distance = calculateDistance(
+                    { lat: selectedLat, lng: selectedLng },
+                    { lat: connectedStation.stationCoord[0], lng: connectedStation.stationCoord[1] }
+                );
+                return distance < 500;
+            }
+            return false;
+        });
+
+        if (isWithin500m) {
+            console.error('Selected station is within 500m of a connected station');
+            return;
+        }
+
+        try {
+            const updatedStationData = {
+                stationId: selectedId,
+                shortName: selectedShortName,
+                stationName: selectedStationName,
+                stationCoord: [selectedLat, selectedLng],
+                stationConn: selectedConns,
+            };
+
+            const response = await fetch(`http://localhost:8080/stations/update-station/${selectedId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedStationData),
+            });
+
+            if (response.ok) {
+                // for (const stationConn of selectedConns) {
+                //     const connectedStation = stations.find(station => station.shortName === stationConn);
+                //     console.log(connectedStation);
+                //     if (connectedStation) {
+                //         const updateStationConn = [...connectedStation.stationConn, selectedShortName]
+                //         console.log(updateStationConn)
+                //         const response = await updateConnectedStationConn(connectedStation._id, updateStationConn);
+                //         console.log(response);
+                //     }
+                // }
+                setEditStationModal(false);
+                fetchStations();
+            } else {
+                console.error('Failed to update station');
+            }
+        } catch (error) {
+            console.error('Error updating station:', error);
+        }
+    };
+
+
+
     const handleMapClick = (latlng: { lat: number; lng: number }) => {
         onMapDoubleClick(latlng);
+        setEditStationModal(false);
     };
 
     useEffect(() => {
         fetchStations();
-    }, [onMapDoubleClick, deleteStationModal]);
+    }, [onMapDoubleClick, deleteStationModal, editStationModal]);
 
+    const calculateDistance = (latlng1: { lat: number; lng: number }, latlng2: { lat: number; lng: number }) => {
+        const R = 6371e3; // Earth's radius in meters
+        const φ1 = (latlng1.lat * Math.PI) / 180;
+        const φ2 = (latlng2.lat * Math.PI) / 180;
+        const Δφ = ((latlng2.lat - latlng1.lat) * Math.PI) / 180;
+        const Δλ = ((latlng2.lng - latlng1.lng) * Math.PI) / 180;
+
+        const a =
+            Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+            Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        const distance = R * c; // in meters
+        return distance;
+    };
 
     return (
         <div className="map-container" onDoubleClick={() => { }}>
@@ -162,9 +291,13 @@ const MapAdmin = ({ onMapDoubleClick, onDeleteStation }: any) => {
                     <MyMarker key={index}
                         position={station.stationCoord}
                         onDoubleClick={() => {
+                            setSelectedId(station._id);
                             setSelectedShortName(station.shortName);
-                            setSelectedStationName(station.stationName)
-                            toggleDeleteStationModal();
+                            setSelectedStationName(station.stationName);
+                            setSelectedLat(station.stationCoord[0]);
+                            setSelectedLng(station.stationCoord[1]);
+                            setSelectedConns(station.stationConn);
+                            setEditStationModal(true);
                         }}>
                         {station.stationName}
 
@@ -201,17 +334,77 @@ const MapAdmin = ({ onMapDoubleClick, onDeleteStation }: any) => {
                 )}
             </div>
 
-            {/* <div className="edit-station">
-                <div className="edit-station-overlay">
+
+            <div className="edit-station">
+                {editStationModal && (
                     <div className="edit-station-modal">
-                        <div className="edit-station-label"><strong>STATION NAME</strong></div>
+                        <div className="edit-indicator">Edit Station
+                            <button className="edit-exit"
+                                onClick={toggleEditStationModal}>
+                                <BsFillXSquareFill />
+                            </button>
+                        </div>
+                        <div className="edit-contents">
+                            <label className="edit-station-label">Station name:
+                                <input className="edit-station-name"
+                                    value={selectedStationName}
+                                    onChange={(e) => setSelectedStationName(e.target.value)}
+                                    placeholder="Station name"></input>
+                            </label>
+                            <label className="edit-shortname-label">Station shortname:
+                                <input className="edit-station-shortname"
+                                    value={selectedShortName}
+                                    onChange={(e) => setSelectedShortName(e.target.value)}
+                                    placeholder="Station shortname"></input>
+                            </label>
+                            <div className="edit-station-coords">
+                                <label className="edit-lat-label">Latitude:
+                                    <input className="edit-lat-coord"
+                                        value={selectedLat?.toFixed(6)}
+                                        onChange={(e) => setSelectedLat(parseFloat(e.target.value))}
+                                        placeholder="Latitude"></input>
+                                </label>
+                                <label className="edit-long-label">Longitude:
+                                    <input className="edit-long-coord"
+                                        value={selectedLng?.toFixed(6)}
+                                        onChange={(e) => setSelectedLng(parseFloat(e.target.value))}
+                                        placeholder="Longitude"></input>
+
+                                </label>
+                            </div>
+                            <div className="edit-connections">
+                                <label className="edit-conns-label">Connections:</label>
+                                <Select
+                                    className="edit-connect-select"
+                                    value={selectedConns.map(option => ({ value: option, label: option }))}
+                                    onChange={(selectedOptions) => {
+                                        if (Array.isArray(selectedOptions)) {
+                                            const selectedValues = selectedOptions.map(option => option.value);
+                                            setSelectedConns(selectedValues);
+                                        } else {
+                                            setSelectedConns([]);
+                                        }
+                                    }}
+                                    placeholder="Select connections..."
+                                    closeMenuOnSelect={true}
+                                    components={animatedComponents}
+                                    isMulti
+                                    //filter itself from the options
+                                    options={stationsOptions.filter(option => option.value !== selectedShortName)} />
+
+                            </div>
+                        </div>
                         <div className="edit-station-btns">
-                            <div className="edit-station-btn">Edit</div>
-                            <div className="delete-modal-btn">Delete</div>
+                            <button className="edit-delete-btn"
+                                onClick={toggleDeleteStationModal}
+                            >Delete</button>
+                            <button className="edit-station-btn"
+                                onClick={handleStationUpdate}
+                            >Save</button>
                         </div>
                     </div>
-                </div>
-            </div> */}
+                )}
+            </div>
 
         </div>
     );
