@@ -178,6 +178,10 @@
     border: 1px solid #ccc;
 }
 
+.add-station-btn {
+    border: 1px solid #28a745;
+}
+
 
 
 /* DELETE STATION   ///////// */
@@ -289,7 +293,3 @@
     border: 1px solid #f62447;
 }
 
-.custom-popup .station-name:hover {
-    cursor: pointer; /* Change cursor style on hover */
-    text-decoration: underline; /* Add underline effect on hover */
-}
