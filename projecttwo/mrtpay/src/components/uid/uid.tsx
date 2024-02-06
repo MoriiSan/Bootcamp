@@ -62,7 +62,7 @@ const UID = () => {
 
     /////////////////pagination
     const [currentPage, setCurrentPage] = useState(1);
-    const cardsPerPage = 6;
+    const cardsPerPage = 8;
     const itemsPerPage = 8;
 
 

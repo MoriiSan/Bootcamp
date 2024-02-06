@@ -8,8 +8,8 @@
     padding: 1%;
     background-color: white;
     position: relative;
-    z-index:1;
-    border-bottom: 1px solid #ccc;   
+    z-index: 1;
+    border-bottom: 1px solid #ccc;
 }
 
 .fare-container {
@@ -34,7 +34,7 @@
 .fare-details {
     display: flex;
     flex-direction: column;
-    gap:10px;
+    gap: 10px;
 }
 
 .fare-status {
@@ -47,17 +47,20 @@
     font-weight: 700;
     color: #477a1e;
 }
+
 .edit-fare-container {
     display: flex;
     flex-direction: row;
     border: 1px solid #ccc;
-    border-radius: 5px;;
+    border-radius: 5px;
+    ;
 }
 
 .fare-label {
     padding: 5px 10px 5px 10px;
     border-right: 1px solid #ccc;
 }
+
 .edit-fare {
     padding: 5px 0 5px 10px;
     width: 100%;
@@ -81,5 +84,207 @@
     padding: 1%;
     background-color: white;
     position: relative;
-    z-index:1;
+    z-index: 1;
+}
+
+/* ADD-STATION ////////////////////// */
+
+.add-station-overlay,
+.delete-station-overlay,
+.edit-station-overlay {
+    background: rgba(49, 49, 49, 0.5);
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+}
+
+.add-station-modal {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    background-color: white;
+    width: 415px;
+    border-radius: 5px;
+    padding: 20px;
+    left: 3%;
+    transform: translateX(-50%);
+    top: 50%;
+    transform: translateY(-50%);
+    gap: 10px;
+    /* box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5); */
+}
+
+
+.station-name,
+.station-shortname,
+.lat-coord,
+.long-coord {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    height: 40px;
+    width: 375px;
+    padding-inline: 10px;
+}
+
+.lat-coord,
+.long-coord {
+    width: 182px;
+}
+
+.station-coords {
+    gap: 10px;
+}
+
+.station-name:focus,
+.station-shortname:focus,
+.lat-coord:focus,
+.long-coord:focus {
+    outline-color: #ffb031;
+}
+
+.station-label,
+.shortname-label,
+.lat-label,
+.long-label {
+    display: flex;
+    flex-direction: column;
+}
+
+.station-coords {
+    display: flex;
+    flex-direction: row;
+}
+
+.add-station-btns {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-top: 5px;
+    gap: 10px;
+}
+
+.cancel-btn,
+.add-station-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+
+
+/* DELETE STATION   ///////// */
+
+.delete-station-modal {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    background-color: white;
+    width: 415px;
+    border-radius: 5px;
+    /* padding: 20px; */
+    left: 37%;
+    transform: translateX(-50%);
+    top: 40%;
+    transform: translateY(-50%);
+    gap: 10px;
+}
+
+.delete-indicator {
+    height: 20px;
+    border-radius: 5px 5px 0 0;
+    background-color: #f62447;
+}
+
+.delete-contents {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 20px;
+    gap: 20px;
+}
+
+.delete-label {
+    display: flex;
+    flex-direction: column;
+}
+
+.delete-icon {
+    color: #f62447;
+}
+
+.delete-btns {
+    display: flex;
+    flex-direction: row;
+    padding: 15px;
+    border-top: 1px solid #ccc;
+    gap: 10px;
+}
+
+.cancel-delete-btn,
+.delete-station-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.delete-station-btn {
+    border: 1px solid #f62447;
+}
+
+
+/* EDIT STATIONS ////////// */
+.edit-station-modal {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    background-color: white;
+    width: 415px;
+    border-radius: 5px;
+    padding: 20px;
+    left: 37%;
+    transform: translateX(-50%);
+    top: 40%;
+    transform: translateY(-50%);
+    gap: 10px;
+}
+
+.edit-station-label {
+    display: flex;
+    justify-content: center;
+    font-size: 32px;
+}
+
+.edit-station-btns {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.edit-station-btn,
+.delete-modal-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.delete-modal-btn {
+    border: 1px solid #f62447;
 }

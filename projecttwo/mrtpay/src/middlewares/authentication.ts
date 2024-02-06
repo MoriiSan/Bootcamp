@@ -11,7 +11,7 @@ export const useAuth = () => {
         if (!sessionToken) {
             navigate('/');
         }
-        console.log("t", sessionToken)
+        // console.log("t", sessionToken)
 
         try {
             const decoded = jwtDecode(sessionToken);
@@ -23,7 +23,7 @@ export const useAuth = () => {
                 navigate('/');
                 return;
                 }
-            console.log('Token is valid:', decoded);
+            // console.log('Token is valid:', decoded);
         } catch (error) {
             console.error('Token is not valid:', error);
             localStorage.removeItem('TICKETING-AUTH');
