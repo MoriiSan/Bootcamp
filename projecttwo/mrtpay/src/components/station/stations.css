@@ -288,3 +288,8 @@
 .delete-modal-btn {
     border: 1px solid #f62447;
 }
+
+.custom-popup .station-name:hover {
+    cursor: pointer; /* Change cursor style on hover */
+    text-decoration: underline; /* Add underline effect on hover */
+}

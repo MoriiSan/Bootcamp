@@ -18,29 +18,30 @@ const customIcon = new Icon({
     iconSize: [40, 40]
 })
 
-const MyMarker = ({ position, children }: any) => {
-    const [marker, setMarker] = useState<any>(null);
+const MyMarker = ({ position, children, onDoubleClick }: any) => {
+    const handleDoubleClick = () => {
+        onDoubleClick();
+    };
 
-    useEffect(() => {
-        if (marker) {
-            marker.openPopup();
-        }
-    }, [marker]);
-
-    return <Marker position={position} icon={customIcon} eventHandlers={{ dblclick: () => setMarker(marker) }}>
-        <Popup closeButton={false} className="custom-popup">{children}</Popup>
-    </Marker>
-}
+    return (
+        <Marker position={position} icon={customIcon} eventHandlers={{ dblclick: handleDoubleClick }}>
+            <Popup closeButton={false} className="custom-popup">{children}</Popup>
+        </Marker>
+    );
+};
 
 interface StationsProps {
     onMapDoubleClick: (latlng: { lat: number; lng: number }) => void;
     onDeleteStation: (shortName: string) => void;
 }
+
 ////////////////////////////////
 ////////////////////////////////
 const MapAdmin = ({ onMapDoubleClick, onDeleteStation }: any) => {
     const [stations, setStations] = useState<Markers[]>([]);
     const [deleteStationModal, setDeleteStationModal] = useState(false);
+    const [selectedShortName, setSelectedShortName] = useState<string>("");
+    const [selectedStationName, setSelectedStationName] = useState<string>("");
 
     const toggleDeleteStationModal = () => {
         setDeleteStationModal(!deleteStationModal);
@@ -66,9 +67,7 @@ const MapAdmin = ({ onMapDoubleClick, onDeleteStation }: any) => {
         }
     };
 
-    useEffect(() => {
-        fetchStations();
-    }, [onMapDoubleClick]);
+
 
     const displayPolylines = (stations: Markers[]) => {
         const polylines: JSX.Element[] = [];
@@ -128,6 +127,7 @@ const MapAdmin = ({ onMapDoubleClick, onDeleteStation }: any) => {
                         duration: 2000,
                     }
                 });
+                toggleDeleteStationModal();
             } else {
                 console.error('Failed to delete station');
             }
@@ -136,17 +136,13 @@ const MapAdmin = ({ onMapDoubleClick, onDeleteStation }: any) => {
         }
     };
 
-    const handleStationClick = (shortName: string) => {
-        const confirmDelete = window.confirm(`Are you sure you want to delete station ${shortName}?`);
-        if (confirmDelete) {
-            onDeleteStation(shortName);
-        }
-    };
-
     const handleMapClick = (latlng: { lat: number; lng: number }) => {
         onMapDoubleClick(latlng);
     };
 
+    useEffect(() => {
+        fetchStations();
+    }, [onMapDoubleClick, deleteStationModal]);
 
 
     return (
@@ -165,7 +161,11 @@ const MapAdmin = ({ onMapDoubleClick, onDeleteStation }: any) => {
                 {stations.map((station, index) => (
                     <MyMarker key={index}
                         position={station.stationCoord}
-                        onClick={() => handleStationClick(station.shortName)}>
+                        onDoubleClick={() => {
+                            setSelectedShortName(station.shortName);
+                            setSelectedStationName(station.stationName)
+                            toggleDeleteStationModal();
+                        }}>
                         {station.stationName}
 
                     </MyMarker>
@@ -185,21 +185,23 @@ const MapAdmin = ({ onMapDoubleClick, onDeleteStation }: any) => {
                                     <BsExclamationTriangleFill size={50} />
                                 </div>
                                 <div className="delete-label">
-                                    <label><strong>Delete this station?</strong></label>
+                                    <label><strong>Delete {selectedStationName.toUpperCase()}?</strong></label>
                                     <label>You won't be able to revert this!</label>
                                 </div>
                             </div>
                             <div className="delete-btns">
                                 <button className="cancel-delete-btn"
                                     onClick={toggleDeleteStationModal}>Cancel</button>
-                                <button className="delete-station-btn">Delete station!</button>
+                                <button className="delete-station-btn"
+                                    onClick={() => handleDelete(selectedShortName)}
+                                >Delete station!</button>
                             </div>
                         </div>
                     </div>
                 )}
             </div>
 
-            <div className="edit-station">
+            {/* <div className="edit-station">
                 <div className="edit-station-overlay">
                     <div className="edit-station-modal">
                         <div className="edit-station-label"><strong>STATION NAME</strong></div>
@@ -209,7 +211,7 @@ const MapAdmin = ({ onMapDoubleClick, onDeleteStation }: any) => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
 
         </div>
     );
