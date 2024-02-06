@@ -144,7 +144,6 @@ const MapAdmin = ({ onMapDoubleClick }: any) => {
             });
 
             if (response.ok) {
-                console.error("Station deleted successfully!")
                 Store.addNotification({
                     title: "DELETED!",
                     message: "Station deleted successfully!",
@@ -165,29 +164,6 @@ const MapAdmin = ({ onMapDoubleClick }: any) => {
             }
         } catch (error) {
             console.error('Error deleting station:', error);
-        }
-    };
-
-    const updateConnectedStationConn = async (stationId: string, updatedStationConn: string[]) => {
-        try {
-            const response = await fetch(`http://localhost:8080/stations/update-station/${stationId}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ stationConn: updatedStationConn }),
-            });
-
-            if (response.ok) {
-                console.log(`Connections updated successfully for station with ${selectedShortName}`);
-                return true; // Indicate success
-            } else {
-                console.error(`Failed to update connections for station with ID ${stationId}`);
-                return false; // Indicate failure
-            }
-        } catch (error) {
-            console.error('Error updating connected station:', error);
-            return false; // Indicate failure
         }
     };
 
