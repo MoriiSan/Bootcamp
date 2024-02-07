@@ -6,8 +6,7 @@ import { BsPencilSquare, BsXSquareFill } from "react-icons/bs";
 import { ReactNotifications, Store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 import 'animate.css';
-import MapAdmin from './mapAdmin';
-import { calculateDistance } from './mapAdmin';
+import MapAdmin, { calculateDistance } from './mapAdmin';
 
 const animatedComponents = makeAnimated();
 
@@ -361,6 +360,12 @@ const Stations: React.FC = () => {
                         </div>
                     </div>
                 )}
+            </div>
+
+            <div className="station-note">
+                <div className="note-modal">
+
+                </div>
             </div>
 
         </div>
