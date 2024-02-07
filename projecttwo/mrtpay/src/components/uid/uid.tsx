@@ -147,8 +147,10 @@ const UID = () => {
                     duration: 2000,
                 }
             });
+            setBal("");
             return;
         }
+        
         await handleCreate();
         toggleAddUser();
     };
