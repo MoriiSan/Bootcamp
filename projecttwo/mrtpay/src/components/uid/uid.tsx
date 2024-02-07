@@ -18,6 +18,7 @@ const UID = () => {
     const [addLoad, setAddLoad] = useState(false);
     const toggleAddLoad = () => {
         setAddLoad(!addLoad)
+        setNewBalance("");
     };
     const [isDelete, setIsDelete] = useState(false);
     const toggleIsDelete = () => {
@@ -71,23 +72,6 @@ const UID = () => {
 
     const handleCreate = async () => {
         try {
-            const parsedBal = parseFloat(bal);
-            if (isNaN(parsedBal) || parsedBal < 0 || parsedBal > 1000) {
-                console.error('Invalid balance value.');
-                Store.addNotification({
-                    title: "OOPS.",
-                    message: "Invalid balance value. Balance must be between 0 and 1000.",
-                    type: "warning",
-                    insert: "top",
-                    container: "top-right",
-                    animationIn: ["animate__animated animate__bounceIn"],
-                    animationOut: ["animate__animated animate__slideOutRight"],
-                    dismiss: {
-                        duration: 2000,
-                    }
-                });
-                return;
-            }
             const response = await fetch(`${process.env.REACT_APP_URL}cards`, {
                 method: 'POST',
                 headers: {
@@ -137,6 +121,23 @@ const UID = () => {
             Store.addNotification({
                 title: "OOPS.",
                 message: "UID must be 10 digits long.",
+                type: "warning",
+                insert: "top",
+                container: "top-right",
+                animationIn: ["animate__animated animate__bounceIn"],
+                animationOut: ["animate__animated animate__slideOutRight"],
+                dismiss: {
+                    duration: 2000,
+                }
+            });
+            return;
+        }
+        const parsedBal = parseFloat(bal);
+        if (isNaN(parsedBal) || parsedBal < 1 || parsedBal > 1000) {
+            console.error('Invalid balance value.');
+            Store.addNotification({
+                title: "OOPS.",
+                message: "Invalid balance value. Balance must be between 0 and 1000.",
                 type: "warning",
                 insert: "top",
                 container: "top-right",
@@ -357,9 +358,14 @@ const UID = () => {
                                         value={bal}
                                         onChange={(e) => { setBal(e.target.value) }}
                                         placeholder='Balance'
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'e' || e.key === 'E') {
+                                                e.preventDefault();
+                                            }
+                                        }}
                                     ></input>
                                 </div>
-                                <div className="card-btns">
+                                <div className="add-card-btns">
                                     <button className='btn-cancel'
                                         onClick={toggleAddUser}>
                                         Close
@@ -401,13 +407,13 @@ const UID = () => {
                     </div>
                     <div className="pagination">
                         <button onClick={() => setCurrentPage(currentPage - 1)}
-                        className='prev'
+                            className='prev'
                             disabled={currentPage === 1}>
                             Prev
                         </button>
                         <span className="current-page">{currentPage}</span>
                         <button onClick={() => setCurrentPage(currentPage + 1)}
-                        className='next'
+                            className='next'
                             disabled={currentPage === Math.ceil(filteredCards.length / cardsPerPage)}>
                             Next
                         </button>
@@ -491,7 +497,13 @@ const UID = () => {
                                             type="number"
                                             value={newBalance}
                                             onChange={(e) => setNewBalance(e.target.value)}
-                                            placeholder='Add amount'></input>
+                                            placeholder='Add amount'
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'e' || e.key === 'E') {
+                                                    e.preventDefault();
+                                                }
+                                            }}
+                                        ></input>
                                     </div>
                                 </div>
                                 <div className="load-btns">
