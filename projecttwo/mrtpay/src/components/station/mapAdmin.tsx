@@ -56,7 +56,6 @@ export const calculateDistance = (latlng1: { lat: number; lng: number }, latlng2
 const MapAdmin = ({ onMapDoubleClick }: any) => {
     const [stations, setStations] = useState<Markers[]>([]);
     const [deleteStationModal, setDeleteStationModal] = useState(false);
-    const [selectedShortName, setSelectedShortName] = useState<string>("");
     const [selectedStationName, setSelectedStationName] = useState<string>("");
     const [selectedLat, setSelectedLat] = useState<number>(0); 
     const [selectedLng, setSelectedLng] = useState<number>(0); 
