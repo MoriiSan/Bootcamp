@@ -1,119 +1,253 @@
 import React, { useEffect, useState } from "react";
-import "leaflet/dist/leaflet.css";
-import { MapContainer, Marker, Popup, TileLayer, Polyline, ZoomControl } from 'react-leaflet';
-import { Icon, LeafletMouseEvent  } from "leaflet";
+import { MapContainer, Marker, Popup, TileLayer, Polyline } from 'react-leaflet';
+// import useSwr from "swr";
+import useSupercluster from "use-supercluster";
+import { Icon, popup } from "leaflet";
+import GetLatLng from "./getLatLng";
+import { ReactNotifications, Store } from 'react-notifications-component';
+import { calculateDistance } from "./station/mapAdmin";
 import './mrtMap.css';
+import { IoEnterOutline } from "react-icons/io5";
+import { RiUserLocationLine, RiArrowGoBackFill } from "react-icons/ri";
+
 
 interface Markers {
-  shortName: string;
-  stationName: string;
-  stationCoord: [number, number];
-  stationConn: [string];
+    _id: string;
+    stationName: string;
+    stationCoord: [number, number];
+    stationConn: string[];
 }
 
 const customIcon = new Icon({
-  iconUrl: "https://cdn-icons-png.flaticon.com/512/9131/9131502.png",
-  iconSize: [30, 30]
+    iconUrl: "   https://cdn-icons-png.flaticon.com/512/10308/10308895.png ",
+    // https://cdn-icons-png.flaticon.com/512/10312/10312894.png 
+    // https://cdn-icons-png.flaticon.com/512/10308/10308856.png 
+    iconSize: [30, 30]
 })
 
-// "https://cdn-icons-png.flaticon.com/512/3710/3710297.png" // human figure icon
-// "https://cdn-icons-png.flaticon.com/512/1632/1632646.png" // red circle icon
+const MyMarker = ({ position, children, onClick, eventHandlers }: any) => {
+    // const handleDoubleClick = () => {
+    //     onDoubleClick();
+    // };
 
 
-const handleMarkerMouseOver = (e: LeafletMouseEvent) => {
-  e.target.openPopup();
+    return (
+        <Marker position={position} icon={customIcon}
+            eventHandlers={eventHandlers}
+        >
+
+        </Marker>
+    );
 };
 
-function MrtMap() {
+////////////////////////////////
+////////////////////////////////
+const MrtMap = ({ onClick }: any) => {
+    const [stations, setStations] = useState<Markers[]>([]);
+    const [selectedStation, setSelectedStation] = useState<Markers | null>(null);
+    const [selectedStationName, setSelectedStationName] = useState<string>("");
+    const [selectedLat, setSelectedLat] = useState<number>(0);
+    const [selectedLng, setSelectedLng] = useState<number>(0);
+    const [selectedConns, setSelectedConns] = useState<string[]>([]);
+    const [selectedId, setSelectedId] = useState('');
+    const [cards, setCards] = useState();
+    const [uid, setUid] = useState();
+    const [bal, setBal] = useState();
+    const [submit, setSubmit] = useState(false);
+    const [mapCenter, setMapCenter] = useState([14.595322, 121.018737])
 
-  const [stations, setStations] = useState<Markers[]>([]);
-
-  const fetchStations = async () => {
-    try {
-      const response = await fetch(`http://localhost:8080/stations`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (response.ok) {
-        const fetchedStations = await response.json();
-        setStations(fetchedStations);
-      } else {
-        console.error('Failed to fetch stations');
-      }
-    } catch (error) {
-      console.error('Error fetching stations:', error);
+    const toggleSubmit = () => {
+        setSubmit(!submit);
     }
-  };
 
-  useEffect(() => {
-    fetchStations();
-  }, []);
+    const fetchStations = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/stations`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
 
-  const displayPolylines = (stations: Markers[]) => {
-    const polylines: JSX.Element[] = [];
-    const connections: Set<string> = new Set();
-    console.log(stations)
-    stations.forEach((station) => {
-      station.stationConn.forEach((stationConnected) => {
-        const direction = `${station.shortName}-${stationConnected}`;
-        const reverseDirection = `${stationConnected}-${station.shortName}`;
-
-        if (!connections.has(direction) && !connections.has(reverseDirection)) {
-          const stationConnectedData = stations.find(
-            (s) => String(s.shortName) === String(stationConnected)
-          );
-
-          if (stationConnectedData) {
-            polylines.push(
-              <Polyline
-                key={direction}
-                color="red"
-                weight={5}
-                positions={[
-                  station.stationCoord,
-                  stationConnectedData.stationCoord,
-                ]}
-              />
-            );
-
-            connections.add(direction);
-            connections.add(reverseDirection);
-          }
+            if (response.ok) {
+                const fetchedStations = await response.json();
+                setStations(fetchedStations);
+            } else {
+                console.error('Failed to fetch stations');
+            }
+        } catch (error) {
+            console.error('Error fetching stations:', error);
         }
-      });
-    });
-    console.log(polylines)
-    return polylines;
-  };
+    };
 
-  console.log(displayPolylines)
+    const fetchCards = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/cards`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                const fetchedCards = await response.json();
+                setCards(fetchedCards);
+            } else {
+                console.error('Failed to fetch cards');
+            }
+        } catch (error) {
+            console.error('Error fetching cards:', error);
+        }
+    };
+
+    const displayPolylines = (stations: Markers[]) => {
+        const polylines: JSX.Element[] = [];
+        const connections: Set<string> = new Set();
+        stations.forEach((station) => {
+            station.stationConn.forEach((stationConnected) => {
+                const direction = `${station.stationName}-${stationConnected}`;
+                const reverseDirection = `${stationConnected}-${station.stationName}`;
+
+                if (!connections.has(direction) && !connections.has(reverseDirection)) {
+                    const stationConnectedData = stations.find(
+                        (s) => String(s.stationName) === String(stationConnected)
+                    );
+
+                    if (stationConnectedData) {
+                        polylines.push(
+                            <Polyline
+                                key={direction}
+                                color="#303030"
+                                weight={6}
+                                positions={[
+                                    station.stationCoord,
+                                    stationConnectedData.stationCoord,
+                                ]} />);
+                        connections.add(direction);
+                        connections.add(reverseDirection);
+                    }
+                }
+            });
+        });
+        return polylines;
+    };
+
+    // const { clusters, supercluster } = useSupercluster({
+    //     points: stations.map(station => ({
+    //         type: 'Feature',
+    //         properties: { cluster: false, stationId: station._id },
+    //         geometry: {
+    //             type: 'Point',
+    //             coordinates: station.stationCoord,
+    //         },
+    //     })),
+    //     bounds: [-180, -90, 180, 90], // World bounds
+    //     zoom: 10, // Initial zoom level
+    //     options: { radius: 75, maxZoom: 20 },
+    // });
 
 
-  return (
-    <div className="mrt-map-container">
-      <MapContainer center={[14.588188, 121.056797]} zoom={12.5} scrollWheelZoom={true} minZoom={3} maxZoom={18} zoomControl={false}>
+    //getLatLng //////////////////////
+    // const handleMapClick = (latlng: { lat: number; lng: number }) => {
+    //     onMapDoubleClick(latlng);
+    // };
 
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+    useEffect(() => {
+        fetchStations();
+    }, [onClick, selectedStation]);
 
+    useEffect(() => {
+        if (selectedStation) {
+            setMapCenter(selectedStation.stationCoord);
+        }
+    }, [selectedStation]);
+    console.log(mapCenter[0], mapCenter[1])
+    return (
+        <div className="map-container" onClick={() => { }}>
+            <MapContainer center={[mapCenter[0], mapCenter[1]]}
+                zoom={13} scrollWheelZoom={true} minZoom={12}
+                maxZoom={17} zoomControl={false} style={{ height: '100svh' }}
+                doubleClickZoom={false}>
+                <TileLayer
+                    url="https://tile.jawg.io/jawg-light/{z}/{x}/{y}.png?access-token=Rs3yx5aveNteEw7myffiDtutSEcX3b0zdHPWxOQbMjJyX6vCRNe4ZYLts8ya6wOI"
+                    attribution='&copy; <a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank" class="jawg-attrib">&copy; <b>Jawg</b>Maps</a> | <a href="https://www.openstreetmap.org/copyright" title="OpenStreetMap is open data licensed under ODbL" target="_blank" class="osm-attrib">&copy; OSM contributors</a>'
+                />
 
-        {stations.map((station, index) => (
-          <Marker key={index} position={station.stationCoord as [number,number]} icon={customIcon} eventHandlers={{ mouseover: handleMarkerMouseOver }}>
-            <Popup closeButton={false} className="custom-popup"> {station.stationName} </Popup>
-          </Marker>
-        ))}
+                {stations.map((station, index) => (
+                    <MyMarker key={index}
+                        position={station.stationCoord}
+                        eventHandlers={{
+                            click: () => setSelectedStation(station)
+                        }}
+                    >
+                        {station.stationName}
+                    </MyMarker>
+                ))}
 
-        {/* <ZoomControl position="bottomright" /> */}
+                {displayPolylines(stations)}
+                {/* <GetLatLng onDoubleClick={handleMapClick} /> */}
 
-        {displayPolylines(stations)}
+            </MapContainer>
 
-      </MapContainer>
-    </div>
-  );
+            {selectedStation && (
+                <div>
+
+                    <div className="tapState-prompt">
+                        <div className="tapState-indicator"></div>
+                        <div className="tapState-container">
+                            <div className="tapState-station">
+                                <RiUserLocationLine />
+                                {selectedStation?.stationName.toUpperCase()}
+                                {/* STATION NAME */}
+                            </div>
+
+                            {!submit && (
+                                <>
+                                    <div className="uid-input-container">
+                                        <div className="uid-label">UID:</div>
+                                        <input className="uid-input"
+                                            placeholder="input UID">
+                                        </input>
+                                    </div>
+                                    <div className="uid-submit"
+                                        onClick={toggleSubmit}
+                                    >Submit</div>
+                                </>
+                            )}
+
+                            {submit && (
+                                <>
+                                    <div className="user-card">
+                                        <div className="cancel-submit"
+                                            onClick={toggleSubmit}
+                                        >
+                                            <RiArrowGoBackFill size={20} />
+                                        </div>
+                                        <div className="uid-display">1234567890
+                                            <div className="uid-text">UID</div>
+                                        </div>
+                                        <div className="balance-display">PHP 89</div>
+                                    </div>
+                                </>
+                            )}
+
+                        </div>
+                        {submit && (
+                            <>
+                                <div className="tapState-btns">
+                                    <div className="tapIn"
+                                    >Tap In</div>
+                                    <div className="tapOut">Tap Out</div>
+                                </div>
+                            </>
+                        )}
+
+                    </div>
+                </div>
+            )}
+
+        </div>
+    );
 }
 
 export default MrtMap;

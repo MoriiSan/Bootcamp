@@ -12,7 +12,7 @@ import {
 
 
 //pages
-import App from './App';
+import App from './pages/mrtUser';
 import Login from './pages/Login';
 import About from './pages/About';
 import AdminPage from './pages/AdminPage';
@@ -23,11 +23,16 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<Login />} />
+
       <Route path="admin" element={<AdminPage />}>
         <Route path="uid" element={<UID />} />
         <Route path="stations" element={<Stations />} />
       </Route>
-      <Route path="mrt" element={<App />}></Route>
+
+      <Route path="mrt" element={<App />}>
+        <Route path="mrt/:stationName/:tapState" element={<App />} />
+      </Route>
+
     </>
   )
 );

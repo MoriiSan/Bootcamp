@@ -1,6 +1,5 @@
 import React, {useState}  from 'react';
-import { BsArrows } from "react-icons/bs";
-import lineBigImage from './lineBig.png';
+import lineBigImage from '../assets/lineBig.png';
 import './card.css';
 
 export default function Card() {

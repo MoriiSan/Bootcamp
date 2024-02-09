@@ -263,7 +263,7 @@ const MapAdmin = ({ onMapDoubleClick }: any) => {
     return (
         <div className="map-container" onDoubleClick={() => { }}>
             <MapContainer center={[14.537586, 121.001584]}
-                zoom={14} scrollWheelZoom={true} minZoom={10}
+                zoom={14} scrollWheelZoom={true} minZoom={3}
                 maxZoom={18} zoomControl={false} style={{ height: '83svh' }}
                 doubleClickZoom={false}
             >

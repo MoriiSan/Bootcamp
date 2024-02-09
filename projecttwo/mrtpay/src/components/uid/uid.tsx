@@ -348,7 +348,14 @@ const UID = () => {
                                     <input className='input-container'
                                         type="number"
                                         value={uid}
-                                        onChange={(e) => { setUid(e.target.value) }}
+                                        onChange={(e) => {
+                                            const input = e.target.value;
+                                            // Ensure only numbers are entered
+                                            const onlyNums = input.replace(/[^0-9]/g, '');
+                                            // Limit to 10 digits
+                                            const limitedNums = onlyNums.slice(0, 10);
+                                            setUid(limitedNums);
+                                        }}
                                         placeholder='UID'
                                     ></input>
                                 </div>

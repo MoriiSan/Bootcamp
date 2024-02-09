@@ -1,5 +1,153 @@
-.custom-popup {
-    font-family: sans-serif;
-    font-size: 14px;
-    color: #333;
-  }
+.tapState-prompt {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  left: 3%;
+  top: 5%;
+  background-color: white;
+  border-radius: 5px;
+  color: #202020;
+  box-shadow: 2px 2px 6px #888888;
+}
+
+.tapState-indicator {
+  height: 10px;
+  background-color: #ffb031;
+  border-radius: 5px 5px 0 0;
+}
+
+.tapState-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 10px;
+}
+
+.tapState-station {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 1000;
+  height: 40px;
+  border-radius: 5px;
+  border: 1px solid #ffb031;
+  gap: 5px;
+  /* background-color:#ffb031; */
+}
+
+
+/* UID ///////////////////// */
+.uid-input-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.uid-label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #888;
+  border-right: none;
+  border-radius: 5px 0 0 5px;
+  height: 40px;
+  padding-inline: 10px;
+}
+
+.uid-input {
+  border-radius: 0 5px 5px 0;
+  border: 1px solid #888;
+  padding-inline: 10px;
+  width: 380px;
+  height: 40px;
+  outline: none;
+}
+
+.uid-input.focus {
+  border: 1px solid #ffb031;
+}
+
+.uid-submit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  border-radius: 5px;
+  border: 1px solid #888;
+  cursor: pointer;
+}
+
+/* USER DISPLAY ///////////////// */
+.user-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 400px;
+  height: 200px;
+  border-radius: 5px;
+  border: 2px dashed #202020;
+  background-color: white;
+  margin: 10px 0 0 20px;
+  box-shadow: 1px 1px 6px #888888;
+  padding: 15px;
+}
+.cancel-submit {
+  position: absolute;
+  left: 25px;
+  top: 180px;
+  border-radius: 50%;
+  border: 1px solid #202020;
+  background-color: white;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.cancel-submit:hover {
+  background-color: #ffb031;
+  color: white;
+}
+
+.uid-display {
+  display: flex;
+  flex-direction: row;
+  font-weight: 700;
+  font-size: 28px;
+  gap: 5px;
+}
+.uid-text {
+  display: flex;
+  align-items: flex-end;
+  font-weight: 400;
+  font-size: 14px;
+  color: #a3a3a3;
+  margin-bottom: 5px;
+}
+
+.balance-display {
+  align-self: flex-end;
+  font-weight: 1000;
+  font-size: 42px;
+  color: #204491;
+}
+
+/* TAP BUTTONS //////////////////////// */
+.tapState-btns {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 20px;
+  gap: 10px;
+  border-top: 1px solid #888;
+}
+
+.tapIn,
+.tapOut {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  height: 40px;
+  border-radius: 5px;
+  border: 1px solid #888;
+  cursor: pointer;
+}
