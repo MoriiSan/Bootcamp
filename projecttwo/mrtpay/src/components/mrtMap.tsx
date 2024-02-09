@@ -132,39 +132,14 @@ const MrtMap = ({ onClick }: any) => {
         return polylines;
     };
 
-    // const { clusters, supercluster } = useSupercluster({
-    //     points: stations.map(station => ({
-    //         type: 'Feature',
-    //         properties: { cluster: false, stationId: station._id },
-    //         geometry: {
-    //             type: 'Point',
-    //             coordinates: station.stationCoord,
-    //         },
-    //     })),
-    //     bounds: [-180, -90, 180, 90], // World bounds
-    //     zoom: 10, // Initial zoom level
-    //     options: { radius: 75, maxZoom: 20 },
-    // });
-
-
-    //getLatLng //////////////////////
-    // const handleMapClick = (latlng: { lat: number; lng: number }) => {
-    //     onMapDoubleClick(latlng);
-    // };
 
     useEffect(() => {
         fetchStations();
-    }, [onClick, selectedStation]);
+    }, [onClick]);
 
-    useEffect(() => {
-        if (selectedStation) {
-            setMapCenter(selectedStation.stationCoord);
-        }
-    }, [selectedStation]);
-    console.log(mapCenter[0], mapCenter[1])
     return (
         <div className="map-container" onClick={() => { }}>
-            <MapContainer center={[mapCenter[0], mapCenter[1]]}
+            <MapContainer center={[14.595322, 121.018737]}
                 zoom={13} scrollWheelZoom={true} minZoom={12}
                 maxZoom={17} zoomControl={false} style={{ height: '100svh' }}
                 doubleClickZoom={false}>
@@ -185,7 +160,6 @@ const MrtMap = ({ onClick }: any) => {
                 ))}
 
                 {displayPolylines(stations)}
-                {/* <GetLatLng onDoubleClick={handleMapClick} /> */}
 
             </MapContainer>
 
