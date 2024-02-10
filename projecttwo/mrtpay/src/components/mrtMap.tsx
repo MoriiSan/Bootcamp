@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { MapContainer, Marker, Popup, TileLayer, Polyline } from 'react-leaflet';
 // import useSwr from "swr";
-import useSupercluster from "use-supercluster";
+// import useSupercluster from "use-supercluster";
 import { Icon, popup } from "leaflet";
 import GetLatLng from "./getLatLng";
 import { ReactNotifications, Store } from 'react-notifications-component';
@@ -26,11 +26,6 @@ const customIcon = new Icon({
 })
 
 const MyMarker = ({ position, children, onClick, eventHandlers }: any) => {
-    // const handleDoubleClick = () => {
-    //     onDoubleClick();
-    // };
-
-
     return (
         <Marker position={position} icon={customIcon}
             eventHandlers={eventHandlers}
@@ -139,7 +134,7 @@ const MrtMap = ({ onClick }: any) => {
 
     return (
         <div className="map-container" onClick={() => { }}>
-            <MapContainer center={[14.595322, 121.018737]}
+            <MapContainer center={[14.596108, 120.984860]}
                 zoom={13} scrollWheelZoom={true} minZoom={12}
                 maxZoom={17} zoomControl={false} style={{ height: '100svh' }}
                 doubleClickZoom={false}>
@@ -180,7 +175,7 @@ const MrtMap = ({ onClick }: any) => {
                                     <div className="uid-input-container">
                                         <div className="uid-label">UID:</div>
                                         <input className="uid-input"
-                                            placeholder="input UID">
+                                            placeholder="Input UID">
                                         </input>
                                     </div>
                                     <div className="uid-submit"
@@ -200,7 +195,9 @@ const MrtMap = ({ onClick }: any) => {
                                         <div className="uid-display">1234567890
                                             <div className="uid-text">UID</div>
                                         </div>
-                                        <div className="balance-display">PHP 89</div>
+                                        <div className="balance-display">
+                                            <div className="bal-text">BALANCE</div>
+                                            PHP 89</div>
                                     </div>
                                 </>
                             )}
