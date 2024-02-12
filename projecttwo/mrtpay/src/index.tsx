@@ -12,7 +12,7 @@ import {
 
 
 //pages
-import App from './pages/mrtUser';
+import MrtUser from './pages/mrtUser';
 import Login from './pages/Login';
 import About from './pages/About';
 import AdminPage from './pages/AdminPage';
@@ -29,9 +29,9 @@ const router = createBrowserRouter(
         <Route path="stations" element={<Stations />} />
       </Route>
 
-      <Route path="mrt" element={<App />}>
-        <Route path="mrt/:stationName/:tapState" element={<App />} />
-      </Route>
+      <Route path="mrt" element={<MrtUser />}/>
+      <Route path="mrt/:uid" element={<MrtUser />} />
+      <Route path="mrt/:stationName/:tapState/:uid" element={<MrtUser />} />
 
     </>
   )

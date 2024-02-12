@@ -7,19 +7,18 @@ interface LocationProps {
   zoom: number
 }
 
-
 const MapFly: React.FC<LocationProps> = ({ station, zoom }) => {
   const map = useMap();
-  const flyDuration = 1.5;
+  const flyDuration = 0.3;
 
   const fly = (location: LatLngExpression) => {
-    map.flyTo(location, zoom, {
+    map.flyTo(location, 14, {
       animate: true,
       duration: flyDuration
     })
   };
   const flyCenter = () => {
-    map.flyTo([14.59673, 121.04809], 12, {
+    map.flyTo([14.596108, 120.984860], 13, {
       animate: true,
       duration: flyDuration
     })
@@ -27,7 +26,7 @@ const MapFly: React.FC<LocationProps> = ({ station, zoom }) => {
 
   useEffect(() => {
     if (station) {
-      fly(L.latLng(station.coordinates.x, station.coordinates.y))
+      fly(L.latLng(station.stationCoord[0], station.stationCoord[1]))
     } else {
       flyCenter()
     }

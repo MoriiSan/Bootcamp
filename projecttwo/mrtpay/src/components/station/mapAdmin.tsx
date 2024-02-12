@@ -19,7 +19,7 @@ interface StationOption {
 }
 
 const customIcon = new Icon({
-    iconUrl: "  https://cdn-icons-png.flaticon.com/512/821/821354.png ",
+    iconUrl: "https://cdn-icons-png.flaticon.com/512/4551/4551380.png",
     iconSize: [40, 40]
 })
 
@@ -57,8 +57,8 @@ const MapAdmin = ({ onMapDoubleClick }: any) => {
     const [stations, setStations] = useState<Markers[]>([]);
     const [deleteStationModal, setDeleteStationModal] = useState(false);
     const [selectedStationName, setSelectedStationName] = useState<string>("");
-    const [selectedLat, setSelectedLat] = useState<number>(0); 
-    const [selectedLng, setSelectedLng] = useState<number>(0); 
+    const [selectedLat, setSelectedLat] = useState<number>(0);
+    const [selectedLng, setSelectedLng] = useState<number>(0);
     const [selectedConns, setSelectedConns] = useState<string[]>([]);
     const [selectedId, setSelectedId] = useState('');
     const [stationsOptions, setStationsOptions] = useState<StationOption[]>([]);

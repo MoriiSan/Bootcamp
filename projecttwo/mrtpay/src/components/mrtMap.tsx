@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import { MapContainer, Marker, Popup, TileLayer, Polyline } from 'react-leaflet';
-// import useSwr from "swr";
-// import useSupercluster from "use-supercluster";
 import { Icon, popup } from "leaflet";
-import GetLatLng from "./getLatLng";
-import { ReactNotifications, Store } from 'react-notifications-component';
-import { calculateDistance } from "./station/mapAdmin";
-import './mrtMap.css';
 import { IoEnterOutline } from "react-icons/io5";
 import { RiUserLocationLine, RiArrowGoBackFill } from "react-icons/ri";
+import { ReactNotifications, Store } from 'react-notifications-component';
+import { calculateDistance } from "./station/mapAdmin";
+import GetLatLng from "./getLatLng";
+import MapFly from './mapFly';
+import './mrtMap.css';
 
 
 interface Markers {
@@ -18,25 +18,31 @@ interface Markers {
     stationConn: string[];
 }
 
-interface Cards {
-    uid: Number;
-    bal: Number;
-}
-
 const customIcon = new Icon({
-    iconUrl: "   https://cdn-icons-png.flaticon.com/512/10308/10308895.png ",
-    // https://cdn-icons-png.flaticon.com/512/10312/10312894.png 
-    // https://cdn-icons-png.flaticon.com/512/10308/10308856.png 
+    iconUrl: "https://cdn-icons-png.flaticon.com/512/4551/4551380.png",
     //#0091ea
-    iconSize: [30, 30]
+    iconSize: [50, 50]
 })
+const selectedIcon = new Icon({
+    iconUrl: "   https://cdn-icons-png.flaticon.com/512/5216/5216456.png ",
+    iconSize: [80, 80]
+});
 
-const MyMarker = ({ position, children, onClick, eventHandlers }: any) => {
+const MyMarker = ({ position, children, onClick, eventHandlers, isSelected }: any) => {
+    const [adjustedPosition, setAdjustedPosition] = useState<[number, number]>(position);
+
+    useEffect(() => {
+        // Adjust the latitude when the station is selected
+        if (isSelected) {
+            setAdjustedPosition([position[0] + 0.0034, position[1]]);
+        } else {
+            setAdjustedPosition([position[0] + 0.002, position[1]]);
+        }
+    }, [isSelected, position]);
+
     return (
-        <Marker position={position} icon={customIcon}
-            eventHandlers={eventHandlers}
-        >
-
+        <Marker position={adjustedPosition} icon={isSelected ? selectedIcon : customIcon}
+            eventHandlers={eventHandlers}>
         </Marker>
     );
 };
@@ -55,10 +61,11 @@ const MrtMap = ({ onClick }: any) => {
     const [uid, setUid] = useState<number | null>(null);
     const [bal, setBal] = useState<number | null>(null);
     const [submit, setSubmit] = useState(false);
-    const [mapCenter, setMapCenter] = useState([14.595322, 121.018737])
+    // const [doNavigate, setDoNavigate] = useState(false);
 
-    const toggleSubmit = () => {
-        setSubmit(!submit);
+    const toggleSubmitOff = () => {
+        setSubmit(false);
+        setUidInput("");
     }
 
     const fetchStations = async () => {
@@ -94,7 +101,7 @@ const MrtMap = ({ onClick }: any) => {
                 const { uid, bal } = await response.json();
                 setUid(uid);
                 setBal(bal);
-                toggleSubmit();
+                setSubmit(true)
             } else if (response.status === 404) {
                 console.error('UID does not exist');
                 setUid(null);
@@ -139,6 +146,17 @@ const MrtMap = ({ onClick }: any) => {
         return polylines;
     };
 
+    const navigate = useNavigate();
+    const handleTapIn = (stationName: string, tapState: any, uid: number) => {
+        const url = `/mrt/${uid}/${stationName}/${tapState}`;
+        navigate(url);
+    };
+    const handleTapInClick = () => {
+        if (selectedStation && uid !== null) {
+            const tapState = 'In';
+            handleTapIn(selectedStation.stationName, tapState, uid);
+        }
+    };
 
     useEffect(() => {
         fetchStations();
@@ -157,7 +175,8 @@ const MrtMap = ({ onClick }: any) => {
 
                 {stations.map((station, index) => (
                     <MyMarker key={index}
-                        position={station.stationCoord}
+                        position={[station.stationCoord[0], station.stationCoord[1]]}
+                        isSelected={selectedStation === station}
                         eventHandlers={{
                             click: () => setSelectedStation(station)
                         }}
@@ -167,6 +186,7 @@ const MrtMap = ({ onClick }: any) => {
                 ))}
 
                 {displayPolylines(stations)}
+                <MapFly station={selectedStation} zoom={12} />
 
             </MapContainer>
 
@@ -215,7 +235,7 @@ const MrtMap = ({ onClick }: any) => {
                                 <>
                                     <div className="user-card">
                                         <div className="cancel-submit"
-                                            onClick={toggleSubmit}
+                                            onClick={toggleSubmitOff}
                                         >
                                             <RiArrowGoBackFill size={20} />
                                         </div>
@@ -234,6 +254,7 @@ const MrtMap = ({ onClick }: any) => {
                             <>
                                 <div className="tapState-btns">
                                     <div className="tapIn"
+                                        onClick={handleTapInClick}
                                     >Tap In</div>
                                     <div className="tapOut">Tap Out</div>
                                 </div>
