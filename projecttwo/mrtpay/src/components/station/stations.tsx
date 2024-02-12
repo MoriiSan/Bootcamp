@@ -276,7 +276,13 @@ const Stations: React.FC = () => {
                                             type="number"
                                             value={newFare}
                                             onChange={(e) => setNewFare(e.target.value)}
-                                            placeholder='Update amount'></input>
+                                            placeholder='Update amount'
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'e' || e.key === 'E') {
+                                                    e.preventDefault();
+                                                }
+                                            }}
+                                        ></input>
                                     </div>
                                 </div>
                                 <div className="fare-btns">

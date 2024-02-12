@@ -357,6 +357,11 @@ const UID = () => {
                                             setUid(limitedNums);
                                         }}
                                         placeholder='UID'
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'e' || e.key === 'E') {
+                                                e.preventDefault();
+                                            }
+                                        }}
                                     ></input>
                                 </div>
                                 <div className="detail-container">
