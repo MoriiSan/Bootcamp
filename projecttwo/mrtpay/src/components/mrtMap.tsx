@@ -18,10 +18,16 @@ interface Markers {
     stationConn: string[];
 }
 
+interface Cards {
+    uid: Number;
+    bal: Number;
+}
+
 const customIcon = new Icon({
     iconUrl: "   https://cdn-icons-png.flaticon.com/512/10308/10308895.png ",
     // https://cdn-icons-png.flaticon.com/512/10312/10312894.png 
     // https://cdn-icons-png.flaticon.com/512/10308/10308856.png 
+    //#0091ea
     iconSize: [30, 30]
 })
 
@@ -45,9 +51,9 @@ const MrtMap = ({ onClick }: any) => {
     const [selectedLng, setSelectedLng] = useState<number>(0);
     const [selectedConns, setSelectedConns] = useState<string[]>([]);
     const [selectedId, setSelectedId] = useState('');
-    const [cards, setCards] = useState();
-    const [uid, setUid] = useState();
-    const [bal, setBal] = useState();
+    const [uidInput, setUidInput] = useState('');
+    const [uid, setUid] = useState<number | null>(null);
+    const [bal, setBal] = useState<number | null>(null);
     const [submit, setSubmit] = useState(false);
     const [mapCenter, setMapCenter] = useState([14.595322, 121.018737])
 
@@ -75,9 +81,9 @@ const MrtMap = ({ onClick }: any) => {
         }
     };
 
-    const fetchCards = async () => {
+    const fetchCard = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/cards`, {
+            const response = await fetch(`http://localhost:8080/cards/${uidInput}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -85,8 +91,14 @@ const MrtMap = ({ onClick }: any) => {
             });
 
             if (response.ok) {
-                const fetchedCards = await response.json();
-                setCards(fetchedCards);
+                const { uid, bal } = await response.json();
+                setUid(uid);
+                setBal(bal);
+                toggleSubmit();
+            } else if (response.status === 404) {
+                console.error('UID does not exist');
+                setUid(null);
+                setBal(null);
             } else {
                 console.error('Failed to fetch cards');
             }
@@ -112,7 +124,7 @@ const MrtMap = ({ onClick }: any) => {
                         polylines.push(
                             <Polyline
                                 key={direction}
-                                color="#303030"
+                                color="#204491"
                                 weight={6}
                                 positions={[
                                     station.stationCoord,
@@ -139,7 +151,7 @@ const MrtMap = ({ onClick }: any) => {
                 maxZoom={17} zoomControl={false} style={{ height: '100svh' }}
                 doubleClickZoom={false}>
                 <TileLayer
-                    url="https://tile.jawg.io/jawg-light/{z}/{x}/{y}.png?access-token=Rs3yx5aveNteEw7myffiDtutSEcX3b0zdHPWxOQbMjJyX6vCRNe4ZYLts8ya6wOI"
+                    url="https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}.png?access-token=Rs3yx5aveNteEw7myffiDtutSEcX3b0zdHPWxOQbMjJyX6vCRNe4ZYLts8ya6wOI"
                     attribution='&copy; <a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank" class="jawg-attrib">&copy; <b>Jawg</b>Maps</a> | <a href="https://www.openstreetmap.org/copyright" title="OpenStreetMap is open data licensed under ODbL" target="_blank" class="osm-attrib">&copy; OSM contributors</a>'
                 />
 
@@ -175,11 +187,26 @@ const MrtMap = ({ onClick }: any) => {
                                     <div className="uid-input-container">
                                         <div className="uid-label">UID:</div>
                                         <input className="uid-input"
-                                            placeholder="Input UID">
+                                            placeholder="Input UID"
+                                            type="number"
+                                            value={uidInput}
+                                            onChange={(e) => {
+                                                const input = e.target.value;
+                                                const onlyNums = input.replace(/[^0-9]/g, '');
+                                                const limitedNums = onlyNums.slice(0, 10);
+                                                setUidInput(limitedNums);
+                                            }}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'e' || e.key === 'E') {
+                                                    e.preventDefault();
+                                                }
+                                            }}>
                                         </input>
                                     </div>
                                     <div className="uid-submit"
-                                        onClick={toggleSubmit}
+                                        onClick={() => {
+                                            fetchCard();
+                                        }}
                                     >Submit</div>
                                 </>
                             )}
@@ -192,12 +219,12 @@ const MrtMap = ({ onClick }: any) => {
                                         >
                                             <RiArrowGoBackFill size={20} />
                                         </div>
-                                        <div className="uid-display">1234567890
+                                        <div className="uid-display">{uid}
                                             <div className="uid-text">UID</div>
                                         </div>
                                         <div className="balance-display">
                                             <div className="bal-text">BALANCE</div>
-                                            PHP 89</div>
+                                            {`PHP ${bal}`}</div>
                                     </div>
                                 </>
                             )}
