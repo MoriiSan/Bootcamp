@@ -1,13 +1,13 @@
-import { useMap, useMapEvents } from 'react-leaflet';
-import L, { LatLng, LatLngExpression } from 'leaflet';
-import { useEffect, useState } from 'react';
+import { useMap } from 'react-leaflet';
+import L, { LatLngExpression } from 'leaflet';
+import { useEffect } from 'react';
 
 interface LocationProps {
   station: any | null,
   zoom: number
 }
 
-const MapFly: React.FC<LocationProps> = ({ station, zoom }) => {
+const MapFly: React.FC<LocationProps> = ({ station }) => {
   const map = useMap();
   const flyDuration = 0.3;
 

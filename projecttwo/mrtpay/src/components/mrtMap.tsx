@@ -9,6 +9,7 @@ import { calculateDistance } from "./station/mapAdmin";
 import GetLatLng from "./getLatLng";
 import MapFly from './mapFly';
 import './mrtMap.css';
+import { AnyNsRecord } from "dns";
 
 
 interface Markers {
@@ -66,6 +67,7 @@ const MrtMap = ({ onClick }: any) => {
     const toggleSubmitOff = () => {
         setSubmit(false);
         setUidInput("");
+        navigate('/mrt');
     }
 
     const fetchStations = async () => {
@@ -89,6 +91,10 @@ const MrtMap = ({ onClick }: any) => {
     };
 
     const fetchCard = async () => {
+        if (uidInput.trim() === "") {
+            console.error('UID is blank');
+            return;
+        }
         try {
             const response = await fetch(`http://localhost:8080/cards/${uidInput}`, {
                 method: 'GET',
@@ -102,17 +108,16 @@ const MrtMap = ({ onClick }: any) => {
                 setUid(uid);
                 setBal(bal);
                 setSubmit(true)
-            } else if (response.status === 404) {
+            } else {
                 console.error('UID does not exist');
                 setUid(null);
                 setBal(null);
-            } else {
-                console.error('Failed to fetch cards');
             }
         } catch (error) {
             console.error('Error fetching cards:', error);
         }
     };
+
 
     const displayPolylines = (stations: Markers[]) => {
         const polylines: JSX.Element[] = [];
@@ -147,20 +152,25 @@ const MrtMap = ({ onClick }: any) => {
     };
 
     const navigate = useNavigate();
-    const handleTapIn = (stationName: string, tapState: any, uid: number) => {
-        const url = `/mrt/${uid}/${stationName}/${tapState}`;
+    const handleTapIn = (stationName: string, tapState: string) => {
+        const url = `/mrt/${stationName}/${tapState}`;
         navigate(url);
     };
     const handleTapInClick = () => {
-        if (selectedStation && uid !== null) {
+        if (selectedStation) {
             const tapState = 'In';
-            handleTapIn(selectedStation.stationName, tapState, uid);
+            handleTapIn(selectedStation.stationName, tapState);
+            fetchCard();
         }
     };
 
     useEffect(() => {
         fetchStations();
     }, [onClick]);
+    useEffect(() => {
+        navigate('/mrt');
+        toggleSubmitOff();
+    }, []);
 
     return (
         <div className="map-container" onClick={() => { }}>
@@ -223,11 +233,12 @@ const MrtMap = ({ onClick }: any) => {
                                             }}>
                                         </input>
                                     </div>
-                                    <div className="uid-submit"
-                                        onClick={() => {
-                                            fetchCard();
-                                        }}
-                                    >Submit</div>
+                                    <div className="tapState-btns">
+                                        <div className="tapIn"
+                                            onClick={handleTapInClick}
+                                        >Tap In</div>
+                                        <div className="tapOut">Tap Out</div>
+                                    </div>
                                 </>
                             )}
 
@@ -250,17 +261,6 @@ const MrtMap = ({ onClick }: any) => {
                             )}
 
                         </div>
-                        {submit && (
-                            <>
-                                <div className="tapState-btns">
-                                    <div className="tapIn"
-                                        onClick={handleTapInClick}
-                                    >Tap In</div>
-                                    <div className="tapOut">Tap Out</div>
-                                </div>
-                            </>
-                        )}
-
                     </div>
                 </div>
             )}

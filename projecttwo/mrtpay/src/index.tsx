@@ -30,8 +30,8 @@ const router = createBrowserRouter(
       </Route>
 
       <Route path="mrt" element={<MrtUser />}/>
-      <Route path="mrt/:uid" element={<MrtUser />} />
-      <Route path="mrt/:stationName/:tapState/:uid" element={<MrtUser />} />
+      {/* <Route path="mrt/:uid" element={<MrtUser />} /> */}
+      <Route path="mrt/:stationName/:tapState" element={<MrtUser />} />
 
     </>
   )
