@@ -57,20 +57,23 @@ const MyMarker = ({ position, children, onClick, eventHandlers, isSelected }: an
 const MrtMap = ({ onClick }: any) => {
     const [stations, setStations] = useState<Markers[]>([]);
     const [selectedStation, setSelectedStation] = useState<Markers | null>(null);
-    const [selectedStationName, setSelectedStationName] = useState<string>("");
-    const [selectedLat, setSelectedLat] = useState<number>(0);
-    const [selectedLng, setSelectedLng] = useState<number>(0);
-    const [selectedConns, setSelectedConns] = useState<string[]>([]);
-    const [selectedId, setSelectedId] = useState('');
     const [uidInput, setUidInput] = useState('');
     const [uid, setUid] = useState<number | null>(null);
-    const [bal, setBal] = useState<number | null>(null);
     const [submit, setSubmit] = useState(false);
-    const [tapState, setTapState] = useState('');
-    const [afterTapOut, setAfterTapOut] = useState(false);
 
-    // const [userUi, setUserUi] = useState(false);
-    // const [doNavigate, setDoNavigate] = useState(false);
+
+    /* TAP IN /////////////// */
+    const [tapState, setTapState] = useState('');
+
+
+    /* TAP OUT ///////////// */
+    const [ticket, setTicket] = useState(false);
+    const [fare, setFare] = useState<number>(0);
+    const [initialBal, setInitialBal] = useState<number>(0);
+    const [stationIn, setStationIn] = useState('');
+    const [finalBal, setFinalBal] = useState<number>(0);
+    const [stationOut, setStationOut] = useState('');
+
 
     const navigate = useNavigate();
     const tapInUrl = (stationName: string, tapState: string) => {
@@ -84,10 +87,21 @@ const MrtMap = ({ onClick }: any) => {
 
     const toggleSubmitOff = () => {
         setSubmit(false);
-        setAfterTapOut(false);
+        setTicket(false);
         setUidInput("");
         navigate('/mrt');
     }
+
+    const leaveStation = () => {
+        setSubmit(false);
+        setTicket(false);
+        setUidInput("");
+        navigate('/mrt');
+        setSelectedStation(null)
+    }
+
+
+
 
     const fetchStations = async () => {
         try {
@@ -111,7 +125,7 @@ const MrtMap = ({ onClick }: any) => {
 
     const fetchCard = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/cards/${uid}`, {
+            const response = await fetch(`http://localhost:8080/cards/${uidInput}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -120,7 +134,7 @@ const MrtMap = ({ onClick }: any) => {
 
             if (response.ok) {
                 const fetchedCard = await response.json();
-                setBal(fetchedCard.bal)
+                setInitialBal(fetchedCard.bal)
             } else {
                 console.error('Failed to fetch cards');
             }
@@ -146,7 +160,7 @@ const MrtMap = ({ onClick }: any) => {
             if (response.ok) {
                 const card = await response.json();
                 setUid(card.uid);
-                setBal(card.bal);
+                setInitialBal(card.bal);
                 setTapState(card.tapState)
                 setSubmit(true)
                 if (selectedStation) {
@@ -156,7 +170,7 @@ const MrtMap = ({ onClick }: any) => {
                 }
             } else {
                 setUid(null);
-                setBal(null);
+                setInitialBal(0);
                 return;
             }
         } catch (error) {
@@ -164,31 +178,56 @@ const MrtMap = ({ onClick }: any) => {
         }
     };
 
-    const handleTapIn = () => {
-        tapIn();
-    };
+
+    const getFare = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/adminConfigs/fareId?=1`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                const fetchedFare = await response.json();
+                setFare(fetchedFare.fareKm)
+                return (fetchedFare.fareKm)
+            } else {
+                console.error('Failed to fetch fare');
+            }
+        } catch (error) {
+            console.error('Error fetching fare:', error);
+        }
+    }
+
 
     const tapOut = async () => {
         if (uidInput.trim() === "") {
             console.error('UID is blank');
             return;
         }
-        await fetchCard();
+        // await fetchCard();
+        let fareX = await getFare();
+
         try {
+            const finalBal = initialBal - fareX;
             const response = await fetch(`http://localhost:8080/cards/tapOut/${uidInput}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ bal: bal ? bal - fare : 0, tapState: '' })
+                body: JSON.stringify({ bal: finalBal, tapState: '' })
             });
 
             if (response.ok) {
                 const card = await response.json();
-                setBal(bal ? bal - fare : 0)
+                setStationIn(card.tapState)
+                setFinalBal(card.bal - fareX)
                 setTapState('')
-                setSubmit(true)
-                setAfterTapOut(true)
+                setStationOut(selectedStation ? selectedStation.stationName : '');
+                setSubmit(false)
+                setTicket(true)
+                // console.log(finalBal)
                 if (selectedStation) {
                     tapOutUrl(selectedStation.stationName, 'Out');
                     console.log('TAP OUT SUCCESS!')
@@ -196,7 +235,7 @@ const MrtMap = ({ onClick }: any) => {
                 }
             } else {
                 setUid(null);
-                setBal(null);
+                setInitialBal(0);
                 return;
             }
         } catch (error) {
@@ -204,11 +243,12 @@ const MrtMap = ({ onClick }: any) => {
         }
     }
 
+    const handleTapIn = () => {
+        tapIn();
+    };
     const handleTapOut = () => {
         tapOut();
     }
-
-    const fare = 20;
 
     const displayPolylines = (stations: Markers[]) => {
         const polylines: JSX.Element[] = [];
@@ -281,110 +321,115 @@ const MrtMap = ({ onClick }: any) => {
 
             {selectedStation !== null && (
                 <div>
-                    <div className="tapState-prompt">
-                        <div className="tapState-indicator"></div>
-                        <div className="tapState-container">
-                            <div className="tapState-station">
-                                <RiUserLocationLine />
-                                {selectedStation?.stationName.toUpperCase()}
+                    {!ticket && (
+                        <div className="tapState-prompt">
+                            <div className="tapState-indicator"></div>
+                            <div className="tapState-container">
+                                <div className="tapState-station">
+                                    <RiUserLocationLine />
+                                    {selectedStation?.stationName.toUpperCase()}
+                                </div>
+
+                                {!submit && (
+                                    <>
+                                        <div className="uid-input-container">
+                                            <div className="uid-label">UID:</div>
+                                            <input className="uid-input"
+                                                placeholder="Input UID"
+                                                type="number"
+                                                value={uidInput}
+                                                onChange={(e) => {
+                                                    const input = e.target.value;
+                                                    const onlyNums = input.replace(/[^0-9]/g, '');
+                                                    const limitedNums = onlyNums.slice(0, 10);
+                                                    setUidInput(limitedNums);
+                                                }}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'e' || e.key === 'E') {
+                                                        e.preventDefault();
+                                                    }
+                                                }}>
+                                            </input>
+                                        </div>
+                                        <div className="tapState-btns">
+                                            <div className="tapIn"
+                                                onClick={handleTapIn}
+                                            >Tap In</div>
+                                            <div className="tapOut"
+                                                onClick={handleTapOut}>Tap Out</div>
+                                        </div>
+                                    </>
+                                )}
+
+                                {submit && (
+                                    <>
+                                        <div className="user-card">
+                                            <img className="tapCard-icon"
+                                                src="https://cdn-icons-png.flaticon.com/512/674/674896.png ">
+                                            </img>
+                                            <div className="cancel-submit"
+                                                onClick={toggleSubmitOff}
+                                            >
+                                                <RiArrowGoBackFill size={20} />
+                                            </div>
+                                            <div className="uid-display">
+                                                <div className="uid-text"></div>
+                                                <div className="uid-value">{uid}</div>
+
+                                            </div>
+                                            <div className="balance-display">
+                                                <div className="bal-text">BALANCE</div>
+                                                <div className="bal-value">{`PHP ${initialBal}`}</div>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
                             </div>
+                        </div>
 
-                            {!submit && (
-                                <>
-                                    <div className="uid-input-container">
-                                        <div className="uid-label">UID:</div>
-                                        <input className="uid-input"
-                                            placeholder="Input UID"
-                                            type="number"
-                                            value={uidInput}
-                                            onChange={(e) => {
-                                                const input = e.target.value;
-                                                const onlyNums = input.replace(/[^0-9]/g, '');
-                                                const limitedNums = onlyNums.slice(0, 10);
-                                                setUidInput(limitedNums);
-                                            }}
-                                            onKeyDown={(e) => {
-                                                if (e.key === 'e' || e.key === 'E') {
-                                                    e.preventDefault();
-                                                }
-                                            }}>
-                                        </input>
-                                    </div>
-                                    <div className="tapState-btns">
-                                        <div className="tapIn"
-                                            onClick={handleTapIn}
-                                        >Tap In</div>
-                                        <div className="tapOut"
-                                            onClick={handleTapOut}>Tap Out</div>
-                                    </div>
-                                </>
-                            )}
-
-                            {submit && (
-                                <>
-                                    <div className="user-card">
-                                        <img className="tapCard-icon"
-                                            src="https://cdn-icons-png.flaticon.com/512/674/674896.png ">
-                                        </img>
-                                        <div className="cancel-submit"
-                                            onClick={toggleSubmitOff}
-                                        >
-                                            <RiArrowGoBackFill size={20} />
-                                        </div>
-                                        <div className="uid-display">
-                                            <div className="uid-text"></div>
-                                            <div className="uid-value">{uid}</div>
-
-                                        </div>
-                                        <div className="balance-display">
-                                            <div className="bal-text">BALANCE</div>
-                                            <div className="bal-value">{`PHP ${bal}`}</div>
-                                        </div>
-                                    </div>
-                                </>
-                            )}
-
-                            {afterTapOut && (
-                                <>
-                                    <div className="user-card">
-                                        <img className="tapCard-icon"
-                                            src="https://cdn-icons-png.flaticon.com/512/674/674896.png ">
-                                        </img>
-                                        <div className="cancel-submit"
-                                            onClick={toggleSubmitOff}
-                                        >
-                                            <RiArrowGoBackFill size={20} />
-                                        </div>
-                                        <div className="uid-display">
-                                            <div className="uid-text"></div>
-                                            <div className="uid-value">{uid}</div>
-
-                                        </div>
-                                        <div className="balance-display">
-                                            <div className="bal-text">BALANCE</div>
-                                            <div className="bal-value">{`PHP ${bal}`}</div>
-                                        </div>
-                                    </div>
-                                </>
-                            )}
+                    )}
 
 
+                </div>
+            )}
+
+
+
+            {/* ticket ///////////////// */}
+            {ticket && (
+                <div className="ticket-container">
+                    <div className="ticket-top">
+                        <div className="another-inner-top">
+                            <div className="ticket-uid-label">UID
+                                <div className="ticket-uid"><strong>{uid}</strong></div>
+                            </div>
+                            <div className="ticket-bal-label">BALANCE
+                                <div className="ticket-bal"><strong> PHP {initialBal}</strong></div>
+                            </div>
+                        </div>
+                        <div className="inner-top">
+                            <div className="initial-station-label">Depart</div>
+                            <div className="initial-station">{stationIn}</div>
+                            <img className="line-direction"
+                                src="https://cdn-icons-png.flaticon.com/512/2473/2473536.png "></img>
+                            <div className="final-station-label">Arrive</div>
+                            <div className="final-station">{stationOut}</div>
+                        </div>
+                    </div>
+                    <div className="ticket-bottom"
+                        onClick={leaveStation}>
+                        <div className="inner-bottom">
+                            <div className="inner-bottom-left">
+                                <div className="distance-label">Distance traveled</div>
+                                <div className="new-bal-label">new balance {finalBal}</div>
+                            </div>
+                            <div className="inner-bottom-right">
+                                <div className="ticket-fare-label">-{fare}PHP</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             )}
-
-            {/*    https://cdn-icons-png.flaticon.com/512/6822/6822815.png  */}
-
-            <div className="ticket-container">
-                <div className="ticket-top">top</div>
-                <div className="ticket-bottom">bottom</div>
-            </div>
-            <div className="sample-container">
-                <div className="sample"></div>
-            </div>
-
-
         </div>
     );
 }

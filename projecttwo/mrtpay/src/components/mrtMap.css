@@ -184,66 +184,167 @@
 
 .ticket-container {
   position: absolute;
-  bottom: 100px;
-  right: 100px;
+  bottom: 10svh;
+  right: 8svw;
   gap: 10px;
+  font-size: 12px;
+  transition: bottom 0.5s ease;
 }
 
 .ticket-top {
-  background-color: white;
+  background-color: #ffb031;
   width: 250px;
   height: 250px;
-  border-radius: 5px 5px 5px 5px;
-  border: 1px solid #888;
-  border-bottom-left-radius: 10px;
-  overflow: hidden;
-}
-.ticket-top::before {
-  border-bottom-left-radius: 50%;
-}
-
-.ticket-bottom {
-  background-color: white;
-  width: 250px;
-  height: 100px;
-  border-radius: 5px 5px 5px 5px;
-  border: 1px solid #888;
-}
-
-/* sample /////////////// */
-
-.sample-container {
-  position: absolute;
-  bottom: 100px;
-  right: 100px;
-
-}
-
-.sample {
-  background-color: #202020;
-  width: 200px;
-  height: 200px;
-  border-radius: 10px;
-  /* -webkit-mask:
-    radial-gradient(circle at bottom left, transparent 20px, black 20px);
-  mask:
-    radial-gradient(circle at bottom left, transparent 20px, black 20px); */
-
+  border-radius: 5px 5px 0 0;
 
   -webkit-mask-image:
-    radial-gradient(circle at top left, transparent 15px, black 16px),
-    radial-gradient(circle at top right, transparent 15px, black 16px),
-    radial-gradient(circle at bottom left, transparent 15px, black 16px),
-    radial-gradient(circle at bottom right, transparent 15px, black 16px);
+    radial-gradient(circle at bottom left, transparent 10px, black 11px),
+    radial-gradient(circle at bottom right, transparent 10px, black 11px);
   -webkit-mask-position: top left, top right, bottom left, bottom right;
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-size: 50% 50%;
   mask-image:
-    radial-gradient(circle at top left, transparent 15px, black 16px),
-    radial-gradient(circle at top right, transparent 15px, black 16px),
-    radial-gradient(circle at bottom left, transparent 15px, black 16px),
-    radial-gradient(circle at bottom right, transparent 15px, black 16px);
-  mask-position: top left, top right, bottom left, bottom right;
+    radial-gradient(circle at bottom left, transparent 10px, black 11px),
+    radial-gradient(circle at bottom right, transparent 10px, black 11px);
+  mask-position: bottom left, bottom right;
   mask-repeat: no-repeat;
-  mask-size: 50% 50%;
+  mask-size: 50% 100%;
+}
+
+.ticket-bottom {
+  cursor: pointer;
+  background-color: #ffb031;
+  width: 250px;
+  height: 100px;
+  border-radius: 0 0 5px 5px;
+  border-top: 3px dashed white;
+
+  -webkit-mask-image:
+    radial-gradient(circle at top left, transparent 10px, black 11px),
+    radial-gradient(circle at top right, transparent 10px, black 11px);
+  -webkit-mask-position: top left, top right, bottom left, bottom right;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 50% 100%;
+  mask-image:
+    radial-gradient(circle at top left, transparent 10px, black 11px),
+    radial-gradient(circle at top right, transparent 10px, black 11px);
+  mask-position: top left, top right;
+  mask-repeat: no-repeat;
+  mask-size: 50% 100%;
+}
+
+.another-inner-top {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  background-color: white;
+  width: 238px;
+  height: 73px;
+  margin-left: 6px;
+  bottom: 271px;
+  border-radius: 5px;
+  padding: 5px;
+  border: 1px solid #202020;
+}
+
+.ticket-uid-label,
+.ticket-bal-label {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  color: #b6b6b6;
+}
+
+.ticket-uid,
+.ticket-bal {
+  color: #202020;
+}
+
+.inner-top {
+  position: absolute;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 238px;
+  height: 150px;
+  margin-left: 6px;
+  bottom: 115px;
+  border-radius: 5px;
+  padding: 5px;
+  border: 1px solid #202020;
+
+}
+
+.initial-station-label,
+.final-station-label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #b6b6b6;
+  width: 100%;
+  align-items: center;
+}
+
+.initial-station,
+.final-station {
+  display: flex;
+  align-self: center;
+  font-weight: 500;
+  font-size: 14px;
+  color: #202020;
+}
+
+.initial-station {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  border-bottom: 1px solid #202020;
+}
+
+.final-station-label {
+  border-top: 1px solid #202020;
+}
+
+.line-direction {
+  display: flex;
+  align-self: center;
+  height: 50px;
+  width: 50px;
+  transform: rotate(90deg)
+}
+
+.inner-bottom {
+  position: absolute;
+  background-color: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 238px;
+  height: 80px;
+  margin-left: 6px;
+  bottom: 6px;
+  border-radius: 5px;
+  padding: 5px;
+  border: 1px solid #202020;
+
+}
+
+.inner-bottom-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.inner-bottom-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ticket-fare-label {
+  font-size: 18px;
+  font-weight: 800;
+  color: #Ee3e3e;
 }
