@@ -9,7 +9,6 @@ import { calculateDistance } from "./station/mapAdmin";
 import GetLatLng from "./getLatLng";
 import MapFly from './mapFly';
 import './mrtMap.css';
-import { AnyNsRecord } from "dns";
 
 
 interface Markers {
@@ -17,6 +16,12 @@ interface Markers {
     stationName: string;
     stationCoord: [number, number];
     stationConn: string[];
+}
+
+interface Cards {
+    uid: number;
+    bal: number;
+    tapState: string
 }
 
 const customIcon = new Icon({
@@ -33,7 +38,6 @@ const MyMarker = ({ position, children, onClick, eventHandlers, isSelected }: an
     const [adjustedPosition, setAdjustedPosition] = useState<[number, number]>(position);
 
     useEffect(() => {
-        // Adjust the latitude when the station is selected
         if (isSelected) {
             setAdjustedPosition([position[0] + 0.0034, position[1]]);
         } else {
@@ -62,10 +66,25 @@ const MrtMap = ({ onClick }: any) => {
     const [uid, setUid] = useState<number | null>(null);
     const [bal, setBal] = useState<number | null>(null);
     const [submit, setSubmit] = useState(false);
+    const [tapState, setTapState] = useState('');
+    const [afterTapOut, setAfterTapOut] = useState(false);
+
+    // const [userUi, setUserUi] = useState(false);
     // const [doNavigate, setDoNavigate] = useState(false);
+
+    const navigate = useNavigate();
+    const tapInUrl = (stationName: string, tapState: string) => {
+        const url = `/mrt/${stationName}/${tapState}`;
+        navigate(url);
+    };
+    const tapOutUrl = (stationName: string, tapState: string) => {
+        const url = `/mrt/${stationName}/${tapState}`;
+        navigate(url);
+    };
 
     const toggleSubmitOff = () => {
         setSubmit(false);
+        setAfterTapOut(false);
         setUidInput("");
         navigate('/mrt');
     }
@@ -91,12 +110,8 @@ const MrtMap = ({ onClick }: any) => {
     };
 
     const fetchCard = async () => {
-        if (uidInput.trim() === "") {
-            console.error('UID is blank');
-            return;
-        }
         try {
-            const response = await fetch(`http://localhost:8080/cards/${uidInput}`, {
+            const response = await fetch(`http://localhost:8080/cards/${uid}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -104,20 +119,96 @@ const MrtMap = ({ onClick }: any) => {
             });
 
             if (response.ok) {
-                const { uid, bal } = await response.json();
-                setUid(uid);
-                setBal(bal);
-                setSubmit(true)
+                const fetchedCard = await response.json();
+                setBal(fetchedCard.bal)
             } else {
-                console.error('UID does not exist');
-                setUid(null);
-                setBal(null);
+                console.error('Failed to fetch cards');
             }
         } catch (error) {
             console.error('Error fetching cards:', error);
         }
     };
 
+    const tapIn = async () => {
+        if (uidInput.trim() === "") {
+            console.error('UID is blank');
+            return;
+        }
+        try {
+            const response = await fetch(`http://localhost:8080/cards/tapIn/${uidInput}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ tapState: selectedStation?.stationName })
+            });
+
+            if (response.ok) {
+                const card = await response.json();
+                setUid(card.uid);
+                setBal(card.bal);
+                setTapState(card.tapState)
+                setSubmit(true)
+                if (selectedStation) {
+                    tapInUrl(selectedStation.stationName, 'In');
+                    console.log('TAP IN SUCCESS!')
+                    return;
+                }
+            } else {
+                setUid(null);
+                setBal(null);
+                return;
+            }
+        } catch (error) {
+            console.error('Error fetching cards:', error);
+        }
+    };
+
+    const handleTapIn = () => {
+        tapIn();
+    };
+
+    const tapOut = async () => {
+        if (uidInput.trim() === "") {
+            console.error('UID is blank');
+            return;
+        }
+        await fetchCard();
+        try {
+            const response = await fetch(`http://localhost:8080/cards/tapOut/${uidInput}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ bal: bal ? bal - fare : 0, tapState: '' })
+            });
+
+            if (response.ok) {
+                const card = await response.json();
+                setBal(bal ? bal - fare : 0)
+                setTapState('')
+                setSubmit(true)
+                setAfterTapOut(true)
+                if (selectedStation) {
+                    tapOutUrl(selectedStation.stationName, 'Out');
+                    console.log('TAP OUT SUCCESS!')
+                    return;
+                }
+            } else {
+                setUid(null);
+                setBal(null);
+                return;
+            }
+        } catch (error) {
+            console.error('Error fetching cards:', error);
+        }
+    }
+
+    const handleTapOut = () => {
+        tapOut();
+    }
+
+    const fare = 20;
 
     const displayPolylines = (stations: Markers[]) => {
         const polylines: JSX.Element[] = [];
@@ -151,19 +242,6 @@ const MrtMap = ({ onClick }: any) => {
         return polylines;
     };
 
-    const navigate = useNavigate();
-    const handleTapIn = (stationName: string, tapState: string) => {
-        const url = `/mrt/${stationName}/${tapState}`;
-        navigate(url);
-    };
-    const handleTapInClick = () => {
-        if (selectedStation) {
-            const tapState = 'In';
-            handleTapIn(selectedStation.stationName, tapState);
-            fetchCard();
-        }
-    };
-
     useEffect(() => {
         fetchStations();
     }, [onClick]);
@@ -188,7 +266,8 @@ const MrtMap = ({ onClick }: any) => {
                         position={[station.stationCoord[0], station.stationCoord[1]]}
                         isSelected={selectedStation === station}
                         eventHandlers={{
-                            click: () => setSelectedStation(station)
+                            click: () => (setSelectedStation(station), toggleSubmitOff())
+
                         }}
                     >
                         {station.stationName}
@@ -200,16 +279,14 @@ const MrtMap = ({ onClick }: any) => {
 
             </MapContainer>
 
-            {selectedStation && (
+            {selectedStation !== null && (
                 <div>
-
                     <div className="tapState-prompt">
                         <div className="tapState-indicator"></div>
                         <div className="tapState-container">
                             <div className="tapState-station">
                                 <RiUserLocationLine />
                                 {selectedStation?.stationName.toUpperCase()}
-                                {/* STATION NAME */}
                             </div>
 
                             {!submit && (
@@ -235,9 +312,10 @@ const MrtMap = ({ onClick }: any) => {
                                     </div>
                                     <div className="tapState-btns">
                                         <div className="tapIn"
-                                            onClick={handleTapInClick}
+                                            onClick={handleTapIn}
                                         >Tap In</div>
-                                        <div className="tapOut">Tap Out</div>
+                                        <div className="tapOut"
+                                            onClick={handleTapOut}>Tap Out</div>
                                     </div>
                                 </>
                             )}
@@ -245,25 +323,63 @@ const MrtMap = ({ onClick }: any) => {
                             {submit && (
                                 <>
                                     <div className="user-card">
+                                        <img className="tapCard-icon"
+                                            src="https://cdn-icons-png.flaticon.com/512/674/674896.png ">
+                                        </img>
                                         <div className="cancel-submit"
                                             onClick={toggleSubmitOff}
                                         >
                                             <RiArrowGoBackFill size={20} />
                                         </div>
-                                        <div className="uid-display">{uid}
-                                            <div className="uid-text">UID</div>
+                                        <div className="uid-display">
+                                            <div className="uid-text"></div>
+                                            <div className="uid-value">{uid}</div>
+
                                         </div>
                                         <div className="balance-display">
                                             <div className="bal-text">BALANCE</div>
-                                            {`PHP ${bal}`}</div>
+                                            <div className="bal-value">{`PHP ${bal}`}</div>
+                                        </div>
                                     </div>
                                 </>
                             )}
+
+                            {afterTapOut && (
+                                <>
+                                    <div className="user-card">
+                                        <img className="tapCard-icon"
+                                            src="https://cdn-icons-png.flaticon.com/512/674/674896.png ">
+                                        </img>
+                                        <div className="cancel-submit"
+                                            onClick={toggleSubmitOff}
+                                        >
+                                            <RiArrowGoBackFill size={20} />
+                                        </div>
+                                        <div className="uid-display">
+                                            <div className="uid-text"></div>
+                                            <div className="uid-value">{uid}</div>
+
+                                        </div>
+                                        <div className="balance-display">
+                                            <div className="bal-text">BALANCE</div>
+                                            <div className="bal-value">{`PHP ${bal}`}</div>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
+
 
                         </div>
                     </div>
                 </div>
             )}
+
+{/*    https://cdn-icons-png.flaticon.com/512/6822/6822815.png  */}
+
+            <div className="ticket-container">
+                <div className="ticket-top">top</div>
+                <div className="ticket-bottom">bottom</div>
+            </div>
 
         </div>
     );

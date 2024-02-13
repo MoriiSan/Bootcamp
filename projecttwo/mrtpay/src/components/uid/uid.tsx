@@ -35,6 +35,7 @@ const UID = () => {
         setIsCardView(false);
     };
 
+    const [tapState, setTapState] = useState('')
     const [uid, setUid] = useState('')
     const [bal, setBal] = useState('')
     const [newBalance, setNewBalance] = useState('');
@@ -48,6 +49,7 @@ const UID = () => {
     interface Cards {
         uid: number;
         bal: number;
+        tapState: string;
     }
 
     const [searchQuery, setSearchQuery] = useState('');
@@ -66,13 +68,11 @@ const UID = () => {
     const cardsPerPage = 8;
     const itemsPerPage = 8;
 
-
-
     /////////////////////////////
 
     const handleCreate = async () => {
         try {
-            const response = await fetch(`${process.env.REACT_APP_URL}cards`, {
+            const response = await fetch(`${process.env.REACT_APP_URL}cards/creating-card`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
