@@ -184,11 +184,18 @@
 
 .ticket-container {
   position: absolute;
-  bottom: 10svh;
-  right: 8svw;
+  bottom: 5svh;
+  right: 3svw;
   gap: 10px;
   font-size: 12px;
-  transition: bottom 0.5s ease;
+  transition: transform 0.3s ease-in-out;
+}
+
+.ticket-container:hover {
+  transform: scale(1.5) translateY(-20%) translateX(-20%);
+
+
+  transition: transform 0.5s ease-in-out;
 }
 
 .ticket-top {
@@ -208,7 +215,7 @@
     radial-gradient(circle at bottom right, transparent 10px, black 11px);
   mask-position: bottom left, bottom right;
   mask-repeat: no-repeat;
-  mask-size: 50% 100%;
+  mask-size: 60% 100%;
 }
 
 .ticket-bottom {
@@ -230,7 +237,7 @@
     radial-gradient(circle at top right, transparent 10px, black 11px);
   mask-position: top left, top right;
   mask-repeat: no-repeat;
-  mask-size: 50% 100%;
+  mask-size: 60% 100%;
 }
 
 .another-inner-top {

@@ -7,8 +7,10 @@ import { RiUserLocationLine, RiArrowGoBackFill } from "react-icons/ri";
 import { ReactNotifications, Store } from 'react-notifications-component';
 import { calculateDistance } from "./station/mapAdmin";
 import GetLatLng from "./getLatLng";
+import { haversine } from './calcDistance';
 import MapFly from './mapFly';
 import './mrtMap.css';
+import { Edge, Graph, Path, alg } from 'graphlib';
 
 
 interface Markers {
@@ -60,6 +62,7 @@ const MrtMap = ({ onClick }: any) => {
     const [uidInput, setUidInput] = useState('');
     const [uid, setUid] = useState<number | null>(null);
     const [submit, setSubmit] = useState(false);
+    const [graph, setGraph] = useState<Graph | null>(null);
 
 
     /* TAP IN /////////////// */
@@ -99,9 +102,6 @@ const MrtMap = ({ onClick }: any) => {
         navigate('/mrt');
         setSelectedStation(null)
     }
-
-
-
 
     const fetchStations = async () => {
         try {
@@ -169,8 +169,7 @@ const MrtMap = ({ onClick }: any) => {
                     return;
                 }
             } else {
-                setUid(null);
-                setInitialBal(0);
+                console.log('NO EXIT')
                 return;
             }
         } catch (error) {
@@ -282,19 +281,50 @@ const MrtMap = ({ onClick }: any) => {
         return polylines;
     };
 
+    ///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
+
+    // const buildGraph = () => {
+    //     const g = new Graph();
+    //     stations.forEach(Markers => {
+    //         Markers.stationConn.forEach(connections => {
+    //             g.setEdge(Markers.stationName, connections, calculateDistance(Markers, stations.find(s => s.stationName === connections)));
+    //         });
+    //     });
+    //     setGraph(g);
+    // };
+
+    // const displayShortestPath = () => {
+    //     if (!graph || !stationIn || !stationOut) return null;
+    //     const path: { [node: string]: Edge[] } = {};
+    //     const shortestPath = alg
+    //         .dijkstra(graph, stationIn, undefined, (v) => path[v])
+    //         .map((stationName: string) => stations.find(station => station.stationName === stationName)?.stationCoord)
+    //         .filter(Boolean);
+
+    //     return (
+    //         <Polyline
+    //             positions={shortestPath}
+    //             color="red"
+    //             weight={6}
+    //         />
+    //     );
+    // };
+
+    ///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
+
     useEffect(() => {
         fetchStations();
-    }, [onClick]);
-    useEffect(() => {
         navigate('/mrt');
         toggleSubmitOff();
     }, []);
 
     return (
         <div className="map-container" onClick={() => { }}>
-            <MapContainer center={[14.596108, 120.984860]}
-                zoom={13} scrollWheelZoom={true} minZoom={12}
-                maxZoom={17} zoomControl={false} style={{ height: '100svh' }}
+            <MapContainer center={[14.593795, 120.931320]}
+                zoom={12} scrollWheelZoom={true} minZoom={12}
+                maxZoom={14} zoomControl={false} style={{ height: '100svh' }}
                 doubleClickZoom={false}>
                 <TileLayer
                     url="https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}.png?access-token=Rs3yx5aveNteEw7myffiDtutSEcX3b0zdHPWxOQbMjJyX6vCRNe4ZYLts8ya6wOI"
@@ -307,14 +337,13 @@ const MrtMap = ({ onClick }: any) => {
                         isSelected={selectedStation === station}
                         eventHandlers={{
                             click: () => (setSelectedStation(station), toggleSubmitOff())
-
-                        }}
-                    >
+                        }}>
                         {station.stationName}
                     </MyMarker>
                 ))}
 
                 {displayPolylines(stations)}
+
                 <MapFly station={selectedStation} zoom={12} />
 
             </MapContainer>
@@ -397,7 +426,7 @@ const MrtMap = ({ onClick }: any) => {
 
             {/* ticket ///////////////// */}
             {ticket && (
-                <div className="ticket-container">
+                <div className={`ticket-container ${ticket ? 'show' : ''}`}>
                     <div className="ticket-top">
                         <div className="another-inner-top">
                             <div className="ticket-uid-label">UID

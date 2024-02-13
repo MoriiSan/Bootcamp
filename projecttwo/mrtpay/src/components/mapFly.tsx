@@ -18,7 +18,7 @@ const MapFly: React.FC<LocationProps> = ({ station }) => {
     })
   };
   const flyCenter = () => {
-    map.flyTo([14.596108, 120.984860], 13, {
+    map.flyTo([14.593795, 120.931320], 12, {
       animate: true,
       duration: flyDuration
     })
