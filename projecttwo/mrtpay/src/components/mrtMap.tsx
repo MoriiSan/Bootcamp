@@ -374,12 +374,16 @@ const MrtMap = ({ onClick }: any) => {
                 </div>
             )}
 
-{/*    https://cdn-icons-png.flaticon.com/512/6822/6822815.png  */}
+            {/*    https://cdn-icons-png.flaticon.com/512/6822/6822815.png  */}
 
             <div className="ticket-container">
                 <div className="ticket-top">top</div>
                 <div className="ticket-bottom">bottom</div>
             </div>
+            <div className="sample-container">
+                <div className="sample"></div>
+            </div>
+
 
         </div>
     );

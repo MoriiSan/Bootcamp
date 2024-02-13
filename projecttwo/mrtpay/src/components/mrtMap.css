@@ -209,3 +209,41 @@
   border-radius: 5px 5px 5px 5px;
   border: 1px solid #888;
 }
+
+/* sample /////////////// */
+
+.sample-container {
+  position: absolute;
+  bottom: 100px;
+  right: 100px;
+
+}
+
+.sample {
+  background-color: #202020;
+  width: 200px;
+  height: 200px;
+  border-radius: 10px;
+  /* -webkit-mask:
+    radial-gradient(circle at bottom left, transparent 20px, black 20px);
+  mask:
+    radial-gradient(circle at bottom left, transparent 20px, black 20px); */
+
+
+  -webkit-mask-image:
+    radial-gradient(circle at top left, transparent 15px, black 16px),
+    radial-gradient(circle at top right, transparent 15px, black 16px),
+    radial-gradient(circle at bottom left, transparent 15px, black 16px),
+    radial-gradient(circle at bottom right, transparent 15px, black 16px);
+  -webkit-mask-position: top left, top right, bottom left, bottom right;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 50% 50%;
+  mask-image:
+    radial-gradient(circle at top left, transparent 15px, black 16px),
+    radial-gradient(circle at top right, transparent 15px, black 16px),
+    radial-gradient(circle at bottom left, transparent 15px, black 16px),
+    radial-gradient(circle at bottom right, transparent 15px, black 16px);
+  mask-position: top left, top right, bottom left, bottom right;
+  mask-repeat: no-repeat;
+  mask-size: 50% 50%;
+}
