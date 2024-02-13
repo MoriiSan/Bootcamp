@@ -73,8 +73,8 @@ const MrtMap = ({ onClick }: any) => {
     const [ticket, setTicket] = useState(false);
     const [fare, setFare] = useState<number>(0);
     const [initialBal, setInitialBal] = useState<number>(0);
-    const [stationIn, setStationIn] = useState('');
     const [finalBal, setFinalBal] = useState<number>(0);
+    const [stationIn, setStationIn] = useState('');
     const [stationOut, setStationOut] = useState('');
 
 
@@ -205,7 +205,7 @@ const MrtMap = ({ onClick }: any) => {
             console.error('UID is blank');
             return;
         }
-        // await fetchCard();
+
         let fareX = await getFare();
 
         try {
@@ -220,9 +220,9 @@ const MrtMap = ({ onClick }: any) => {
 
             if (response.ok) {
                 const card = await response.json();
-                setStationIn(card.tapState)
                 setFinalBal(card.bal - fareX)
                 setTapState('')
+                setStationIn(card.tapState)
                 setStationOut(selectedStation ? selectedStation.stationName : '');
                 setSubmit(false)
                 setTicket(true)
@@ -280,6 +280,40 @@ const MrtMap = ({ onClick }: any) => {
         });
         return polylines;
     };
+    const linesTraveled = (stations: Markers[], initialStation: Markers, finalStation: Markers) => {
+        const polylines: JSX.Element[] = [];
+        const connections: Set<string> = new Set();
+    
+        initialStation.stationConn.forEach((stationConnected) => {
+            const direction = `${initialStation.stationName}-${stationConnected}`;
+            const reverseDirection = `${stationConnected}-${initialStation.stationName}`;
+    
+            if (!connections.has(direction) && !connections.has(reverseDirection)) {
+                const stationConnectedData = stations.find(
+                    (s) => s.stationName === stationConnected
+                );
+    
+                if (stationConnectedData && stationConnectedData.stationName === finalStation.stationName) {
+                    polylines.push(
+                        <Polyline
+                            key={direction}
+                            color="#204491"
+                            weight={6}
+                            positions={[
+                                initialStation.stationCoord,
+                                stationConnectedData.stationCoord,
+                            ]}
+                        />
+                    );
+                    connections.add(direction);
+                    connections.add(reverseDirection);
+                }
+            }
+        });
+    
+        return polylines;
+    };
+    
 
     ///////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////
@@ -343,6 +377,7 @@ const MrtMap = ({ onClick }: any) => {
                 ))}
 
                 {displayPolylines(stations)}
+                {/* {linesTraveled(stations, stationIn, finalStation)} */}
 
                 <MapFly station={selectedStation} zoom={12} />
 
