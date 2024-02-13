@@ -265,6 +265,10 @@ const MrtMap = ({ onClick }: any) => {
                 </div>
             )}
 
+            <div className="sample-container">
+                <div className="sample"></div>
+            </div>
+
         </div>
     );
 }
