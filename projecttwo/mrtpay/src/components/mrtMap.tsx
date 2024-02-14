@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { MapContainer, Marker, Popup, TileLayer, Polyline } from 'react-leaflet';
 import { Icon, popup } from "leaflet";
@@ -256,6 +257,26 @@ const MrtMap = ({ onClick }: any) => {
     const handleTapOut = () => {
         tapOut();
     }
+
+    const calculateTraveledDistance = async (initialStation: any, finalStation: any) => {
+        try {
+            const response = await axios.post('/api/traveledDistance', { initialStation, finalStation });
+            return response.data.distance;
+        } catch (error) {
+            console.error('Error calculating traveled distance:', error);
+            throw error;
+        }
+    };
+
+    const getRoute = async (initialStation: any, finalStation: any) => {
+        try {
+            const response = await axios.post('/api/getRoute', { initialStation, finalStation });
+            return response.data;
+        } catch (error) {
+            console.error('Error getting route:', error);
+            throw error;
+        }
+    };
 
     const displayPolylines = (stations: Markers[]) => {
         const polylines: JSX.Element[] = [];
