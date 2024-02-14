@@ -258,25 +258,25 @@ const MrtMap = ({ onClick }: any) => {
         tapOut();
     }
 
-    const calculateTraveledDistance = async (initialStation: any, finalStation: any) => {
-        try {
-            const response = await axios.post('/api/traveledDistance', { initialStation, finalStation });
-            return response.data.distance;
-        } catch (error) {
-            console.error('Error calculating traveled distance:', error);
-            throw error;
-        }
-    };
+    // const calculateTraveledDistance = async (initialStation: any, finalStation: any) => {
+    //     try {
+    //         const response = await axios.post('/api/traveledDistance', { initialStation, finalStation });
+    //         return response.data.distance;
+    //     } catch (error) {
+    //         console.error('Error calculating traveled distance:', error);
+    //         throw error;
+    //     }
+    // };
 
-    const getRoute = async (initialStation: any, finalStation: any) => {
-        try {
-            const response = await axios.post('/api/getRoute', { initialStation, finalStation });
-            return response.data;
-        } catch (error) {
-            console.error('Error getting route:', error);
-            throw error;
-        }
-    };
+    // const getRoute = async (initialStation: any, finalStation: any) => {
+    //     try {
+    //         const response = await axios.post('/api/getRoute', { initialStation, finalStation });
+    //         return response.data;
+    //     } catch (error) {
+    //         console.error('Error getting route:', error);
+    //         throw error;
+    //     }
+    // };
 
     const displayPolylines = (stations: Markers[]) => {
         const polylines: JSX.Element[] = [];
