@@ -74,6 +74,7 @@ const MrtMap = ({ onClick }: any) => {
     /* TAP OUT ///////////// */
     const [ticket, setTicket] = useState(false);
     const [fare, setFare] = useState<number>(0);
+    const [fareDist, setFareDist] = useState<number>(0);
     const [initialBal, setInitialBal] = useState<number>(0);
     const [finalBal, setFinalBal] = useState<number>(0);
     const [stationIn, setStationIn] = useState('');
@@ -99,7 +100,7 @@ const MrtMap = ({ onClick }: any) => {
         setStationOut("")
         setUidInput("");
         setDistance(undefined)
-        setRoute([])
+        setRoute([]);
         navigate('/mrt');
     }
 
@@ -113,6 +114,7 @@ const MrtMap = ({ onClick }: any) => {
             setUidInput("");
             navigate('/mrt');
             setSelectedStation(null);
+            toggleSubmitOff();
 
             setCutTicket(true);
         }, 2000);
@@ -204,7 +206,7 @@ const MrtMap = ({ onClick }: any) => {
 
             if (response.ok) {
                 const fetchedFare = await response.json();
-                setFare(fetchedFare.fareKm)
+                setFare((fetchedFare.fareKm))
                 return (fetchedFare.fareKm)
             } else {
                 console.error('Failed to fetch fare');
@@ -222,11 +224,8 @@ const MrtMap = ({ onClick }: any) => {
         }
 
         let fareX = await getFare();
-        // let distanceTraveled =  await traveledDistance ();
-        // console.log(distanceTraveled);
-
         try {
-            const finalBal = initialBal - fareX;
+            const finalBal = initialBal - fareDist;
             const response = await fetch(`http://localhost:8080/cards/tapOut/${uidInput}`, {
                 method: 'PATCH',
                 headers: {
@@ -237,7 +236,7 @@ const MrtMap = ({ onClick }: any) => {
 
             if (response.ok) {
                 const card = await response.json();
-                setFinalBal(card.bal - fareX)
+                setFinalBal(card.bal - fareDist)
                 setTapState('')
                 setStationIn(card.tapState)
                 setStationOut(selectedStation ? selectedStation.stationName : '');
@@ -259,11 +258,6 @@ const MrtMap = ({ onClick }: any) => {
             console.error('Error fetching cards:', error);
         }
     }
-
-    // const handleTapIn = () => {
-    //     tapIn();
-    // };
-
 
     const displayPolylines = (stations: Markers[]) => {
         const polylines: JSX.Element[] = [];
@@ -319,13 +313,15 @@ const MrtMap = ({ onClick }: any) => {
         }
         return routePolylines;
     };
-    
+
 
 
     ///////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////
 
     const traveledDistance = async (initialStation: string, finalStation: string) => {
+        let fareX = await getFare();
+
         try {
             const response = await fetch(`${process.env.REACT_APP_URL}stations/traveled-distance`, {
                 method: 'POST',
@@ -338,6 +334,9 @@ const MrtMap = ({ onClick }: any) => {
                 const distanceTraveled = await response.json();
                 console.log(distanceTraveled.distance)
                 setDistance(distanceTraveled.distance)
+                setFareDist(fareX * distanceTraveled.distance)
+                console.log('fareDist:', fareX * distanceTraveled.distance)
+                return(distanceTraveled.distance)
             } else {
                 console.error('Error setting edge distances');
             }
@@ -357,7 +356,6 @@ const MrtMap = ({ onClick }: any) => {
             });
             if (response.ok) {
                 const routeTraveled = await response.json();
-                console.log(routeTraveled)
                 setRoute(routeTraveled)
             } else {
                 console.error('Error setting edge distances');
@@ -376,7 +374,27 @@ const MrtMap = ({ onClick }: any) => {
         fetchStations();
         navigate('/mrt');
         toggleSubmitOff();
-        
+
+        const getRoute = async (initialStation: string, finalStation: string) => {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_URL}stations/get-route`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ initialStation, finalStation })
+                });
+                if (response.ok) {
+                    const routeTraveled = await response.json();
+                    setRoute(routeTraveled)
+                } else {
+                    console.error('Error setting edge distances');
+                }
+            } catch (error) {
+                console.error('Error fetching stations:', error);
+            }
+        };
+        getRoute(stationIn, selectedStation ? selectedStation.stationName : '')
     }, []);
 
     return (
@@ -403,6 +421,7 @@ const MrtMap = ({ onClick }: any) => {
                 ))}
 
                 {displayPolylines(stations)}
+
                 {displayRoutePolylines(route)}
                 {/* {linesTraveled(stations, stationIn, finalStation)} */}
 
@@ -515,7 +534,7 @@ const MrtMap = ({ onClick }: any) => {
                                 <div className="new-bal-label">New Balance {finalBal}</div>
                             </div>
                             <div className="inner-bottom-right">
-                                <div className="ticket-fare-label">-{fare}PHP</div>
+                                <div className="ticket-fare-label">-{fareDist}PHP</div>
                             </div>
                         </div>
                     </div>

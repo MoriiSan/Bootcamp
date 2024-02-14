@@ -168,7 +168,7 @@ const Stations: React.FC = () => {
 
     const fetchFare = async () => {
         try {
-            const response = await fetch(`${process.env.REACT_APP_URL}adminConfigs/fareId`, {
+            const response = await fetch(`${process.env.REACT_APP_URL}adminConfigs/${1}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -177,7 +177,8 @@ const Stations: React.FC = () => {
 
             if (response.ok) {
                 const fetchedFare = await response.json();
-                setFare(fetchedFare[0].fareKm);
+                console.log(fetchedFare.fareKm)
+                setFare(fetchedFare.fareKm);
             } else {
                 console.error('Failed to fetch fare');
             }
