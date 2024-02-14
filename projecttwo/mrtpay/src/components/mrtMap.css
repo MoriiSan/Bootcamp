@@ -219,7 +219,7 @@
 .ticket-top {
   /* Your existing styles */
   transition: transform 0.5s ease;
-  transform: translateY(-35%);
+  transform: translateY(-30%);
 }
 
 .ticket-top.show {

@@ -78,6 +78,8 @@ const MrtMap = ({ onClick }: any) => {
     const [finalBal, setFinalBal] = useState<number>(0);
     const [stationIn, setStationIn] = useState('');
     const [stationOut, setStationOut] = useState('');
+    const [distance, setDistance] = useState();
+    const [route, setRoute] = useState<string[]>([]);
 
 
     const navigate = useNavigate();
@@ -93,7 +95,11 @@ const MrtMap = ({ onClick }: any) => {
     const toggleSubmitOff = () => {
         setSubmit(false);
         setTicket(false);
+        setStationIn("")
+        setStationOut("")
         setUidInput("");
+        setDistance(undefined)
+        setRoute([])
         navigate('/mrt');
     }
 
@@ -152,7 +158,7 @@ const MrtMap = ({ onClick }: any) => {
         }
     };
 
-    const tapIn = async () => {
+    const handleTapIn = async () => {
         if (uidInput.trim() === "") {
             console.error('UID is blank');
             return;
@@ -209,13 +215,15 @@ const MrtMap = ({ onClick }: any) => {
     }
 
 
-    const tapOut = async () => {
+    const handleTapOut = async () => {
         if (uidInput.trim() === "") {
             console.error('UID is blank');
             return;
         }
 
         let fareX = await getFare();
+        // let distanceTraveled =  await traveledDistance ();
+        // console.log(distanceTraveled);
 
         try {
             const finalBal = initialBal - fareX;
@@ -235,7 +243,8 @@ const MrtMap = ({ onClick }: any) => {
                 setStationOut(selectedStation ? selectedStation.stationName : '');
                 setSubmit(false)
                 setTicket(true)
-                // console.log(finalBal)
+                traveledDistance(card.tapState, selectedStation ? selectedStation.stationName : '')
+                getRoute(card.tapState, selectedStation ? selectedStation.stationName : '')
                 if (selectedStation) {
                     tapOutUrl(selectedStation.stationName, 'Out');
                     console.log('TAP OUT SUCCESS!')
@@ -251,32 +260,10 @@ const MrtMap = ({ onClick }: any) => {
         }
     }
 
-    const handleTapIn = () => {
-        tapIn();
-    };
-    const handleTapOut = () => {
-        tapOut();
-    }
-
-    // const calculateTraveledDistance = async (initialStation: any, finalStation: any) => {
-    //     try {
-    //         const response = await axios.post('/api/traveledDistance', { initialStation, finalStation });
-    //         return response.data.distance;
-    //     } catch (error) {
-    //         console.error('Error calculating traveled distance:', error);
-    //         throw error;
-    //     }
+    // const handleTapIn = () => {
+    //     tapIn();
     // };
 
-    // const getRoute = async (initialStation: any, finalStation: any) => {
-    //     try {
-    //         const response = await axios.post('/api/getRoute', { initialStation, finalStation });
-    //         return response.data;
-    //     } catch (error) {
-    //         console.error('Error getting route:', error);
-    //         throw error;
-    //     }
-    // };
 
     const displayPolylines = (stations: Markers[]) => {
         const polylines: JSX.Element[] = [];
@@ -295,8 +282,9 @@ const MrtMap = ({ onClick }: any) => {
                         polylines.push(
                             <Polyline
                                 key={direction}
-                                color="#204491"
-                                weight={6}
+                                color="#202020"
+                                weight={5}
+                                dashArray="13"
                                 positions={[
                                     station.stationCoord,
                                     stationConnectedData.stationCoord,
@@ -309,81 +297,86 @@ const MrtMap = ({ onClick }: any) => {
         });
         return polylines;
     };
-    const linesTraveled = (stations: Markers[], initialStation: Markers, finalStation: Markers) => {
-        const polylines: JSX.Element[] = [];
-        const connections: Set<string> = new Set();
 
-        initialStation.stationConn.forEach((stationConnected) => {
-            const direction = `${initialStation.stationName}-${stationConnected}`;
-            const reverseDirection = `${stationConnected}-${initialStation.stationName}`;
-
-            if (!connections.has(direction) && !connections.has(reverseDirection)) {
-                const stationConnectedData = stations.find(
-                    (s) => s.stationName === stationConnected
+    const displayRoutePolylines = (route: string[]) => {
+        const routePolylines: JSX.Element[] = [];
+        for (let i = 0; i < route.length - 1; i++) {
+            const initialStation = stations.find(station => station.stationName === route[i]);
+            const finalStation = stations.find(station => station.stationName === route[i + 1]);
+            if (initialStation && finalStation) {
+                routePolylines.push(
+                    <Polyline
+                        key={`route-${i}`}
+                        positions={[
+                            initialStation.stationCoord,
+                            finalStation.stationCoord
+                        ]}
+                        color="#d03f33"
+                        weight={6}
+                    />
                 );
-
-                if (stationConnectedData && stationConnectedData.stationName === finalStation.stationName) {
-                    polylines.push(
-                        <Polyline
-                            key={direction}
-                            color="#204491"
-                            weight={6}
-                            positions={[
-                                initialStation.stationCoord,
-                                stationConnectedData.stationCoord,
-                            ]}
-                        />
-                    );
-                    connections.add(direction);
-                    connections.add(reverseDirection);
-                }
             }
-        });
+        }
+        return routePolylines;
+    };
+    
 
-        return polylines;
+
+    ///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
+
+    const traveledDistance = async (initialStation: string, finalStation: string) => {
+        try {
+            const response = await fetch(`${process.env.REACT_APP_URL}stations/traveled-distance`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ initialStation, finalStation })
+            });
+            if (response.ok) {
+                const distanceTraveled = await response.json();
+                console.log(distanceTraveled.distance)
+                setDistance(distanceTraveled.distance)
+            } else {
+                console.error('Error setting edge distances');
+            }
+        } catch (error) {
+            console.error('Error fetching stations:', error);
+        }
+    };
+
+    const getRoute = async (initialStation: string, finalStation: string) => {
+        try {
+            const response = await fetch(`${process.env.REACT_APP_URL}stations/get-route`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ initialStation, finalStation })
+            });
+            if (response.ok) {
+                const routeTraveled = await response.json();
+                console.log(routeTraveled)
+                setRoute(routeTraveled)
+            } else {
+                console.error('Error setting edge distances');
+            }
+        } catch (error) {
+            console.error('Error fetching stations:', error);
+        }
     };
 
 
     ///////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////
 
-    // const buildGraph = () => {
-    //     const g = new Graph();
-    //     stations.forEach(Markers => {
-    //         Markers.stationConn.forEach(connections => {
-    //             g.setEdge(Markers.stationName, connections, calculateDistance(Markers, stations.find(s => s.stationName === connections)));
-    //         });
-    //     });
-    //     setGraph(g);
-    // };
-
-    // const displayShortestPath = () => {
-    //     if (!graph || !stationIn || !stationOut) return null;
-    //     const path: { [node: string]: Edge[] } = {};
-    //     const shortestPath = alg
-    //         .dijkstra(graph, stationIn, undefined, (v) => path[v])
-    //         .map((stationName: string) => stations.find(station => station.stationName === stationName)?.stationCoord)
-    //         .filter(Boolean);
-
-    //     return (
-    //         <Polyline
-    //             positions={shortestPath}
-    //             color="red"
-    //             weight={6}
-    //         />
-    //     );
-    // };
-
-    ///////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////
-
-
-
 
     useEffect(() => {
         fetchStations();
         navigate('/mrt');
         toggleSubmitOff();
+        
     }, []);
 
     return (
@@ -410,6 +403,7 @@ const MrtMap = ({ onClick }: any) => {
                 ))}
 
                 {displayPolylines(stations)}
+                {displayRoutePolylines(route)}
                 {/* {linesTraveled(stations, stationIn, finalStation)} */}
 
                 <MapFly station={selectedStation} zoom={12} />
@@ -517,8 +511,8 @@ const MrtMap = ({ onClick }: any) => {
                         onClick={leaveStation}>
                         <div className="inner-bottom">
                             <div className="inner-bottom-left">
-                                <div className="distance-label">Distance traveled</div>
-                                <div className="new-bal-label">new balance {finalBal}</div>
+                                <div className="distance-label">Distance traveled {Number(distance).toFixed(2)} km</div>
+                                <div className="new-bal-label">New Balance {finalBal}</div>
                             </div>
                             <div className="inner-bottom-right">
                                 <div className="ticket-fare-label">-{fare}PHP</div>
