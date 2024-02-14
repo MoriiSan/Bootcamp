@@ -63,6 +63,7 @@ const MrtMap = ({ onClick }: any) => {
     const [uid, setUid] = useState<number | null>(null);
     const [submit, setSubmit] = useState(false);
     const [graph, setGraph] = useState<Graph | null>(null);
+    const [cutTicket, setCutTicket] = useState(true);
 
 
     /* TAP IN /////////////// */
@@ -96,12 +97,19 @@ const MrtMap = ({ onClick }: any) => {
     }
 
     const leaveStation = () => {
-        setSubmit(false);
-        setTicket(false);
-        setUidInput("");
-        navigate('/mrt');
-        setSelectedStation(null)
-    }
+        // Add animation class to ticket-bottom before leaving
+        setCutTicket(false);
+
+        setTimeout(() => {
+            setSubmit(false);
+            setTicket(false);
+            setUidInput("");
+            navigate('/mrt');
+            setSelectedStation(null);
+
+            setCutTicket(true);
+        }, 2000);
+    };
 
     const fetchStations = async () => {
         try {
@@ -283,16 +291,16 @@ const MrtMap = ({ onClick }: any) => {
     const linesTraveled = (stations: Markers[], initialStation: Markers, finalStation: Markers) => {
         const polylines: JSX.Element[] = [];
         const connections: Set<string> = new Set();
-    
+
         initialStation.stationConn.forEach((stationConnected) => {
             const direction = `${initialStation.stationName}-${stationConnected}`;
             const reverseDirection = `${stationConnected}-${initialStation.stationName}`;
-    
+
             if (!connections.has(direction) && !connections.has(reverseDirection)) {
                 const stationConnectedData = stations.find(
                     (s) => s.stationName === stationConnected
                 );
-    
+
                 if (stationConnectedData && stationConnectedData.stationName === finalStation.stationName) {
                     polylines.push(
                         <Polyline
@@ -310,10 +318,10 @@ const MrtMap = ({ onClick }: any) => {
                 }
             }
         });
-    
+
         return polylines;
     };
-    
+
 
     ///////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////
@@ -348,6 +356,9 @@ const MrtMap = ({ onClick }: any) => {
     ///////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////
 
+
+
+
     useEffect(() => {
         fetchStations();
         navigate('/mrt');
@@ -372,7 +383,8 @@ const MrtMap = ({ onClick }: any) => {
                         eventHandlers={{
                             click: () => (setSelectedStation(station), toggleSubmitOff())
                         }}>
-                        {station.stationName}
+                        {/* {station.stationName} */}
+                        <Popup>{station.stationName}</Popup>
                     </MyMarker>
                 ))}
 
@@ -462,7 +474,7 @@ const MrtMap = ({ onClick }: any) => {
             {/* ticket ///////////////// */}
             {ticket && (
                 <div className={`ticket-container ${ticket ? 'show' : ''}`}>
-                    <div className="ticket-top">
+                    <div className={cutTicket ? "ticket-top show" : "ticket-top"}>
                         <div className="another-inner-top">
                             <div className="ticket-uid-label">UID
                                 <div className="ticket-uid"><strong>{uid}</strong></div>

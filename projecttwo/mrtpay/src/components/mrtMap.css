@@ -193,8 +193,6 @@
 
 .ticket-container:hover {
   transform: scale(1.5) translateY(-20%) translateX(-20%);
-
-
   transition: transform 0.5s ease-in-out;
 }
 
@@ -217,6 +215,17 @@
   mask-repeat: no-repeat;
   mask-size: 60% 100%;
 }
+
+.ticket-top {
+  /* Your existing styles */
+  transition: transform 0.5s ease;
+  transform: translateY(-35%);
+}
+
+.ticket-top.show {
+  transform: translateY(0);
+}
+
 
 .ticket-bottom {
   cursor: pointer;
@@ -249,7 +258,7 @@
   width: 238px;
   height: 73px;
   margin-left: 6px;
-  bottom: 271px;
+  bottom: 170px;
   border-radius: 5px;
   padding: 5px;
   border: 1px solid #202020;
@@ -277,7 +286,7 @@
   width: 238px;
   height: 150px;
   margin-left: 6px;
-  bottom: 115px;
+  bottom: 15px;
   border-radius: 5px;
   padding: 5px;
   border: 1px solid #202020;
@@ -348,6 +357,8 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  border-left: 1px solid #202020;
+  padding: 5px;
 }
 
 .ticket-fare-label {
