@@ -5,6 +5,7 @@ import { MapContainer, Marker, Popup, TileLayer, Polyline } from 'react-leaflet'
 import { Icon, popup } from "leaflet";
 import { IoEnterOutline } from "react-icons/io5";
 import { RiUserLocationLine, RiArrowGoBackFill } from "react-icons/ri";
+import { TbCurrencyPeso } from "react-icons/tb";
 import { ReactNotifications, Store } from 'react-notifications-component';
 import { calculateDistance } from "./station/mapAdmin";
 import GetLatLng from "./getLatLng";
@@ -74,6 +75,7 @@ const MrtMap = ({ onClick }: any) => {
     /* TAP OUT ///////////// */
     const [ticket, setTicket] = useState(false);
     const [fare, setFare] = useState<number>(0);
+    const [totalFare, setTotalFare] = useState<number>(0);
     const [initialBal, setInitialBal] = useState<number>(0);
     const [finalBal, setFinalBal] = useState<number>(0);
     const [stationIn, setStationIn] = useState('');
@@ -102,19 +104,36 @@ const MrtMap = ({ onClick }: any) => {
         navigate('/mrt');
     }
 
-    const leaveStation = () => {
+    const leaveStation = async () => {
         // Add animation class to ticket-bottom before leaving
         setCutTicket(false);
 
-        setTimeout(() => {
-            setSubmit(false);
-            setTicket(false);
-            setUidInput("");
-            navigate('/mrt');
-            setSelectedStation(null);
-            setRoute([])
+        setTimeout( async () => {
+            try {
+                // Update the database with the final balance immediately
+                const response = await fetch(`http://localhost:8080/cards/${uidInput}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ bal: finalBal, tapState: '' })
+                });
 
-            setCutTicket(true);
+                if (response.ok) {
+                    // After updating the database, proceed with resetting state and navigation
+                    setSubmit(false);
+                    setTicket(false);
+                    setUidInput("");
+                    navigate('/mrt');
+                    setSelectedStation(null);
+                    setRoute([]);
+                    setCutTicket(true);
+                } else {
+                    console.error('Failed to update card balance');
+                }
+            } catch (error) {
+                console.error('Error updating card balance:', error);
+            }
         }, 2000);
     };
 
@@ -150,6 +169,7 @@ const MrtMap = ({ onClick }: any) => {
             if (response.ok) {
                 const fetchedCard = await response.json();
                 setInitialBal(fetchedCard.bal)
+                setStationIn(fetchedCard.tapState)
             } else {
                 console.error('Failed to fetch cards');
             }
@@ -175,6 +195,7 @@ const MrtMap = ({ onClick }: any) => {
                 setUid(card.uid);
                 setInitialBal(card.bal);
                 setSubmit(true)
+                console.log('Balance check:', card.bal)
             } else {
                 console.log('Balance check failed')
                 return;
@@ -221,7 +242,7 @@ const MrtMap = ({ onClick }: any) => {
 
     const getFare = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/adminConfigs/fareId?=1`, {
+            const response = await fetch(`http://localhost:8080/adminConfigs/1`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -231,7 +252,6 @@ const MrtMap = ({ onClick }: any) => {
             if (response.ok) {
                 const fetchedFare = await response.json();
                 setFare(fetchedFare.fareKm)
-                return (fetchedFare.fareKm)
             } else {
                 console.error('Failed to fetch fare');
             }
@@ -241,37 +261,73 @@ const MrtMap = ({ onClick }: any) => {
     }
 
 
+    // const handleTapOut = async () => {
+    //     if (uidInput.trim() === "") {
+    //         console.error('UID is blank');
+    //         return;
+    //     }
+
+    //     try {
+    //         const response = await fetch(`http://localhost:8080/cards/tapOut/${uidInput}`, {
+    //             method: 'PATCH',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify({ bal: 500, tapState: '' })
+    //         });
+
+    //         if (response.ok) {
+    //             const card = await response.json();
+    //             setFinalBal(card.bal)
+    //             setTapState('')
+    //             setStationIn(card.tapState)
+    //             setStationOut(selectedStation ? selectedStation.stationName : '');
+    //             setSubmit(false)
+    //             setTicket(true)
+    //             traveledDistance(card.tapState, selectedStation ? selectedStation.stationName : '')
+    //             getRoute(card.tapState, selectedStation ? selectedStation.stationName : '')
+    //             if (selectedStation) {
+    //                 tapOutUrl(selectedStation.stationName, 'Out');
+    //                 console.log('TAP OUT SUCCESS!')
+    //                 return;
+    //             }
+    //         } else {
+    //             setUid(null);
+    //             setInitialBal(0);
+    //             return;
+    //         }
+    //     } catch (error) {
+    //         console.error('Error fetching cards:', error);
+    //     }
+    // }
+
     const handleTapOut = async () => {
         if (uidInput.trim() === "") {
             console.error('UID is blank');
             return;
         }
 
-        let fareX = await getFare();
-        // let distanceTraveled =  await traveledDistance ();
-        // console.log(distanceTraveled);
-
         try {
-            const finalBal = initialBal - fareX;
             const response = await fetch(`http://localhost:8080/cards/tapOut/${uidInput}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ bal: finalBal, tapState: '' })
+                body: JSON.stringify({ tapState: '' })
             });
 
             if (response.ok) {
                 const card = await response.json();
-                setFinalBal(card.bal - fareX)
-                setTapState('')
                 setStationIn(card.tapState)
                 setStationOut(selectedStation ? selectedStation.stationName : '');
                 setSubmit(false)
                 setTicket(true)
-                traveledDistance(card.tapState, selectedStation ? selectedStation.stationName : '')
-                getRoute(card.tapState, selectedStation ? selectedStation.stationName : '')
                 if (selectedStation) {
+                    getRoute(card.tapState, selectedStation ? selectedStation.stationName : '')
+                    const tempVal = await traveledDistance(card.tapState, selectedStation ? selectedStation.stationName : '')
+                    setFinalBal(card.bal - Number(tempVal))
+                    console.log('finalBal:', card.bal - Number(tempVal))
+                    console.log('total fare:', tempVal)
                     tapOutUrl(selectedStation.stationName, 'Out');
                     console.log('TAP OUT SUCCESS!')
                     return;
@@ -286,9 +342,59 @@ const MrtMap = ({ onClick }: any) => {
         }
     }
 
-    // const handleTapIn = () => {
-    //     tapIn();
-    // };
+    ///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
+
+    const traveledDistance = async (initialStation: string, finalStation: string) => {
+        try {
+            const response = await fetch(`${process.env.REACT_APP_URL}stations/traveled-distance`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ initialStation, finalStation })
+            });
+            if (response.ok) {
+                const distanceTraveled = await response.json();
+                console.log(distanceTraveled)
+                setDistance((distanceTraveled.distance).toFixed(1))
+                console.log('Distance: ', (distanceTraveled.distance).toFixed(1), 'Km')
+                setTotalFare(Number((fare * distanceTraveled.distance).toFixed(1)));
+                console.log('Total Fare: ', ((fare * distanceTraveled.distance).toFixed(1)))
+                return Number((fare * distanceTraveled.distance).toFixed(1))
+            } else {
+                console.error('Error setting edge distances');
+            }
+        } catch (error) {
+            console.error('Error fetching stations:', error);
+        }
+    };
+
+    const getRoute = async (initialStation: string, finalStation: string) => {
+        try {
+            const response = await fetch(`${process.env.REACT_APP_URL}stations/get-route`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ initialStation, finalStation })
+            });
+            if (response.ok) {
+                const routeTraveled = await response.json();
+                setRoute(routeTraveled)
+                // console.log(routeTraveled)
+            } else {
+                console.error('Error setting edge distances');
+            }
+        } catch (error) {
+            console.error('Error fetching stations:', error);
+        }
+    };
+
+
+    ///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
+
 
 
     const displayPolylines = (stations: Markers[]) => {
@@ -347,63 +453,19 @@ const MrtMap = ({ onClick }: any) => {
     };
 
 
-
-    ///////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////
-
-    const traveledDistance = async (initialStation: string, finalStation: string) => {
-        try {
-            const response = await fetch(`${process.env.REACT_APP_URL}stations/traveled-distance`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ initialStation, finalStation })
-            });
-            if (response.ok) {
-                const distanceTraveled = await response.json();
-                console.log(distanceTraveled.distance)
-                setDistance(distanceTraveled.distance)
-            } else {
-                console.error('Error setting edge distances');
-            }
-        } catch (error) {
-            console.error('Error fetching stations:', error);
-        }
-    };
-
-    const getRoute = async (initialStation: string, finalStation: string) => {
-        try {
-            const response = await fetch(`${process.env.REACT_APP_URL}stations/get-route`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ initialStation, finalStation })
-            });
-            if (response.ok) {
-                const routeTraveled = await response.json();
-                console.log(routeTraveled)
-                setRoute(routeTraveled)
-            } else {
-                console.error('Error setting edge distances');
-            }
-        } catch (error) {
-            console.error('Error fetching stations:', error);
-        }
-    };
-
-
-    ///////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////
-
-
     useEffect(() => {
+        getFare();
         fetchStations();
         navigate('/mrt');
         toggleSubmitOff();
-
     }, []);
+
+    useEffect(() => {
+        if (uidInput.length === 10) {
+            fetchCard();
+        }
+    }, [uidInput]);
+
 
     return (
         <div className="map-container" onClick={() => { }}>
@@ -467,6 +529,10 @@ const MrtMap = ({ onClick }: any) => {
                                                     }
                                                 }}>
                                             </input>
+                                        </div>
+                                        <div className="checkBal-btn"
+                                            onClick={checkBalance}>
+                                            Check Balance
                                         </div>
                                         <div className="tapState-btns">
                                             <div className="tapIn"
@@ -537,11 +603,21 @@ const MrtMap = ({ onClick }: any) => {
                         onClick={leaveStation}>
                         <div className="inner-bottom">
                             <div className="inner-bottom-left">
-                                <div className="distance-label">Distance traveled {Number(distance).toFixed(2)} km</div>
-                                <div className="new-bal-label">New Balance {finalBal}</div>
+                                <div className="distance-label">
+                                    <label className="dist-label">Total Distance:</label>
+                                    <div><strong>{distance}km</strong> </div>
+                                </div>
+                                <div className="new-bal-label">
+                                    <label className="newbal-label">New Balance:</label>
+                                    <div className="new-total"><strong>PHP {finalBal}</strong></div>
+                                </div>
                             </div>
                             <div className="inner-bottom-right">
-                                <div className="ticket-fare-label">-{fare}PHP</div>
+                                <div className="ticket-fare-text">Total Fare</div>
+                                <div className="ticket-fare-label">
+                                    <TbCurrencyPeso />
+                                    {totalFare}
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -168,7 +168,7 @@ const Stations: React.FC = () => {
 
     const fetchFare = async () => {
         try {
-            const response = await fetch(`${process.env.REACT_APP_URL}adminConfigs/${1}`, {
+            const response = await fetch(`${process.env.REACT_APP_URL}adminConfigs/1`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
