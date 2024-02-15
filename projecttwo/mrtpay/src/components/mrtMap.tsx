@@ -99,7 +99,6 @@ const MrtMap = ({ onClick }: any) => {
         setStationOut("")
         setUidInput("");
         setDistance(undefined)
-        setRoute([])
         navigate('/mrt');
     }
 
@@ -113,6 +112,7 @@ const MrtMap = ({ onClick }: any) => {
             setUidInput("");
             navigate('/mrt');
             setSelectedStation(null);
+            setRoute([])
 
             setCutTicket(true);
         }, 2000);
@@ -319,7 +319,7 @@ const MrtMap = ({ onClick }: any) => {
         }
         return routePolylines;
     };
-    
+
 
 
     ///////////////////////////////////////////////////////
@@ -376,7 +376,7 @@ const MrtMap = ({ onClick }: any) => {
         fetchStations();
         navigate('/mrt');
         toggleSubmitOff();
-        
+
     }, []);
 
     return (
