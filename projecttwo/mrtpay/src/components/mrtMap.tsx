@@ -157,6 +157,32 @@ const MrtMap = ({ onClick }: any) => {
             console.error('Error fetching cards:', error);
         }
     };
+    const checkBalance = async () => {
+        if (uidInput.trim() === "") {
+            console.error('UID is blank');
+            return;
+        }
+        try {
+            const response = await fetch(`http://localhost:8080/cards/tapIn/${uidInput}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                const card = await response.json();
+                setUid(card.uid);
+                setInitialBal(card.bal);
+                setSubmit(true)
+            } else {
+                console.log('Balance check failed')
+                return;
+            }
+        } catch (error) {
+            console.error('Error fetching cards:', error);
+        }
+    }
 
     const handleTapIn = async () => {
         if (uidInput.trim() === "") {
