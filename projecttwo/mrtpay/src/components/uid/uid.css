@@ -105,6 +105,7 @@
     display: flex;
     border: 1px solid #a5a5a5;
     border-radius: 5px;
+    min-width: 130px;
     width: 100%;
     height: 100%;
     padding: 3px;
@@ -149,7 +150,8 @@
     z-index: 10;
 }
 
-.add-user {
+.add-user, 
+.add-load {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -322,8 +324,48 @@
     padding: 5px 8px;
     cursor: pointer;
 }
+
 .current-page {
     border-inline: 1px solid #ccc;
+}
+
+.bg-style {
+    position: relative;
+    /* top: 15.8svh;
+    left: 0; */
+    width: 100%;
+    height: 84svh;
+    overflow: hidden;
+    background-color: white;
+    background-size: 20px 20px;
+    background-image:
+        linear-gradient(to right, rgba(128, 128, 128, 0.3) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(128, 128, 128, 0.3) 1px, transparent 1px);
+}
+
+@media screen and (max-width: 1024px) {
+    .bg-style {
+        height: 91.6svh;
+        overflow: hidden;
+    }
+
+    .navbar {
+        height: 4svh;
+        padding: 1.5svh;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .bg-style {
+
+        height: 100svh;
+        overflow: hidden;
+    }
+
+    .navbar {
+        height: 5svh;
+        padding: 1.5svh;
+    }
 }
 
 .list-card {
@@ -331,25 +373,15 @@
     flex-direction: row;
     flex-wrap: wrap;
     flex: 1;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
-    width: 100%;
-    height: 85svh;
     padding: 15px;
-    background-color: white;
+    background-color: transparent;
     position: relative;
     z-index: 1;
     gap: 15px;
     overflow: auto;
-    background-size: 20px 20px;
-    background-image:
-        linear-gradient(to right, rgba(128, 128, 128, 0.3) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(128, 128, 128, 0.3) 1px, transparent 1px);
-}
 
-
-.bg-style {
-    position: absolute;
 }
 
 .mrt-card {
@@ -361,6 +393,7 @@
     border: 1px solid black;
     border-radius: 5px;
     height: 200px;
+    min-width: 350px;
     width: 350px;
     font-weight: 500;
 }

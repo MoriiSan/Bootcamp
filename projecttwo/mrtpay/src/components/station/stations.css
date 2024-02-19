@@ -1,4 +1,8 @@
-
+/* @media screen and (max-width: 600px) {
+    .map-container {
+        height: 100svh;
+    }
+} */
 
 .fare-container {
     margin-left: auto;
@@ -41,7 +45,6 @@
     flex-direction: row;
     border: 1px solid #ccc;
     border-radius: 5px;
-    ;
 }
 
 .fare-label {

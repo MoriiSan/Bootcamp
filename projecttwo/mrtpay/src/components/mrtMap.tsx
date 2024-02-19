@@ -567,7 +567,7 @@ const MrtMap = ({ onClick }: any) => {
         <div className="map-container" onClick={() => { }}>
             <MapContainer center={[14.593795, 120.931320]}
                 zoom={12} scrollWheelZoom={true} minZoom={12}
-                maxZoom={14} zoomControl={false} style={{ height: '100svh' }}
+                maxZoom={14} zoomControl={false} /* style={{height: '84svh'}} */
                 doubleClickZoom={false}>
                 <TileLayer
                     url="https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}.png?access-token=Rs3yx5aveNteEw7myffiDtutSEcX3b0zdHPWxOQbMjJyX6vCRNe4ZYLts8ya6wOI"

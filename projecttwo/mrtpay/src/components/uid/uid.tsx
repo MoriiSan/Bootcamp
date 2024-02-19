@@ -68,7 +68,7 @@ const UID = () => {
 
     /////////////////pagination
     const [currentPage, setCurrentPage] = useState(1);
-    const cardsPerPage = 8;
+    const cardsPerPage = 9;
     const itemsPerPage = 8;
 
     /////////////////////////////
@@ -481,27 +481,28 @@ const UID = () => {
                     ))}
                 </div>
             )}
-
-            {isCardView && (
-                <div className="list-card">
-                    {filteredCards.slice((currentPage - 1) * cardsPerPage, currentPage * cardsPerPage).map((card, index) => (
-                        <div className="mrt-card" key={index} onClick={() => handleSelect(card)}>
-                            <div className="card-details">
-                                <div className="uid-card">{card.uid}</div>
-                                <div className="bal-card">PHP {card.bal}</div>
+            <div className="bg-style">
+                {isCardView && (
+                    <div className="list-card">
+                        {filteredCards.slice((currentPage - 1) * cardsPerPage, currentPage * cardsPerPage).map((card, index) => (
+                            <div className="mrt-card" key={index} onClick={() => handleSelect(card)}>
+                                <div className="card-details">
+                                    <div className="uid-card">{card.uid}</div>
+                                    <div className="bal-card">PHP {card.bal}</div>
+                                </div>
+                                <div className="card-btns">
+                                    <button className="btn-load" onClick={toggleAddLoad}>
+                                        Load
+                                    </button>
+                                    <button className="btn-delete" onClick={toggleIsDelete}>
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
-                            <div className="card-btns">
-                                <button className="btn-load" onClick={toggleAddLoad}>
-                                    Load
-                                </button>
-                                <button className="btn-delete" onClick={toggleIsDelete}>
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            )}
+                        ))}
+                    </div>
+                )}
+            </div>
 
             <div className='modal-container'>
                 {addLoad && (
