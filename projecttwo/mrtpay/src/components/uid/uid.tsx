@@ -1,7 +1,10 @@
 import { SetStateAction, useEffect, useState } from 'react';
 import './uid.css'
-import { BsCardHeading, BsSearch } from "react-icons/bs";
-import { BsXSquareFill, BsCardText, BsCheckSquareFill } from "react-icons/bs";
+import { BsCardHeading, BsPlus, BsSearch } from "react-icons/bs";
+import {
+    BsXSquareFill, BsCardText, BsCheckSquareFill,
+    BsGrid3X3GapFill, BsListUl, BsArrowLeft, BsArrowRight
+} from "react-icons/bs";
 import { ReactNotifications, Store } from 'react-notifications-component'
 import 'react-notifications-component/dist/theme.css'
 import 'animate.css';
@@ -395,7 +398,8 @@ const UID = () => {
             </div>
             <div className="main-row">
                 <div className="btn-add-user" onClick={toggleAddUser} >
-                    + Add new card
+                    <span className="text">+ Add new card</span>
+                    <BsPlus className="icon" size={18} />
                 </div>
                 <div className="search">
                     <div className="search-bar">
@@ -411,27 +415,37 @@ const UID = () => {
                         </button>
                     </div>
                 </div>
+
+                {/* view mode ////////////////////////////// */}
+
                 <div className='view-options'>
                     <div className="view-mode">
-                        <div className={`card-view ${isCardView ? 'selected' : ''}`}
-                            onClick={toggleIsCardView}>Card View</div>
-                        <div className={`list-view ${isListView ? 'selected' : ''}`}
-                           /*  onClick={toggleIsListView} */>List View</div>
+                        {/*  <div className={`card-view ${isCardView ? 'selected' : ''}`}
+                            onClick={toggleIsCardView}>
+                            <BsGrid3X3GapFill />
+                        </div> */}
+                        {/*  <div className={`list-view ${isListView ? 'selected' : ''}`}
+                            onClick={toggleIsListView}>
+                            <BsListUl />
+                        </div> */}
                     </div>
                     <div className="pagination">
                         <button onClick={() => setCurrentPage(currentPage - 1)}
                             className='prev'
                             disabled={currentPage === 1}>
-                            Prev
+                            <BsArrowLeft />
                         </button>
                         <span className="current-page">{currentPage}</span>
                         <button onClick={() => setCurrentPage(currentPage + 1)}
                             className='next'
                             disabled={currentPage === Math.ceil(filteredCards.length / cardsPerPage)}>
-                            Next
+                            <BsArrowRight />
                         </button>
                     </div>
                 </div>
+
+
+
                 <div className="tab-logo">
                     <div className='count'>{cards.length}</div>
                     <BsCardHeading size={30} />

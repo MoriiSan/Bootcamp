@@ -1,16 +1,4 @@
-.main-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: left;
-    align-items: center;
-    width: -webkit-fill-available;
-    height: 10svh;
-    padding: 1%;
-    background-color: white;
-    position: relative;
-    z-index: 1;
-    border-bottom: 1px solid #ccc;
-}
+
 
 .fare-container {
     margin-left: auto;

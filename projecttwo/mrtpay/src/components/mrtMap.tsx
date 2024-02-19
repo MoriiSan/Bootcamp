@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from "react";
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { MapContainer, Marker, Popup, TileLayer, Polyline } from 'react-leaflet';
-import { Icon, popup } from "leaflet";
+import { Icon } from "leaflet";
 import { IoEnterOutline } from "react-icons/io5";
 import { RiUserLocationLine, RiArrowGoBackFill } from "react-icons/ri";
 import { TbCurrencyPeso } from "react-icons/tb";
-import { ReactNotifications, Store } from 'react-notifications-component';
-import { calculateDistance } from "./station/mapAdmin";
-import GetLatLng from "./getLatLng";
-import { haversine } from './calcDistance';
+import { Store } from 'react-notifications-component';
 import MapFly from './mapFly';
 import './mrtMap.css';
-import { Edge, Graph, Path, alg } from 'graphlib';
+import { Graph } from 'graphlib';
 
 
 interface Markers {
@@ -108,7 +104,7 @@ const MrtMap = ({ onClick }: any) => {
         // Add animation class to ticket-bottom before leaving
         setCutTicket(false);
 
-        setTimeout( async () => {
+        setTimeout(async () => {
             try {
                 // Update the database with the final balance immediately
                 const response = await fetch(`http://localhost:8080/cards/${uidInput}`, {
@@ -177,14 +173,27 @@ const MrtMap = ({ onClick }: any) => {
             console.error('Error fetching cards:', error);
         }
     };
+
     const checkBalance = async () => {
         if (uidInput.trim() === "") {
             console.error('UID is blank');
+            Store.addNotification({
+                title: "BLANK!",
+                message: "There is no UID input.",
+                type: "warning",
+                insert: "top",
+                container: "top-right",
+                animationIn: ["animate__animated animate__bounceIn"],
+                animationOut: ["animate__animated animate__slideOutRight"],
+                dismiss: {
+                    duration: 2000,
+                }
+            });
             return;
         }
         try {
-            const response = await fetch(`http://localhost:8080/cards/tapIn/${uidInput}`, {
-                method: 'PATCH',
+            const response = await fetch(`http://localhost:8080/cards/${uidInput}`, {
+                method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -208,8 +217,36 @@ const MrtMap = ({ onClick }: any) => {
     const handleTapIn = async () => {
         if (uidInput.trim() === "") {
             console.error('UID is blank');
+            Store.addNotification({
+                title: "BLANK!",
+                message: "There is no UID input.",
+                type: "warning",
+                insert: "top",
+                container: "top-right",
+                animationIn: ["animate__animated animate__bounceIn"],
+                animationOut: ["animate__animated animate__slideOutRight"],
+                dismiss: {
+                    duration: 2000,
+                }
+            });
             return;
         }
+        if (initialBal <= 0 || initialBal <= fare) {
+            Store.addNotification({
+                title: "INSUFFICIENT BALANCE!",
+                message: "Your balance is insufficient to tap in.",
+                type: "warning",
+                insert: "top",
+                container: "top-right",
+                animationIn: ["animate__animated animate__bounceIn"],
+                animationOut: ["animate__animated animate__slideOutRight"],
+                dismiss: {
+                    duration: 2000,
+                }
+            });
+            return;
+        }
+
         try {
             const response = await fetch(`http://localhost:8080/cards/tapIn/${uidInput}`, {
                 method: 'PATCH',
@@ -227,11 +264,34 @@ const MrtMap = ({ onClick }: any) => {
                 setSubmit(true)
                 if (selectedStation) {
                     tapInUrl(selectedStation.stationName, 'In');
-                    console.log('TAP IN SUCCESS!')
+                    Store.addNotification({
+                        title: "TAP IN SUCCESS!",
+                        // message: "Tap in Success",
+                        type: "success",
+                        insert: "top",
+                        container: "top-right",
+                        animationIn: ["animate__animated animate__bounceIn"],
+                        animationOut: ["animate__animated animate__slideOutRight"],
+                        dismiss: {
+                            duration: 2000,
+                        }
+                    });
                     return;
                 }
             } else {
-                console.log('NO EXIT')
+                const card = await response.json();
+                Store.addNotification({
+                    title: "OOPS!",
+                    message: card.message,
+                    type: "warning",
+                    insert: "top",
+                    container: "top-right",
+                    animationIn: ["animate__animated animate__bounceIn"],
+                    animationOut: ["animate__animated animate__slideOutRight"],
+                    dismiss: {
+                        duration: 2000,
+                    }
+                });
                 return;
             }
         } catch (error) {
@@ -304,8 +364,21 @@ const MrtMap = ({ onClick }: any) => {
     const handleTapOut = async () => {
         if (uidInput.trim() === "") {
             console.error('UID is blank');
+            Store.addNotification({
+                title: "BLANK!",
+                message: "There is no UID input.",
+                type: "warning",
+                insert: "top",
+                container: "top-right",
+                animationIn: ["animate__animated animate__bounceIn"],
+                animationOut: ["animate__animated animate__slideOutRight"],
+                dismiss: {
+                    duration: 2000,
+                }
+            });
             return;
         }
+        fetchCard();
 
         try {
             const response = await fetch(`http://localhost:8080/cards/tapOut/${uidInput}`, {
@@ -325,16 +398,39 @@ const MrtMap = ({ onClick }: any) => {
                 if (selectedStation) {
                     getRoute(card.tapState, selectedStation ? selectedStation.stationName : '')
                     const tempVal = await traveledDistance(card.tapState, selectedStation ? selectedStation.stationName : '')
-                    setFinalBal(card.bal - Number(tempVal))
+                    setFinalBal(card.bal - Math.round(Number(tempVal)))
                     console.log('finalBal:', card.bal - Number(tempVal))
-                    console.log('total fare:', tempVal)
+                    // console.log('total fare:', tempVal)
                     tapOutUrl(selectedStation.stationName, 'Out');
-                    console.log('TAP OUT SUCCESS!')
+                    Store.addNotification({
+                        title: "TAP OUT SUCCESS",
+                        type: "success",
+                        insert: "top",
+                        container: "top-right",
+                        animationIn: ["animate__animated animate__bounceIn"],
+                        animationOut: ["animate__animated animate__slideOutRight"],
+                        dismiss: {
+                            duration: 2000,
+                        }
+                    });
                     return;
                 }
             } else {
+                const card = await response.json();
+                Store.addNotification({
+                    title: "OOPS!",
+                    message: card.message,
+                    type: "warning",
+                    insert: "top",
+                    container: "top-right",
+                    animationIn: ["animate__animated animate__bounceIn"],
+                    animationOut: ["animate__animated animate__slideOutRight"],
+                    dismiss: {
+                        duration: 2000,
+                    }
+                });
+                setUidInput('');
                 setUid(null);
-                setInitialBal(0);
                 return;
             }
         } catch (error) {
@@ -356,12 +452,12 @@ const MrtMap = ({ onClick }: any) => {
             });
             if (response.ok) {
                 const distanceTraveled = await response.json();
-                console.log(distanceTraveled)
+                // console.log(distanceTraveled)
                 setDistance((distanceTraveled.distance).toFixed(1))
                 console.log('Distance: ', (distanceTraveled.distance).toFixed(1), 'Km')
-                setTotalFare(Number((fare * distanceTraveled.distance).toFixed(1)));
+                setTotalFare(Math.round(Number((fare * distanceTraveled.distance).toFixed(1))));
                 console.log('Total Fare: ', ((fare * distanceTraveled.distance).toFixed(1)))
-                return Number((fare * distanceTraveled.distance).toFixed(1))
+                return Math.round(Number((fare * distanceTraveled.distance).toFixed(1)))
             } else {
                 console.error('Error setting edge distances');
             }
