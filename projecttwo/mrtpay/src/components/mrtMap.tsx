@@ -321,46 +321,6 @@ const MrtMap = ({ onClick }: any) => {
     }
 
 
-    // const handleTapOut = async () => {
-    //     if (uidInput.trim() === "") {
-    //         console.error('UID is blank');
-    //         return;
-    //     }
-
-    //     try {
-    //         const response = await fetch(`http://localhost:8080/cards/tapOut/${uidInput}`, {
-    //             method: 'PATCH',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify({ bal: 500, tapState: '' })
-    //         });
-
-    //         if (response.ok) {
-    //             const card = await response.json();
-    //             setFinalBal(card.bal)
-    //             setTapState('')
-    //             setStationIn(card.tapState)
-    //             setStationOut(selectedStation ? selectedStation.stationName : '');
-    //             setSubmit(false)
-    //             setTicket(true)
-    //             traveledDistance(card.tapState, selectedStation ? selectedStation.stationName : '')
-    //             getRoute(card.tapState, selectedStation ? selectedStation.stationName : '')
-    //             if (selectedStation) {
-    //                 tapOutUrl(selectedStation.stationName, 'Out');
-    //                 console.log('TAP OUT SUCCESS!')
-    //                 return;
-    //             }
-    //         } else {
-    //             setUid(null);
-    //             setInitialBal(0);
-    //             return;
-    //         }
-    //     } catch (error) {
-    //         console.error('Error fetching cards:', error);
-    //     }
-    // }
-
     const handleTapOut = async () => {
         if (uidInput.trim() === "") {
             console.error('UID is blank');
@@ -564,10 +524,15 @@ const MrtMap = ({ onClick }: any) => {
 
 
     return (
-        <div className="map-container" onClick={() => { }}>
-            <MapContainer center={[14.593795, 120.931320]}
-                zoom={12} scrollWheelZoom={true} minZoom={12}
-                maxZoom={14} zoomControl={false} /* style={{height: '84svh'}} */
+        <div onClick={() => { }}>
+            <MapContainer
+                className="mapUser-container"
+                center={[14.596325, 121.027794]}
+                zoom={13}
+                scrollWheelZoom={true}
+                minZoom={12}
+                maxZoom={14}
+                zoomControl={false}
                 doubleClickZoom={false}>
                 <TileLayer
                     url="https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}.png?access-token=Rs3yx5aveNteEw7myffiDtutSEcX3b0zdHPWxOQbMjJyX6vCRNe4ZYLts8ya6wOI"

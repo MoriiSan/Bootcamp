@@ -387,6 +387,7 @@
   justify-content: space-between;
 
 }
+
 .new-total {
   display: flex;
   flex-direction: row;
@@ -406,4 +407,47 @@
   font-size: 18px;
   font-weight: 800;
   color: #Ee3e3e;
+}
+
+/* responsiveness /////////// */
+@media screen and (max-width: 600px) {
+  .tapState-prompt {
+    left: 50%;
+    top: 5%;
+    transform: translateX(-50%);
+    max-width: 370px;
+  }
+
+  .user-card {
+    margin-left: 5px;
+    width: 360px;
+    height: 185px;
+  }
+
+  .cancel-submit {
+    left: 10px;
+
+  }
+
+  .tapCard-icon {
+    width: 135px;
+    height: 135px;
+    top: 115px;
+    left: 255px;
+  }
+
+  .ticket-container {
+    position: absolute;
+    bottom: 3%;
+    left: 55%;
+    transform: translateX(-50%);
+    gap: 10px;
+    font-size: 12px;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .ticket-container:hover {
+    transform: scale(1.5) translateY(-16%) translateX(-63%);
+    transition: transform 0.5s ease-in-out;
+  }
 }

@@ -1,8 +1,20 @@
-/* @media screen and (max-width: 600px) {
-    .map-container {
-        height: 100svh;
+.mapAdmin-container {
+    position: absolute;
+    left: 0;
+    height: 84.2%;
+}
+
+@media screen and (max-width: 1024px) {
+    .mapAdmin-container {
+        height: 92svh;
     }
-} */
+}
+
+@media screen and (max-width: 600px) {
+    .mapAdmin-container {
+        height: 89.5svh;
+    }
+}
 
 .fare-container {
     margin-left: auto;
@@ -106,6 +118,7 @@
     gap: 10px;
     box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
 }
+
 .add-station-indicator {
     display: flex;
     justify-content: center;
@@ -115,6 +128,7 @@
     color: white;
     font-weight: 700;
 }
+
 .add-contents {
     padding: 10px 20px;
 }
@@ -194,11 +208,9 @@
     background-color: white;
     width: 415px;
     border-radius: 5px;
-    /* padding: 20px; */
-    left: 37%;
-    transform: translateX(-50%);
+    left: 50%;
     top: 55%;
-    transform: translateY(-50%);
+    transform: translate(-50%, -50%);
     gap: 10px;
     box-shadow: 0 0 6px black;
 }
@@ -277,6 +289,7 @@
     color: #202020;
     font-weight: 700;
 }
+
 .edit-exit {
     display: flex;
     align-items: center;
@@ -285,6 +298,7 @@
     color: black;
     font-weight: 700;
 }
+
 .edit-contents {
     display: flex;
     flex-direction: column;
@@ -356,4 +370,43 @@
 
 .edit-station-btn {
     border: 1px solid #477a1e;
+}
+
+/* responsiveness ///////// */
+@media screen and (max-width: 600px) {
+
+    .add-station-modal,
+    .edit-station-modal,
+    .delete-station-modal {
+        width: 370px;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .add-station-indicator,
+    .edit-indicator {
+        width: 370px;
+    }
+
+    .station-name,
+    .station-shortname,
+    .lat-coord,
+    .long-coord {
+        width: 330px;
+    }
+
+    .edit-station-name,
+    .edit-station-shortname,
+    .edit-lat-coord,
+    .edit-long-coord {
+        width: 330px;
+    }
+
+    .lat-coord,
+    .long-coord,
+    .edit-lat-coord,
+    .edit-long-coord {
+        width: 160px;
+    }
 }

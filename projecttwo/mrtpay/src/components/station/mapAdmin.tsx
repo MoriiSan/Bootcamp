@@ -20,7 +20,7 @@ interface StationOption {
 
 const customIcon = new Icon({
     iconUrl: "https://cdn-icons-png.flaticon.com/512/4551/4551380.png",
-    iconSize: [40, 40]
+    iconSize: [50, 50]
 })
 
 const MyMarker = ({ position, children, onDoubleClick }: any) => {
@@ -261,10 +261,12 @@ const MapAdmin = ({ onMapDoubleClick }: any) => {
     }, [onMapDoubleClick, deleteStationModal, editStationModal]);
 
     return (
-        <div className="map-container" onDoubleClick={() => { }}>
-            <MapContainer center={[14.593795, 120.931320]}
-                zoom={12} scrollWheelZoom={true} minZoom={3}
-                maxZoom={18} zoomControl={false}
+        <div onDoubleClick={() => { }}>
+            <MapContainer className="mapAdmin-container"
+                center={[14.594042, 121.026798]}
+                zoom={13} scrollWheelZoom={true}
+                minZoom={3} maxZoom={18}
+                zoomControl={false}
                 doubleClickZoom={false}
             >
 

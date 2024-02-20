@@ -9,15 +9,15 @@ import { ReactNotifications } from 'react-notifications-component';
 const MrtUser = () => {
 
     return (
-        <main className="mrt-user">
-            <div className="app-container">
+        <main/*  className="mrt-user" */>
+            <div /* className="app-container" */>
                 <ReactNotifications />
             </div>
             {/* <SideBar></SideBar> */}
             {/* <Card></Card> */}
 
 
-            <div className="mrt-map">
+            <div className="">
                 <MrtMap />
             </div>
 

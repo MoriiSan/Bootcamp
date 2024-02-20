@@ -300,7 +300,7 @@ const Stations: React.FC = () => {
                 )}
             </div>
 
-            <div className="map-container">
+            <div className="">
                 <MapAdmin onMapDoubleClick={handleMapDoubleClick} />
             </div>
 
