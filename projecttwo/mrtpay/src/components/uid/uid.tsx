@@ -183,11 +183,11 @@ const UID = () => {
 
     const handleAddBalance = async () => {
         const parsedNewBalance = parseFloat(newBalance);
-        if (isNaN(parsedNewBalance) || parsedNewBalance <= 0) {
+        if (isNaN(parsedNewBalance) || parsedNewBalance <= 8) {
             console.error('Load must be above zero.');
             Store.addNotification({
                 title: "OOPS.",
-                message: "Load must be above zero.",
+                message: "Load must be above minimum fare.",
                 type: "warning",
                 insert: "top",
                 container: "top-right",
