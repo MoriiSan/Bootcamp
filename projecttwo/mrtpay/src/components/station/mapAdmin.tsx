@@ -143,9 +143,8 @@ const MapAdmin = ({ onMapDoubleClick }: any) => {
                     'Content-Type': 'application/json',
                 },
             });
-
+            const deleteStations = await response.json();
             if (response.ok) {
-                const deleteStations = await response.json();
                 Store.addNotification({
                     title: "DELETED!",
                     message: deleteStations.message,
@@ -163,6 +162,18 @@ const MapAdmin = ({ onMapDoubleClick }: any) => {
                 setSelectedId("");
             } else {
                 console.error('Failed to delete station');
+                Store.addNotification({
+                    title: "OOPS!",
+                    message: deleteStations.message,
+                    type: "danger",
+                    insert: "top",
+                    container: "top-right",
+                    animationIn: ["animate__animated animate__bounceIn"],
+                    animationOut: ["animate__animated animate__slideOutRight"],
+                    dismiss: {
+                        duration: 2000,
+                    }
+                });
             }
         } catch (error) {
             console.error('Error deleting station:', error);

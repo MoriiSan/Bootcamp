@@ -302,7 +302,7 @@ const MrtMap = ({ onClick }: any) => {
 
     const getFare = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/adminConfigs/1`, {
+            const response = await fetch(`http://localhost:8080/adminConfigs/fare`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -311,7 +311,7 @@ const MrtMap = ({ onClick }: any) => {
 
             if (response.ok) {
                 const fetchedFare = await response.json();
-                setFare(fetchedFare.fareKm)
+                setFare(fetchedFare)
             } else {
                 console.error('Failed to fetch fare');
             }
