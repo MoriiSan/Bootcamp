@@ -161,13 +161,13 @@ const MrtMap = ({ onClick }: any) => {
                     'Content-Type': 'application/json',
                 },
             });
-
+            const fetchedCard = await response.json();
             if (response.ok) {
-                const fetchedCard = await response.json();
                 setInitialBal(fetchedCard.bal)
                 setStationIn(fetchedCard.tapState)
             } else {
-                console.error('Failed to fetch cards');
+                // console.error('Failed to fetch cards');
+                
             }
         } catch (error) {
             console.error('Error fetching cards:', error);
@@ -198,15 +198,25 @@ const MrtMap = ({ onClick }: any) => {
                     'Content-Type': 'application/json',
                 },
             });
-
+            const card = await response.json();
             if (response.ok) {
-                const card = await response.json();
                 setUid(card.uid);
                 setInitialBal(card.bal);
                 setSubmit(true)
                 console.log('Balance check:', card.bal)
             } else {
-                console.log('Balance check failed')
+                Store.addNotification({
+                    title: "OOPS!",
+                    message: card.message,
+                    type: "warning",
+                    insert: "top",
+                    container: "top-right",
+                    animationIn: ["animate__animated animate__bounceIn"],
+                    animationOut: ["animate__animated animate__slideOutRight"],
+                    dismiss: {
+                        duration: 2000,
+                    }
+                });
                 return;
             }
         } catch (error) {
@@ -231,7 +241,7 @@ const MrtMap = ({ onClick }: any) => {
             });
             return;
         }
-        if (initialBal <= 0 || initialBal <= fare) {
+        /* if (initialBal <= 0 || initialBal <= fare) {
             Store.addNotification({
                 title: "INSUFFICIENT BALANCE!",
                 message: "Your balance is insufficient to tap in.",
@@ -245,7 +255,7 @@ const MrtMap = ({ onClick }: any) => {
                 }
             });
             return;
-        }
+        } */
 
         try {
             const response = await fetch(`http://localhost:8080/cards/tapIn/${uidInput}`, {

@@ -19,7 +19,6 @@ const Stations: React.FC = () => {
     const [addStationModal, setAddStationModal] = useState(false);
     const [stationName, setStationName] = useState('');
     const [connections, setConnections] = useState([]);
-    const [maintenanceMode, setMaintenanceMode] = useState(false);
 
     const toggleAddStationModal = () => {
         setAddStationModal(!addStationModal);
@@ -101,9 +100,8 @@ const Stations: React.FC = () => {
                     },
                     body: JSON.stringify(stationData),
                 });
-
+                const addStation = await response.json();
                 if (response.ok) {
-                    const addStation = await response.json();
                     Store.addNotification({
                         title: "NEW STATION!",
                         message: addStation.message,
@@ -121,10 +119,10 @@ const Stations: React.FC = () => {
                     toggleAddStationModal();
 
                 } else {
-                    console.error('Failed to create station');
+                    // console.error('Failed to create station');
                     Store.addNotification({
-                        title: "ERROR",
-                        message: "Failed to create station.",
+                        title: "OOPS!",
+                        message: addStation.message,
                         type: "danger",
                         insert: "top",
                         container: "top-right",
@@ -250,6 +248,7 @@ const Stations: React.FC = () => {
         }
     };
 
+    const [maintenanceMode, setMaintenanceMode] = useState(false);
     const toggleMaintenance = async () => {
         try {
             const response = await fetch(`${process.env.REACT_APP_URL}adminConfigs/maintenance/toggle`, {
@@ -262,9 +261,9 @@ const Stations: React.FC = () => {
             if (response.ok) {
                 setMaintenanceMode(!maintenanceMode);
                 Store.addNotification({
-                    title: "MAINTENANCE MODE TOGGLED!",
+                    title: "MAINTENANCE MODE TOGGLED",
                     message: ref.message,
-                    type: "success",
+                    type: "info",
                     insert: "top",
                     container: "top-right",
                     animationIn: ["animate__animated animate__bounceIn"],
@@ -294,23 +293,20 @@ const Stations: React.FC = () => {
     };
 
     const [tapState, setTapState] = useState(false);
-    useEffect(() => {
-        const fetchTapState = async () => {
-            try {
-                const response = await fetch(`${process.env.REACT_APP_URL}cards`);
-                const data = await response.json();
-                const tapState = data.some((card: { tapState: any; }) => !!card.tapState);
-                setTapState(tapState);
-                console.log("hakdog")
-            } catch (error) {
-                console.error('Error fetching tapState:', error);
-            }
-        };
-
-        fetchTapState();
-    }, [tapState]);
+    const fetchTapState = async () => {
+        try {
+            const response = await fetch(`${process.env.REACT_APP_URL}cards`);
+            const data = await response.json();
+            const tapState = data.some((card: { tapState: any; }) => !!card.tapState);
+            setTapState(tapState);
+            console.log("hakdog")
+        } catch (error) {
+            console.error('Error fetching tapState:', error);
+        }
+    };
 
     const handleToggleMaintenance = () => {
+        fetchTapState();
         if (!tapState) {
             toggleMaintenance();
         } else {
@@ -318,9 +314,22 @@ const Stations: React.FC = () => {
         }
     };
 
+    const fetchIsMaintenance = async () => {
+        try {
+            const response = await fetch(`${process.env.REACT_APP_URL}adminConfigs/mode-setting`);
+            const setting = await response.json();
+            setMaintenanceMode(setting)
+            console.log("Maintenance Mode is set to: ", setting)
+        } catch (error) {
+            console.error('Error fetching maintenance mode: ', error);
+        }
+    }
+
     useEffect(() => {
         fetchFare();
         fetchStationOptions();
+        fetchIsMaintenance();
+        fetchTapState();
     }, [addStationModal]);
 
     return (
@@ -337,7 +346,7 @@ const Stations: React.FC = () => {
                     <input type="checkbox"
                         checked={maintenanceMode}
                         onChange={handleToggleMaintenance}
-                        disabled={tapState} />
+                        /* disabled={tapState} */ />
                     <i></i>
                 </label>
                 <div className="fare-container">

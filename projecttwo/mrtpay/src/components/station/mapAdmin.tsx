@@ -161,7 +161,7 @@ const MapAdmin = ({ onMapDoubleClick }: any) => {
                 setEditStationModal(false);
                 setSelectedId("");
             } else {
-                console.error('Failed to delete station');
+                // console.error('Failed to delete station');
                 Store.addNotification({
                     title: "OOPS!",
                     message: deleteStations.message,
@@ -194,7 +194,7 @@ const MapAdmin = ({ onMapDoubleClick }: any) => {
         });
 
         if (isWithin500m) {
-            console.error('Selected station is within 500m of a connected station');
+            // console.error('Selected station is within 500m of a connected station');
             Store.addNotification({
                 title: "OOPS!",
                 message: 'Selected station is within 500m of a connected station',
@@ -225,9 +225,8 @@ const MapAdmin = ({ onMapDoubleClick }: any) => {
                 },
                 body: JSON.stringify(updatedStationData),
             });
-
+            const updateStations = await response.json();
             if (response.ok) {
-                const updateStations = await response.json();
                 Store.addNotification({
                     title: "UPDATED!",
                     message: updateStations.message,
@@ -244,9 +243,9 @@ const MapAdmin = ({ onMapDoubleClick }: any) => {
                 fetchStations();
             } else {
                 Store.addNotification({
-                    title: "NO CHANGES",
-                    message: "No changes in edit.",
-                    type: "warning",
+                    title: "OOPS",
+                    message: updateStations.message,
+                    type: "danger",
                     insert: "top",
                     container: "top-right",
                     animationIn: ["animate__animated animate__bounceIn"],
