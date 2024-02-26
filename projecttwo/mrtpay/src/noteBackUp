@@ -16,7 +16,7 @@ function MRTPay() {
 
     return (
         <div className="bg-color relative h-screen">
-            <div  className="map-container w-4/6 h-fit bg-white rounded-lg drop-shadow-lg absolute right-0 m-6 ">
+            <div  className="w-4/6 h-fit bg-white rounded-lg drop-shadow-lg absolute right-0 m-6 ">
                 <MrtMap/>
             </div>
             <div className="NAVBAR w-3/12 h-svh bg-teal-900 rounded-r-2xl drop-shadow-lg "></div>

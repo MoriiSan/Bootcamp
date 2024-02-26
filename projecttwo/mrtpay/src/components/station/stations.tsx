@@ -100,9 +100,8 @@ const Stations: React.FC = () => {
                     },
                     body: JSON.stringify(stationData),
                 });
-
+                const addStation = await response.json();
                 if (response.ok) {
-                    const addStation = await response.json();
                     Store.addNotification({
                         title: "NEW STATION!",
                         message: addStation.message,
@@ -120,10 +119,10 @@ const Stations: React.FC = () => {
                     toggleAddStationModal();
 
                 } else {
-                    console.error('Failed to create station');
+                    // console.error('Failed to create station');
                     Store.addNotification({
-                        title: "ERROR",
-                        message: "Failed to create station.",
+                        title: "OOPS!",
+                        message: addStation.message,
                         type: "danger",
                         insert: "top",
                         container: "top-right",
@@ -168,7 +167,7 @@ const Stations: React.FC = () => {
 
     const fetchFare = async () => {
         try {
-            const response = await fetch(`${process.env.REACT_APP_URL}adminConfigs/fareId`, {
+            const response = await fetch(`${process.env.REACT_APP_URL}adminConfigs/fare`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -177,7 +176,7 @@ const Stations: React.FC = () => {
 
             if (response.ok) {
                 const fetchedFare = await response.json();
-                setFare(fetchedFare[0].fareKm);
+                setFare(fetchedFare);
             } else {
                 console.error('Failed to fetch fare');
             }
@@ -187,7 +186,6 @@ const Stations: React.FC = () => {
     };
 
     const handleEditFare = async () => {
-        const fareId = 1;
         const parsedNewFare = parseFloat(newFare);
         if (isNaN(parsedNewFare) || parsedNewFare <= 0) {
             console.error('Amount must be a positive number');
@@ -206,14 +204,14 @@ const Stations: React.FC = () => {
             return;
         }
         try {
-            const response = await fetch(`${process.env.REACT_APP_URL}adminConfigs/${fareId}`, {
+            const response = await fetch(`${process.env.REACT_APP_URL}adminConfigs/${1}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ fareKm: parsedNewFare }),
             });
-
+            const fetchedFare = await response.json();
             if (response.ok) {
                 setFare(parsedNewFare)
                 toggleEditFare();
@@ -232,15 +230,106 @@ const Stations: React.FC = () => {
                 });
             } else {
                 console.error('Failed to update fare');
+                Store.addNotification({
+                    title: "OOPS!",
+                    message: fetchedFare.message,
+                    type: "danger",
+                    insert: "top",
+                    container: "top-right",
+                    animationIn: ["animate__animated animate__bounceIn"],
+                    animationOut: ["animate__animated animate__slideOutRight"],
+                    dismiss: {
+                        duration: 2000,
+                    }
+                });
             }
         } catch (error) {
             console.error('Error updating fare', error);
         }
     };
 
+    const [maintenanceMode, setMaintenanceMode] = useState(false);
+    const toggleMaintenance = async () => {
+        try {
+            const response = await fetch(`${process.env.REACT_APP_URL}adminConfigs/maintenance/toggle`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            const ref = await response.json();
+            if (response.ok) {
+                setMaintenanceMode(!maintenanceMode);
+                Store.addNotification({
+                    title: "MAINTENANCE MODE TOGGLED",
+                    message: ref.message,
+                    type: "info",
+                    insert: "top",
+                    container: "top-right",
+                    animationIn: ["animate__animated animate__bounceIn"],
+                    animationOut: ["animate__animated animate__slideOutRight"],
+                    dismiss: {
+                        duration: 2000,
+                    }
+                });
+            } else {
+                console.error('Failed to toggle maintenance mode');
+                Store.addNotification({
+                    title: "OOPS!",
+                    message: ref.message,
+                    type: "danger",
+                    insert: "top",
+                    container: "top-right",
+                    animationIn: ["animate__animated animate__bounceIn"],
+                    animationOut: ["animate__animated animate__slideOutRight"],
+                    dismiss: {
+                        duration: 2000,
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error toggling maintenance', error);
+        }
+    };
+
+    const [tapState, setTapState] = useState(false);
+    const fetchTapState = async () => {
+        try {
+            const response = await fetch(`${process.env.REACT_APP_URL}cards`);
+            const data = await response.json();
+            const tapState = data.some((card: { tapState: any; }) => !!card.tapState);
+            setTapState(tapState);
+            console.log("hakdog")
+        } catch (error) {
+            console.error('Error fetching tapState:', error);
+        }
+    };
+
+    const handleToggleMaintenance = () => {
+        fetchTapState();
+        if (!tapState) {
+            toggleMaintenance();
+        } else {
+            console.log("Cannot toggle maintenance while tapState is not empty");
+        }
+    };
+
+    const fetchIsMaintenance = async () => {
+        try {
+            const response = await fetch(`${process.env.REACT_APP_URL}adminConfigs/mode-setting`);
+            const setting = await response.json();
+            setMaintenanceMode(setting)
+            console.log("Maintenance Mode is set to: ", setting)
+        } catch (error) {
+            console.error('Error fetching maintenance mode: ', error);
+        }
+    }
+
     useEffect(() => {
         fetchFare();
         fetchStationOptions();
+        fetchIsMaintenance();
+        fetchTapState();
     }, [addStationModal]);
 
     return (
@@ -249,16 +338,26 @@ const Stations: React.FC = () => {
                 <ReactNotifications />
             </div>
             <div className="main-row">
-                <div>
-                    Stations
+                <div className="switch-label">
+                    Maintenance Mode
                 </div>
+
+                <label className="form-switch">
+                    <input type="checkbox"
+                        checked={maintenanceMode}
+                        onChange={handleToggleMaintenance}
+                        /* disabled={tapState} */ />
+                    <i></i>
+                </label>
                 <div className="fare-container">
                     <label>Fare per KM:</label>
                     <div className="fare-value"><strong>{fare}</strong> PHP</div>
                 </div>
                 <button className="btn-edit-fare"
                     onClick={toggleEditFare}>
-                    <BsPencilSquare size={22} /></button>
+                    <BsPencilSquare size={18} />
+                </button>
+
             </div>
 
             <div className='modal-container'>
@@ -276,7 +375,13 @@ const Stations: React.FC = () => {
                                             type="number"
                                             value={newFare}
                                             onChange={(e) => setNewFare(e.target.value)}
-                                            placeholder='Update amount'></input>
+                                            placeholder='Update amount'
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'e' || e.key === 'E') {
+                                                    e.preventDefault();
+                                                }
+                                            }}
+                                        ></input>
                                     </div>
                                 </div>
                                 <div className="fare-btns">
@@ -294,7 +399,7 @@ const Stations: React.FC = () => {
                 )}
             </div>
 
-            <div className="map-container">
+            <div className="">
                 <MapAdmin onMapDoubleClick={handleMapDoubleClick} />
             </div>
 

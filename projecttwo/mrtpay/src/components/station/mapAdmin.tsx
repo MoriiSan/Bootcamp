@@ -19,8 +19,8 @@ interface StationOption {
 }
 
 const customIcon = new Icon({
-    iconUrl: "  https://cdn-icons-png.flaticon.com/512/821/821354.png ",
-    iconSize: [40, 40]
+    iconUrl: "https://cdn-icons-png.flaticon.com/512/4551/4551380.png",
+    iconSize: [50, 50]
 })
 
 const MyMarker = ({ position, children, onDoubleClick }: any) => {
@@ -56,10 +56,9 @@ export const calculateDistance = (latlng1: { lat: number; lng: number }, latlng2
 const MapAdmin = ({ onMapDoubleClick }: any) => {
     const [stations, setStations] = useState<Markers[]>([]);
     const [deleteStationModal, setDeleteStationModal] = useState(false);
-    const [selectedShortName, setSelectedShortName] = useState<string>("");
     const [selectedStationName, setSelectedStationName] = useState<string>("");
-    const [selectedLat, setSelectedLat] = useState<number>(0); 
-    const [selectedLng, setSelectedLng] = useState<number>(0); 
+    const [selectedLat, setSelectedLat] = useState<number>(0);
+    const [selectedLng, setSelectedLng] = useState<number>(0);
     const [selectedConns, setSelectedConns] = useState<string[]>([]);
     const [selectedId, setSelectedId] = useState('');
     const [stationsOptions, setStationsOptions] = useState<StationOption[]>([]);
@@ -144,9 +143,8 @@ const MapAdmin = ({ onMapDoubleClick }: any) => {
                     'Content-Type': 'application/json',
                 },
             });
-
+            const deleteStations = await response.json();
             if (response.ok) {
-                const deleteStations = await response.json();
                 Store.addNotification({
                     title: "DELETED!",
                     message: deleteStations.message,
@@ -163,7 +161,19 @@ const MapAdmin = ({ onMapDoubleClick }: any) => {
                 setEditStationModal(false);
                 setSelectedId("");
             } else {
-                console.error('Failed to delete station');
+                // console.error('Failed to delete station');
+                Store.addNotification({
+                    title: "OOPS!",
+                    message: deleteStations.message,
+                    type: "danger",
+                    insert: "top",
+                    container: "top-right",
+                    animationIn: ["animate__animated animate__bounceIn"],
+                    animationOut: ["animate__animated animate__slideOutRight"],
+                    dismiss: {
+                        duration: 2000,
+                    }
+                });
             }
         } catch (error) {
             console.error('Error deleting station:', error);
@@ -184,7 +194,7 @@ const MapAdmin = ({ onMapDoubleClick }: any) => {
         });
 
         if (isWithin500m) {
-            console.error('Selected station is within 500m of a connected station');
+            // console.error('Selected station is within 500m of a connected station');
             Store.addNotification({
                 title: "OOPS!",
                 message: 'Selected station is within 500m of a connected station',
@@ -215,9 +225,8 @@ const MapAdmin = ({ onMapDoubleClick }: any) => {
                 },
                 body: JSON.stringify(updatedStationData),
             });
-
+            const updateStations = await response.json();
             if (response.ok) {
-                const updateStations = await response.json();
                 Store.addNotification({
                     title: "UPDATED!",
                     message: updateStations.message,
@@ -234,9 +243,9 @@ const MapAdmin = ({ onMapDoubleClick }: any) => {
                 fetchStations();
             } else {
                 Store.addNotification({
-                    title: "NO CHANGES",
-                    message: "No changes in edit.",
-                    type: "warning",
+                    title: "OOPS",
+                    message: updateStations.message,
+                    type: "danger",
                     insert: "top",
                     container: "top-right",
                     animationIn: ["animate__animated animate__bounceIn"],
@@ -262,10 +271,12 @@ const MapAdmin = ({ onMapDoubleClick }: any) => {
     }, [onMapDoubleClick, deleteStationModal, editStationModal]);
 
     return (
-        <div className="map-container" onDoubleClick={() => { }}>
-            <MapContainer center={[14.537586, 121.001584]}
-                zoom={14} scrollWheelZoom={true} minZoom={10}
-                maxZoom={18} zoomControl={false} style={{ height: '83svh' }}
+        <div onDoubleClick={() => { }}>
+            <MapContainer className="mapAdmin-container"
+                center={[14.594042, 121.026798]}
+                zoom={13} scrollWheelZoom={true}
+                minZoom={3} maxZoom={18}
+                zoomControl={false}
                 doubleClickZoom={false}
             >
 

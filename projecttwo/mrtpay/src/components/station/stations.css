@@ -1,15 +1,19 @@
-.main-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: left;
-    align-items: center;
-    width: -webkit-fill-available;
-    height: 10svh;
-    padding: 1%;
-    background-color: white;
-    position: relative;
-    z-index: 1;
-    border-bottom: 1px solid #ccc;
+.mapAdmin-container {
+    position: absolute;
+    left: 0;
+    height: 84.2%;
+}
+
+@media screen and (max-width: 1024px) {
+    .mapAdmin-container {
+        height: 92svh;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .mapAdmin-container {
+        height: 89.5svh;
+    }
 }
 
 .fare-container {
@@ -22,6 +26,7 @@
     gap: 5px;
     color: white;
     font-weight: 500;
+    font-size: 14px;
 }
 
 .btn-edit-fare {
@@ -53,7 +58,6 @@
     flex-direction: row;
     border: 1px solid #ccc;
     border-radius: 5px;
-    ;
 }
 
 .fare-label {
@@ -115,6 +119,7 @@
     gap: 10px;
     box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
 }
+
 .add-station-indicator {
     display: flex;
     justify-content: center;
@@ -124,6 +129,7 @@
     color: white;
     font-weight: 700;
 }
+
 .add-contents {
     padding: 10px 20px;
 }
@@ -203,11 +209,9 @@
     background-color: white;
     width: 415px;
     border-radius: 5px;
-    /* padding: 20px; */
-    left: 37%;
-    transform: translateX(-50%);
+    left: 50%;
     top: 55%;
-    transform: translateY(-50%);
+    transform: translate(-50%, -50%);
     gap: 10px;
     box-shadow: 0 0 6px black;
 }
@@ -286,6 +290,7 @@
     color: #202020;
     font-weight: 700;
 }
+
 .edit-exit {
     display: flex;
     align-items: center;
@@ -294,6 +299,7 @@
     color: black;
     font-weight: 700;
 }
+
 .edit-contents {
     display: flex;
     flex-direction: column;
@@ -366,3 +372,98 @@
 .edit-station-btn {
     border: 1px solid #477a1e;
 }
+
+/* responsiveness ///////// */
+@media screen and (max-width: 600px) {
+
+    .add-station-modal,
+    .edit-station-modal,
+    .delete-station-modal {
+        width: 370px;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .add-station-indicator,
+    .edit-indicator {
+        width: 370px;
+    }
+
+    .station-name,
+    .station-shortname,
+    .lat-coord,
+    .long-coord {
+        width: 330px;
+    }
+
+    .edit-station-name,
+    .edit-station-shortname,
+    .edit-lat-coord,
+    .edit-long-coord {
+        width: 330px;
+    }
+
+    .lat-coord,
+    .long-coord,
+    .edit-lat-coord,
+    .edit-long-coord {
+        width: 160px;
+    }
+}
+
+/* toggle switch ////////////////////// */
+.switch-label {
+    color: #888888;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.form-switch {
+    display: inline-block;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .form-switch i {
+    position: relative;
+    display: inline-block;
+    margin-right: .5rem;
+    width: 46px;
+    height: 26px;
+    background-color: #e6e6e6;
+    border-radius: 23px;
+    vertical-align: text-bottom;
+    transition: all 0.3s linear;
+  }
+  .form-switch i::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 42px;
+    height: 22px;
+    background-color: #fff;
+    border-radius: 11px;
+    transform: translate3d(2px, 2px, 0) scale3d(1, 1, 1);
+    transition: all 0.25s linear;
+  }
+  .form-switch i::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 22px;
+    height: 22px;
+    background-color: #fff;
+    border-radius: 11px;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.24);
+    transform: translate3d(2px, 2px, 0);
+    transition: all 0.2s ease-in-out;
+  }
+  .form-switch:active i::after {
+    width: 28px;
+    transform: translate3d(2px, 2px, 0);
+  }
+  .form-switch:active input:checked + i::after { transform: translate3d(16px, 2px, 0); }
+  .form-switch input { display: none; }
+  .form-switch input:checked + i { background-color: #4BD763; }
+  .form-switch input:checked + i::before { transform: translate3d(18px, 2px, 0) scale3d(0, 0, 0); }
+  .form-switch input:checked + i::after { transform: translate3d(22px, 2px, 0); }

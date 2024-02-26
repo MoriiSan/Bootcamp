@@ -1,7 +1,10 @@
 import { SetStateAction, useEffect, useState } from 'react';
 import './uid.css'
-import { BsCardHeading, BsSearch } from "react-icons/bs";
-import { BsXSquareFill, BsCardText, BsCheckSquareFill } from "react-icons/bs";
+import { BsCardHeading, BsPlus, BsSearch } from "react-icons/bs";
+import {
+    BsXSquareFill, BsCardText, BsCheckSquareFill,
+    BsGrid3X3GapFill, BsListUl, BsArrowLeft, BsArrowRight
+} from "react-icons/bs";
 import { ReactNotifications, Store } from 'react-notifications-component'
 import 'react-notifications-component/dist/theme.css'
 import 'animate.css';
@@ -35,6 +38,7 @@ const UID = () => {
         setIsCardView(false);
     };
 
+    const [tapState, setTapState] = useState('')
     const [uid, setUid] = useState('')
     const [bal, setBal] = useState('')
     const [newBalance, setNewBalance] = useState('');
@@ -48,6 +52,7 @@ const UID = () => {
     interface Cards {
         uid: number;
         bal: number;
+        tapState: string;
     }
 
     const [searchQuery, setSearchQuery] = useState('');
@@ -63,16 +68,14 @@ const UID = () => {
 
     /////////////////pagination
     const [currentPage, setCurrentPage] = useState(1);
-    const cardsPerPage = 8;
+    const cardsPerPage = 9;
     const itemsPerPage = 8;
-
-
 
     /////////////////////////////
 
     const handleCreate = async () => {
         try {
-            const response = await fetch(`${process.env.REACT_APP_URL}cards`, {
+            const response = await fetch(`${process.env.REACT_APP_URL}cards/creating-card`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -181,11 +184,11 @@ const UID = () => {
 
     const handleAddBalance = async () => {
         const parsedNewBalance = parseFloat(newBalance);
-        if (isNaN(parsedNewBalance) || parsedNewBalance <= 0) {
+        if (isNaN(parsedNewBalance) || parsedNewBalance <= 8) {
             console.error('Load must be above zero.');
             Store.addNotification({
                 title: "OOPS.",
-                message: "Load must be above zero.",
+                message: "Load must be above minimum fare.",
                 type: "warning",
                 insert: "top",
                 container: "top-right",
@@ -349,8 +352,20 @@ const UID = () => {
                                     <input className='input-container'
                                         type="number"
                                         value={uid}
-                                        onChange={(e) => { setUid(e.target.value) }}
+                                        onChange={(e) => {
+                                            const input = e.target.value;
+                                            // Ensure only numbers are entered
+                                            const onlyNums = input.replace(/[^0-9]/g, '');
+                                            // Limit to 10 digits
+                                            const limitedNums = onlyNums.slice(0, 10);
+                                            setUid(limitedNums);
+                                        }}
                                         placeholder='UID'
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'e' || e.key === 'E') {
+                                                e.preventDefault();
+                                            }
+                                        }}
                                     ></input>
                                 </div>
                                 <div className="detail-container">
@@ -384,7 +399,8 @@ const UID = () => {
             </div>
             <div className="main-row">
                 <div className="btn-add-user" onClick={toggleAddUser} >
-                    + Add new card
+                    <span className="text">+ Add new card</span>
+                    <BsPlus className="icon" size={18} />
                 </div>
                 <div className="search">
                     <div className="search-bar">
@@ -400,27 +416,37 @@ const UID = () => {
                         </button>
                     </div>
                 </div>
+
+                {/* view mode ////////////////////////////// */}
+
                 <div className='view-options'>
                     <div className="view-mode">
-                        <div className={`card-view ${isCardView ? 'selected' : ''}`}
-                            onClick={toggleIsCardView}>Card View</div>
-                        <div className={`list-view ${isListView ? 'selected' : ''}`}
-                           /*  onClick={toggleIsListView} */>List View</div>
+                        {/*  <div className={`card-view ${isCardView ? 'selected' : ''}`}
+                            onClick={toggleIsCardView}>
+                            <BsGrid3X3GapFill />
+                        </div> */}
+                        {/*  <div className={`list-view ${isListView ? 'selected' : ''}`}
+                            onClick={toggleIsListView}>
+                            <BsListUl />
+                        </div> */}
                     </div>
                     <div className="pagination">
                         <button onClick={() => setCurrentPage(currentPage - 1)}
                             className='prev'
                             disabled={currentPage === 1}>
-                            Prev
+                            <BsArrowLeft />
                         </button>
                         <span className="current-page">{currentPage}</span>
                         <button onClick={() => setCurrentPage(currentPage + 1)}
                             className='next'
                             disabled={currentPage === Math.ceil(filteredCards.length / cardsPerPage)}>
-                            Next
+                            <BsArrowRight />
                         </button>
                     </div>
                 </div>
+
+
+
                 <div className="tab-logo">
                     <div className='count'>{cards.length}</div>
                     <BsCardHeading size={30} />
@@ -456,27 +482,28 @@ const UID = () => {
                     ))}
                 </div>
             )}
-
-            {isCardView && (
-                <div className="list-card">
-                    {filteredCards.slice((currentPage - 1) * cardsPerPage, currentPage * cardsPerPage).map((card, index) => (
-                        <div className="mrt-card" key={index} onClick={() => handleSelect(card)}>
-                            <div className="card-details">
-                                <div className="uid-card">{card.uid}</div>
-                                <div className="bal-card">PHP {card.bal}</div>
+            <div className="bg-style">
+                {isCardView && (
+                    <div className="list-card">
+                        {filteredCards.slice((currentPage - 1) * cardsPerPage, currentPage * cardsPerPage).map((card, index) => (
+                            <div className="mrt-card" key={index} onClick={() => handleSelect(card)}>
+                                <div className="card-details">
+                                    <div className="uid-card">{card.uid}</div>
+                                    <div className="bal-card">PHP {card.bal}</div>
+                                </div>
+                                <div className="card-btns">
+                                    <button className="btn-load" onClick={toggleAddLoad}>
+                                        Load
+                                    </button>
+                                    <button className="btn-delete" onClick={toggleIsDelete}>
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
-                            <div className="card-btns">
-                                <button className="btn-load" onClick={toggleAddLoad}>
-                                    Load
-                                </button>
-                                <button className="btn-delete" onClick={toggleIsDelete}>
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            )}
+                        ))}
+                    </div>
+                )}
+            </div>
 
             <div className='modal-container'>
                 {addLoad && (
