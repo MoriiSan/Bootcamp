@@ -101,10 +101,18 @@ const MrtMap = ({ onClick }: any) => {
     }
 
     const leaveStation = async () => {
-        // Add animation class to ticket-bottom before leaving
         setCutTicket(false);
 
         setTimeout(async () => {
+            const currentTime = new Date().toLocaleString('en-US', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+
             try {
                 // Update the database with the final balance immediately
                 const response = await fetch(`http://localhost:8080/cards/${uidInput}`, {
@@ -112,7 +120,7 @@ const MrtMap = ({ onClick }: any) => {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ bal: finalBal, tapState: '' })
+                    body: JSON.stringify({ bal: finalBal, dateTravel: currentTime, charge: totalFare })
                 });
 
                 if (response.ok) {
@@ -167,7 +175,7 @@ const MrtMap = ({ onClick }: any) => {
                 setStationIn(fetchedCard.tapState)
             } else {
                 // console.error('Failed to fetch cards');
-                
+
             }
         } catch (error) {
             console.error('Error fetching cards:', error);
@@ -241,21 +249,6 @@ const MrtMap = ({ onClick }: any) => {
             });
             return;
         }
-        /* if (initialBal <= 0 || initialBal <= fare) {
-            Store.addNotification({
-                title: "INSUFFICIENT BALANCE!",
-                message: "Your balance is insufficient to tap in.",
-                type: "warning",
-                insert: "top",
-                container: "top-right",
-                animationIn: ["animate__animated animate__bounceIn"],
-                animationOut: ["animate__animated animate__slideOutRight"],
-                dismiss: {
-                    duration: 2000,
-                }
-            });
-            return;
-        } */
 
         try {
             const response = await fetch(`http://localhost:8080/cards/tapIn/${uidInput}`, {
