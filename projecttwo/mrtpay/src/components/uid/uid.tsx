@@ -239,7 +239,7 @@ const UID = () => {
                 },
                 body: JSON.stringify({
                     bal: selectedCard.bal + parseFloat(newBalance),
-                    topUp: selectedCard.bal + parseFloat(newBalance),
+                    topUp: parseFloat(newBalance),
                     dateLoaded: currentTime,
                     authorization: jwt_Token
                 }),
