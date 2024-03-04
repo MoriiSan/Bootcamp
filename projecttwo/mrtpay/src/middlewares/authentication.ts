@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 export const useAuth = () => {
     const navigate = useNavigate();
@@ -15,14 +16,16 @@ export const useAuth = () => {
 
         try {
             const decoded = jwtDecode(sessionToken);
+            // const decoded = jwt.verify(sessionToken, 'a1s2d3f4g5h6j7k8l90') as JwtPayload;
 
-            const currentTimestamp = Math.floor(Date.now()/3600);
+
+            const currentTimestamp = Math.floor(Date.now() / 3600);
             if (decoded.exp && decoded.exp < currentTimestamp) {
                 console.error('Token has expired');
                 localStorage.removeItem('TICKETING-AUTH');
                 navigate('/');
                 return;
-                }
+            }
             // console.log('Token is valid:', decoded);
         } catch (error) {
             console.error('Token is not valid:', error);
@@ -45,7 +48,7 @@ export const useAuth = () => {
         return !!localStorage.getItem('TICKETING-AUTH');
     };
 
-    return {login, logout, isAuthenticated};
+    return { login, logout, isAuthenticated };
 }
 
 export default useAuth;

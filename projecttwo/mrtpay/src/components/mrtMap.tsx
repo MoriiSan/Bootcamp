@@ -115,7 +115,7 @@ const MrtMap = ({ onClick }: any) => {
 
             try {
                 // Update the database with the final balance immediately
-                const response = await fetch(`http://localhost:8080/cards/${uidInput}`, {
+                const response = await fetch(`http://localhost:8080/cards/user-update-card/${uidInput}`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
@@ -124,7 +124,6 @@ const MrtMap = ({ onClick }: any) => {
                 });
 
                 if (response.ok) {
-                    // After updating the database, proceed with resetting state and navigation
                     setSubmit(false);
                     setTicket(false);
                     setUidInput("");

@@ -8,9 +8,12 @@ import {
 import { ReactNotifications, Store } from 'react-notifications-component'
 import 'react-notifications-component/dist/theme.css'
 import 'animate.css';
+// import { sessionToken } from '../../middlewares/authentication';
 //<BsCashCoin />
 //<BsCash />
 //<BsCardText />
+
+export const jwt_Token = localStorage.getItem('TICKETING-AUTH') ?? '';
 
 const UID = () => {
     //// add-user-modal
@@ -80,11 +83,10 @@ const UID = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ uid, bal }),
+                body: JSON.stringify({ uid, bal, authorization: jwt_Token }),
             });
-
+            const newCard = await response.json();
             if (response.ok) {
-                // const newCard = await response.json();
                 Store.addNotification({
                     title: "CREATED!",
                     message: "Card created successfully!",
@@ -101,7 +103,7 @@ const UID = () => {
                 console.error('UID is already existing.');
                 Store.addNotification({
                     title: "OOPS.",
-                    message: "Card is already existing!",
+                    message: newCard.message,
                     type: "warning",
                     insert: "top",
                     container: "top-right",
@@ -114,7 +116,6 @@ const UID = () => {
             }
         } catch (error) {
             console.error('Error creating card:', error);
-            alert(`Failed to create card`)
         }
     };
 
@@ -153,7 +154,7 @@ const UID = () => {
             setBal("");
             return;
         }
-        
+
         await handleCreate();
         toggleAddUser();
     };
@@ -219,13 +220,29 @@ const UID = () => {
             return;
         }
 
+        const currentTime = new Date().toLocaleString('en-US', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+        });
+
+
         try {
-            const response = await fetch(`${process.env.REACT_APP_URL}cards/${selectedCard.uid}`, {
+            const response = await fetch(`${process.env.REACT_APP_URL}cards/update-card/${selectedCard.uid}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
+
                 },
-                body: JSON.stringify({ bal: selectedCard.bal + parseFloat(newBalance) }),
+                body: JSON.stringify({
+                    bal: selectedCard.bal + parseFloat(newBalance),
+                    topUp: selectedCard.bal + parseFloat(newBalance),
+                    dateLoaded: currentTime,
+                    authorization: jwt_Token
+                }),
             });
 
             if (response.ok) {
@@ -276,6 +293,7 @@ const UID = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                body: JSON.stringify({ authorization: jwt_Token }),
             });
 
             if (response.ok) {

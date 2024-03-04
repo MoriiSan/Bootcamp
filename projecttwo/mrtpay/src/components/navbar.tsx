@@ -24,6 +24,12 @@ const Navbar = () => {
         }
     }, [isAuthenticated, navigate]);
 
+    useEffect(() => {
+        if (isCardSelected || isStationSelected) {
+            window.location.reload();
+        }
+    }, [isCardSelected, isStationSelected]);
+
     const handleLogout = async () => {
         try {
             await logout();

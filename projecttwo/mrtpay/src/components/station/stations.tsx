@@ -9,7 +9,7 @@ import 'animate.css';
 import MapAdmin, { calculateDistance } from './mapAdmin';
 
 const animatedComponents = makeAnimated();
-
+export const jwt_Token = localStorage.getItem('TICKETING-AUTH') ?? '';
 
 const Stations: React.FC = () => {
     const [fare, setFare] = useState<number>();
@@ -49,6 +49,7 @@ const Stations: React.FC = () => {
                 stationName: stationName,
                 stationCoord: [Number(latitude), Number(longitude)],
                 stationConn: connections,
+                authorization: jwt_Token
             };
             // Fetch existing stations to check distances
             const res = await fetch(`http://localhost:8080/stations`, {
@@ -56,6 +57,7 @@ const Stations: React.FC = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                // body: JSON.stringify({ authorization: jwt_Token }),
             });
 
             if (res.ok) {
@@ -209,7 +211,7 @@ const Stations: React.FC = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ fareKm: parsedNewFare }),
+                body: JSON.stringify({ fareKm: parsedNewFare, authorization: jwt_Token }),
             });
             const fetchedFare = await response.json();
             if (response.ok) {
@@ -299,7 +301,6 @@ const Stations: React.FC = () => {
             const data = await response.json();
             const tapState = data.some((card: { tapState: any; }) => !!card.tapState);
             setTapState(tapState);
-            console.log("hakdog")
         } catch (error) {
             console.error('Error fetching tapState:', error);
         }

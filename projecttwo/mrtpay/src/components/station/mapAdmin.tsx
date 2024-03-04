@@ -6,6 +6,9 @@ import { ReactNotifications, Store } from 'react-notifications-component';
 import { BsExclamationTriangleFill, BsFillXSquareFill } from "react-icons/bs";
 import Select from 'react-select';
 
+export const jwt_Token = localStorage.getItem('TICKETING-AUTH') ?? '';
+
+
 interface Markers {
     _id: string;
     stationName: string;
@@ -142,6 +145,7 @@ const MapAdmin = ({ onMapDoubleClick }: any) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                body: JSON.stringify({ authorization: jwt_Token }),
             });
             const deleteStations = await response.json();
             if (response.ok) {
@@ -216,6 +220,7 @@ const MapAdmin = ({ onMapDoubleClick }: any) => {
                 stationName: selectedStationName,
                 stationCoord: [selectedLat, selectedLng],
                 stationConn: selectedConns,
+                authorization: jwt_Token
             };
 
             const response = await fetch(`http://localhost:8080/stations/update-station/${selectedId}`, {
@@ -242,6 +247,9 @@ const MapAdmin = ({ onMapDoubleClick }: any) => {
                 setEditStationModal(false);
                 fetchStations();
             } else {
+                if (response.status === 403) {
+                    localStorage.removeItem('TICKETING-AUTH');
+                }
                 Store.addNotification({
                     title: "OOPS",
                     message: updateStations.message,

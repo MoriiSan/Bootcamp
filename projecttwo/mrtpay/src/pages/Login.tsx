@@ -36,16 +36,17 @@ export default function Login() {
                 },
                 body: JSON.stringify({ username, password }),
             });
-
+            const data = await response.json();
+            // console.log(data)
             if (response.ok) {
-                const data = await response.json();
                 const sessionToken = data.sessionToken;
+                console.log('Received Token', sessionToken)
                 login(sessionToken);
 
             } else {
                 Store.addNotification({
                     title: "OOPS!",
-                    message: "Username/password is wrong.",
+                    message: data.message,
                     type: "warning",
                     insert: "top",
                     container: "top-center",
