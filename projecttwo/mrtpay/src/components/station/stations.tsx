@@ -95,7 +95,7 @@ const Stations: React.FC = () => {
                     return;
                 }
 
-                const response = await fetch(`http://localhost:8080/stations/create-station`, {
+                const response = await fetch(`${process.env.REACT_APP_URL}stations/create-station`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -145,7 +145,7 @@ const Stations: React.FC = () => {
 
     const fetchStationOptions = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/stations`, {
+            const response = await fetch(`${process.env.REACT_APP_URL}stations`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

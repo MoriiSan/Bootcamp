@@ -115,7 +115,7 @@ const MrtMap = ({ onClick }: any) => {
 
             try {
                 // Update the database with the final balance immediately
-                const response = await fetch(`http://localhost:8080/cards/user-update-card/${uidInput}`, {
+                const response = await fetch(`${process.env.REACT_APP_URL}cards/user-update-card/${uidInput}`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
@@ -142,7 +142,7 @@ const MrtMap = ({ onClick }: any) => {
 
     const fetchStations = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/stations`, {
+            const response = await fetch(`${process.env.REACT_APP_URL}stations`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -162,7 +162,7 @@ const MrtMap = ({ onClick }: any) => {
 
     const fetchCard = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/cards/${uidInput}`, {
+            const response = await fetch(`${process.env.REACT_APP_URL}cards/${uidInput}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -199,7 +199,7 @@ const MrtMap = ({ onClick }: any) => {
             return;
         }
         try {
-            const response = await fetch(`http://localhost:8080/cards/${uidInput}`, {
+            const response = await fetch(`${process.env.REACT_APP_URL}cards/${uidInput}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -250,7 +250,7 @@ const MrtMap = ({ onClick }: any) => {
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/cards/tapIn/${uidInput}`, {
+            const response = await fetch(`${process.env.REACT_APP_URL}cards/tapIn/${uidInput}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -304,7 +304,7 @@ const MrtMap = ({ onClick }: any) => {
 
     const getFare = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/adminConfigs/fare`, {
+            const response = await fetch(`${process.env.REACT_APP_URL}adminConfigs/fare`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -343,7 +343,7 @@ const MrtMap = ({ onClick }: any) => {
         fetchCard();
 
         try {
-            const response = await fetch(`http://localhost:8080/cards/tapOut/${uidInput}`, {
+            const response = await fetch(`${process.env.REACT_APP_URL}cards/tapOut/${uidInput}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

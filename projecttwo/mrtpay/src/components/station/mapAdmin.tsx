@@ -78,7 +78,7 @@ const MapAdmin = ({ onMapDoubleClick }: any) => {
 
     const fetchStations = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/stations`, {
+            const response = await fetch(`${process.env.REACT_APP_URL}stations`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -140,7 +140,7 @@ const MapAdmin = ({ onMapDoubleClick }: any) => {
 
     const handleDelete = async (stationName: string) => {
         try {
-            const response = await fetch(`http://localhost:8080/stations/delete-station/${stationName}`, {
+            const response = await fetch(`${process.env.REACT_APP_URL}stations/delete-station/${stationName}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -223,7 +223,7 @@ const MapAdmin = ({ onMapDoubleClick }: any) => {
                 authorization: jwt_Token
             };
 
-            const response = await fetch(`http://localhost:8080/stations/update-station/${selectedId}`, {
+            const response = await fetch(`${process.env.REACT_APP_URL}stations/update-station/${selectedId}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
