@@ -9,6 +9,7 @@ import { Store } from 'react-notifications-component';
 import MapFly from './mapFly';
 import './mrtMap.css';
 import { Graph } from 'graphlib';
+import QRCode from 'qrcode.react';
 
 
 interface Markers {
@@ -603,7 +604,9 @@ const MrtMap = ({ onClick }: any) => {
                                     <RiUserLocationLine />
                                     {selectedStation?.stationName.toUpperCase()}
                                 </div>
-
+                                <div className='qrContainer'>
+                                    <QRCode value={selectedStation.stationName} />
+                                </div>
                                 {!submit && (
                                     <>
                                         <div className="uid-input-container">

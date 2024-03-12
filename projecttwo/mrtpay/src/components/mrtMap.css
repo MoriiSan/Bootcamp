@@ -24,6 +24,15 @@
   gap: 10px;
 }
 
+.qrContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  border: 1px solid #ffb031;
+  padding-block: 10px;
+}
+
 .tapState-station {
   display: flex;
   justify-content: center;
@@ -445,7 +454,7 @@
     font-size: 12px;
     transition: transform 0.3s ease-in-out;
   }
-  
+
   .ticket-container:hover {
     transform: scale(1.5) translateY(-16%) translateX(-63%);
     transition: transform 0.5s ease-in-out;
