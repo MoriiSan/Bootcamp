@@ -172,6 +172,7 @@ const MrtMap = ({ onClick }: any) => {
             if (response.ok) {
                 setInitialBal(fetchedCard.bal)
                 setStationIn(fetchedCard.tapState)
+                traveledDistance(stationIn, selectedStation!.stationName)
             } else {
                 // console.error('Failed to fetch cards');
 
@@ -322,6 +323,7 @@ const MrtMap = ({ onClick }: any) => {
         }
     }
 
+    const penaltyBal = initialBal - fare;
 
     const handleTapOut = async () => {
         if (uidInput.trim() === "") {
@@ -340,6 +342,13 @@ const MrtMap = ({ onClick }: any) => {
             });
             return;
         }
+
+        console.log('totalFare: ', totalFare, 'bal: ', initialBal)
+        if (totalFare > initialBal) {
+            console.log('Insufficient balance to tap out');
+            return;
+        }
+
         fetchCard();
 
         try {
@@ -357,13 +366,31 @@ const MrtMap = ({ onClick }: any) => {
                 setStationOut(selectedStation ? selectedStation.stationName : '');
                 setSubmit(false)
                 setTicket(true)
-                if (selectedStation) {
+                if (stationIn === selectedStation!.stationName) {
+                    setFinalBal(penaltyBal);
+                    getRoute(card.tapState, selectedStation ? selectedStation.stationName : '')
+                    const tempVal = await traveledDistance(card.tapState, selectedStation ? selectedStation.stationName : '')
+                    console.log('finalBal:', card.bal - fare)
+                    tapOutUrl(selectedStation!.stationName, 'Out');
+                    Store.addNotification({
+                        title: "TAP OUT SUCCESS",
+                        type: "success",
+                        insert: "top",
+                        container: "top-right",
+                        animationIn: ["animate__animated animate__bounceIn"],
+                        animationOut: ["animate__animated animate__slideOutRight"],
+                        dismiss: {
+                            duration: 2000,
+                        }
+                    });
+                    return;
+                } else {
                     getRoute(card.tapState, selectedStation ? selectedStation.stationName : '')
                     const tempVal = await traveledDistance(card.tapState, selectedStation ? selectedStation.stationName : '')
                     setFinalBal(card.bal - Math.round(Number(tempVal)))
                     console.log('finalBal:', card.bal - Number(tempVal))
                     // console.log('total fare:', tempVal)
-                    tapOutUrl(selectedStation.stationName, 'Out');
+                    tapOutUrl(selectedStation!.stationName, 'Out');
                     Store.addNotification({
                         title: "TAP OUT SUCCESS",
                         type: "success",
@@ -417,14 +444,19 @@ const MrtMap = ({ onClick }: any) => {
                 // console.log(distanceTraveled)
                 setDistance((distanceTraveled.distance).toFixed(1))
                 console.log('Distance: ', (distanceTraveled.distance).toFixed(1), 'Km')
-                setTotalFare(Math.round(Number((fare * distanceTraveled.distance).toFixed(1))));
-                console.log('Total Fare: ', ((fare * distanceTraveled.distance).toFixed(1)))
-                return Math.round(Number((fare * distanceTraveled.distance).toFixed(1)))
+                if (stationIn === selectedStation!.stationName) {
+                    setTotalFare(fare);
+                    return fare;
+                } else {
+                    setTotalFare(Math.round(Number((fare * distanceTraveled.distance).toFixed(1))));
+                    console.log('Total Fare: ', ((fare * distanceTraveled.distance).toFixed(1)))
+                    return Math.round(Number((fare * distanceTraveled.distance).toFixed(1)))
+                }
             } else {
                 console.error('Error setting edge distances');
             }
         } catch (error) {
-            console.error('Error fetching stations:', error);
+            // console.error('Error fetching stations:', error);
         }
     };
 
