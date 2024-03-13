@@ -9,7 +9,6 @@ import 'animate.css';
 import MapAdmin, { calculateDistance } from './mapAdmin';
 
 const animatedComponents = makeAnimated();
-// export const jwt_Token = localStorage.getItem('TICKETING-AUTH') ?? '';
 
 const Stations: React.FC = () => {
     const [fare, setFare] = useState<number>();
@@ -250,9 +249,25 @@ const Stations: React.FC = () => {
         }
     };
 
+    const [tapState, setTapState] = useState(false);
+
+    const fetchTapState = async () => {
+        try {
+            const response = await fetch(`${process.env.REACT_APP_URL}cards`);
+            const data = await response.json();
+            const tapState = data.some((card: { tapState: any; }) => !!card.tapState);
+            setTapState(tapState);
+        } catch (error) {
+            console.error('Error fetching tapState:', error);
+        }
+    };
+
     const [maintenanceMode, setMaintenanceMode] = useState(false);
+
     const toggleMaintenance = async () => {
         try {
+            // const tapState = await fetchTapState();
+
             const response = await fetch(`${process.env.REACT_APP_URL}adminConfigs/maintenance/toggle`, {
                 method: 'PATCH',
                 headers: {
@@ -295,20 +310,8 @@ const Stations: React.FC = () => {
         }
     };
 
-    const [tapState, setTapState] = useState(false);
-    const fetchTapState = async () => {
-        try {
-            const response = await fetch(`${process.env.REACT_APP_URL}cards`);
-            const data = await response.json();
-            const tapState = data.some((card: { tapState: any; }) => !!card.tapState);
-            setTapState(tapState);
-        } catch (error) {
-            console.error('Error fetching tapState:', error);
-        }
-    };
 
     const handleToggleMaintenance = () => {
-        fetchTapState();
         if (!tapState) {
             toggleMaintenance();
         } else {

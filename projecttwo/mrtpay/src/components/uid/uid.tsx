@@ -5,6 +5,7 @@ import {
     BsXSquareFill, BsCardText, BsCheckSquareFill,
     BsGrid3X3GapFill, BsListUl, BsArrowLeft, BsArrowRight
 } from "react-icons/bs";
+import { HiCheckCircle } from "react-icons/hi2";
 import { ReactNotifications, Store } from 'react-notifications-component'
 import 'react-notifications-component/dist/theme.css'
 import 'animate.css';
@@ -459,16 +460,10 @@ const UID = () => {
 
                 {/* view mode ////////////////////////////// */}
 
+                {/* 
                 <div className='view-options'>
                     <div className="view-mode">
-                        {/*  <div className={`card-view ${isCardView ? 'selected' : ''}`}
-                            onClick={toggleIsCardView}>
-                            <BsGrid3X3GapFill />
-                        </div> */}
-                        {/*  <div className={`list-view ${isListView ? 'selected' : ''}`}
-                            onClick={toggleIsListView}>
-                            <BsListUl />
-                        </div> */}
+                    
                     </div>
                     <div className="pagination">
                         <button onClick={() => setCurrentPage(currentPage - 1)}
@@ -476,7 +471,7 @@ const UID = () => {
                             disabled={currentPage === 1}>
                             <BsArrowLeft />
                         </button>
-                        <span className="current-page">{currentPage}</span>
+             
                         <button onClick={() => setCurrentPage(currentPage + 1)}
                             className='next'
                             disabled={currentPage === Math.ceil(filteredCards.length / cardsPerPage)}>
@@ -484,7 +479,7 @@ const UID = () => {
                         </button>
                     </div>
                 </div>
-
+ */}
 
 
                 <div className="tab-logo">
@@ -493,42 +488,18 @@ const UID = () => {
                 </div>
             </div>
 
-            {isListView && (
-                <div className="list-list">
-                    <div className="list-header">
-                        <div className="header-details">
-                            <div className="uid-header">UID</div>
-                            <div className="bal-header">BALANCE</div>
-                        </div>
-                        <div className="header-actions">ACTIONS</div>
-                    </div>
-                    {filteredCards.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((card, index) => (
-                        <div className="mrt-list"
-                            key={index}
-                            onClick={() => handleSelect(card)}>
-                            <div className="list-details">
-                                <div className="uid-list">{card.uid}</div>
-                                <div className="bal-list">PHP {card.bal}</div>
-                            </div>
-                            <div className="list-btns">
-                                <button className="btn-load-list"
-                                    onClick={toggleAddLoad}>
-                                    Load</button>
-                                <button className="btn-delete-list"
-                                    onClick={toggleIsDelete}>
-                                    Delete</button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            )}
             <div className="bg-style">
                 {isCardView && (
                     <div className="list-card">
-                        {filteredCards.slice((currentPage - 1) * cardsPerPage, currentPage * cardsPerPage).map((card, index) => (
+                        {cards.map((card, index) => (
                             <div className="mrt-card" key={index} onClick={() => handleSelect(card)}>
                                 <div className="card-details">
-                                    <div className="uid-card">{card.uid}</div>
+                                    <div className="uid-card">
+                                        <div className={card.tapState ? 'HiCheckCircle green' : 'HiCheckCircle grey'}>
+                                            <HiCheckCircle size={24} />
+                                        </div>
+                                        <div className='card-uid'>{card.uid}</div>
+                                    </div>
                                     <div className="bal-card">PHP {card.bal}</div>
                                 </div>
                                 <div className="card-btns">

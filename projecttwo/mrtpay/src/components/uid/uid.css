@@ -150,7 +150,7 @@
     z-index: 10;
 }
 
-.add-user, 
+.add-user,
 .add-load {
     display: flex;
     justify-content: center;
@@ -380,7 +380,8 @@
     position: relative;
     z-index: 1;
     gap: 15px;
-    overflow: auto;
+    height: 84svh;
+    overflow-y: auto;
 
 }
 
@@ -410,9 +411,29 @@
 }
 
 .uid-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     font-weight: 700;
     margin-left: 10px;
+    gap: 5px;
 }
+
+.HiCheckCircle {
+    color: #477a1e;
+    /* color: #888888; */
+}
+
+.green svg {
+    color: #477a1e;
+    /* Change to the desired green color */
+}
+
+.grey svg {
+    color: #888888;
+    /* Change to the desired grey color */
+}
+
 
 .bal-card {
     display: flex;
