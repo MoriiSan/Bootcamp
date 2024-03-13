@@ -144,8 +144,9 @@ const MapAdmin = ({ onMapDoubleClick }: any) => {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem('TICKETING-AUTH') as string
+
                 },
-                body: JSON.stringify({ authorization: jwt_Token }),
             });
             const deleteStations = await response.json();
             if (response.ok) {
@@ -220,13 +221,14 @@ const MapAdmin = ({ onMapDoubleClick }: any) => {
                 stationName: selectedStationName,
                 stationCoord: [selectedLat, selectedLng],
                 stationConn: selectedConns,
-                authorization: jwt_Token
             };
 
             const response = await fetch(`${process.env.REACT_APP_URL}stations/update-station/${selectedId}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem('TICKETING-AUTH') as string
+
                 },
                 body: JSON.stringify(updatedStationData),
             });

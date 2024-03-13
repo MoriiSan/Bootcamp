@@ -9,11 +9,6 @@ import { ReactNotifications, Store } from 'react-notifications-component'
 import 'react-notifications-component/dist/theme.css'
 import 'animate.css';
 // import { sessionToken } from '../../middlewares/authentication';
-//<BsCashCoin />
-//<BsCash />
-//<BsCardText />
-
-export const jwt_Token = localStorage.getItem('TICKETING-AUTH') ?? '';
 
 const UID = () => {
     //// add-user-modal
@@ -83,8 +78,10 @@ const UID = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem('TICKETING-AUTH') as string
+
                 },
-                body: JSON.stringify({ uid, bal, authorization: jwt_Token }),
+                body: JSON.stringify({ uid, bal/* , authorization: jwt_Token */ }),
             });
             const newCard = await response.json();
             if (response.ok) {
@@ -105,7 +102,7 @@ const UID = () => {
                 Store.addNotification({
                     title: "OOPS.",
                     message: newCard.message,
-                    type: "warning",
+                    type: "danger",
                     insert: "top",
                     container: "top-right",
                     animationIn: ["animate__animated animate__bounceIn"],
@@ -121,7 +118,7 @@ const UID = () => {
     };
 
     const handleGenerate = async () => {
-        if (uid.length !== 10 || parseInt(uid) === 0)   {
+        if (uid.length !== 10 || parseInt(uid) === 0) {
             console.error('UID must be 10 digits long');
             Store.addNotification({
                 title: "OOPS.",
@@ -209,7 +206,7 @@ const UID = () => {
 
     const handleAddBalance = async () => {
         const parsedNewBalance = parseFloat(newBalance);
-        if ( parsedNewBalance <= Number(fare)) {
+        if (parsedNewBalance <= Number(fare)) {
             // console.error('Load must be above zero.');
             Store.addNotification({
                 title: "OOPS.",
@@ -259,18 +256,18 @@ const UID = () => {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem('TICKETING-AUTH') as string
 
                 },
                 body: JSON.stringify({
                     bal: selectedCard.bal + parseFloat(newBalance),
                     topUp: parseFloat(newBalance),
                     dateLoaded: currentTime,
-                    authorization: jwt_Token
+                    // authorization: jwt_Token
                 }),
             });
-
+            const updatedCard = await response.json();
             if (response.ok) {
-                const updatedCard = await response.json();
                 setCards((prevCards) =>
                     prevCards.map((card) =>
                         card.uid === selectedCard.uid ? updatedCard : card
@@ -294,7 +291,7 @@ const UID = () => {
                 console.error('Failed to update balance');
                 Store.addNotification({
                     title: "OH NO!",
-                    message: "Failed to update balance",
+                    message: updatedCard.message,
                     type: "danger",
                     insert: "top",
                     container: "top-right",
@@ -316,10 +313,11 @@ const UID = () => {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem('TICKETING-AUTH') as string
                 },
-                body: JSON.stringify({ authorization: jwt_Token }),
+                // body: JSON.stringify({ authorization: jwt_Token }),
             });
-
+            const card = await response.json();
             if (response.ok) {
                 setCards((prevCards) =>
                     prevCards.filter((card) => card.uid !== selectedCard.uid)
@@ -338,10 +336,10 @@ const UID = () => {
                     }
                 });
             } else {
-                console.error('Failed to delete card');
+                // console.error('Failed to delete card');
                 Store.addNotification({
                     title: "OH NO!",
-                    message: "Failed to delete card.",
+                    message: card.message,
                     type: "danger",
                     insert: "top",
                     container: "top-right",

@@ -9,7 +9,7 @@ import 'animate.css';
 import MapAdmin, { calculateDistance } from './mapAdmin';
 
 const animatedComponents = makeAnimated();
-export const jwt_Token = localStorage.getItem('TICKETING-AUTH') ?? '';
+// export const jwt_Token = localStorage.getItem('TICKETING-AUTH') ?? '';
 
 const Stations: React.FC = () => {
     const [fare, setFare] = useState<number>();
@@ -49,15 +49,13 @@ const Stations: React.FC = () => {
                 stationName: stationName,
                 stationCoord: [Number(latitude), Number(longitude)],
                 stationConn: connections,
-                authorization: jwt_Token
             };
             // Fetch existing stations to check distances
-            const res = await fetch(`http://localhost:8080/stations`, {
+            const res = await fetch(`${process.env.REACT_APP_URL}stations`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                // body: JSON.stringify({ authorization: jwt_Token }),
             });
 
             if (res.ok) {
@@ -99,6 +97,7 @@ const Stations: React.FC = () => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': localStorage.getItem('TICKETING-AUTH') as string
                     },
                     body: JSON.stringify(stationData),
                 });
@@ -210,8 +209,9 @@ const Stations: React.FC = () => {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem('TICKETING-AUTH') as string
                 },
-                body: JSON.stringify({ fareKm: parsedNewFare, authorization: jwt_Token }),
+                body: JSON.stringify({ fareKm: parsedNewFare }),
             });
             const fetchedFare = await response.json();
             if (response.ok) {
@@ -257,6 +257,7 @@ const Stations: React.FC = () => {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem('TICKETING-AUTH') as string
                 },
             });
             const ref = await response.json();
