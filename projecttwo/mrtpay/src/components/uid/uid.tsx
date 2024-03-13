@@ -45,6 +45,7 @@ const UID = () => {
     const [uid, setUid] = useState('')
     const [bal, setBal] = useState('')
     const [newBalance, setNewBalance] = useState('');
+    const [fare, setFare] = useState('');
 
     const [selectedCard, setSelectedCard] = useState({ uid: 0, bal: 0 });
     const handleSelect = (card: SetStateAction<{ uid: number; bal: number; }>) => {
@@ -71,7 +72,7 @@ const UID = () => {
 
     /////////////////pagination
     const [currentPage, setCurrentPage] = useState(1);
-    const cardsPerPage = 9;
+    const cardsPerPage = 8;
     const itemsPerPage = 8;
 
     /////////////////////////////
@@ -120,11 +121,11 @@ const UID = () => {
     };
 
     const handleGenerate = async () => {
-        if (uid.length !== 10) {
+        if (uid.length !== 10 || parseInt(uid) === 0)   {
             console.error('UID must be 10 digits long');
             Store.addNotification({
                 title: "OOPS.",
-                message: "UID must be 10 digits long.",
+                message: "UID must be 10 digits long and not zero.",
                 type: "warning",
                 insert: "top",
                 container: "top-right",
@@ -136,12 +137,13 @@ const UID = () => {
             });
             return;
         }
+
         const parsedBal = parseFloat(bal);
-        if (isNaN(parsedBal) || parsedBal < 1 || parsedBal > 1000) {
+        if (isNaN(parsedBal) || parsedBal <= Number(fare) || parsedBal > 1000) {
             console.error('Invalid balance value.');
             Store.addNotification({
                 title: "OOPS.",
-                message: "Invalid balance value. Balance must be between 0 and 1000.",
+                message: "Invalid balance value. Balance must be between minimum fare and 1000.",
                 type: "warning",
                 insert: "top",
                 container: "top-right",
@@ -151,12 +153,33 @@ const UID = () => {
                     duration: 2000,
                 }
             });
+
             setBal("");
             return;
         }
 
         await handleCreate();
         toggleAddUser();
+    };
+
+    const fetchFare = async () => {
+        try {
+            const response = await fetch(`${process.env.REACT_APP_URL}adminConfigs/fare`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                const fetchedFare = await response.json();
+                setFare(fetchedFare);
+            } else {
+                console.error('Failed to fetch fare');
+            }
+        } catch (error) {
+            console.error('Error fetching fare:', error);
+        }
     };
 
     const fetchCards = async () => {
@@ -181,12 +204,13 @@ const UID = () => {
 
     useEffect(() => {
         fetchCards();
+        fetchFare();
     }, [addUser, addLoad]);
 
     const handleAddBalance = async () => {
         const parsedNewBalance = parseFloat(newBalance);
-        if (isNaN(parsedNewBalance) || parsedNewBalance <= 8) {
-            console.error('Load must be above zero.');
+        if ( parsedNewBalance <= Number(fare)) {
+            // console.error('Load must be above zero.');
             Store.addNotification({
                 title: "OOPS.",
                 message: "Load must be above minimum fare.",
@@ -202,11 +226,11 @@ const UID = () => {
             setNewBalance('');
             return;
         }
-        if (parsedNewBalance > 1000) {
-            console.error('Maximum load of 1000.');
+        if (isNaN(parsedNewBalance) || parsedNewBalance > 1000) {
+            console.error('Invalid balance value.');
             Store.addNotification({
                 title: "OOPS.",
-                message: "Maximum load of 1000.",
+                message: "Invalid balance value. Balance must be between minimum fare and 1000.",
                 type: "warning",
                 insert: "top",
                 container: "top-right",
