@@ -40,7 +40,7 @@ export default function Login() {
             // console.log(data)
             if (response.ok) {
                 const sessionToken = data.sessionToken;
-                console.log('Received Token', sessionToken)
+                // console.log('Received Token', sessionToken)
                 login(sessionToken);
 
             } else {

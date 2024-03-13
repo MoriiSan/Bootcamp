@@ -20,7 +20,7 @@ export const useAuth = () => {
                         authorization: sessionToken || "",
                     },
                 });
-                console.log(auth)
+                // console.log(auth)
                 if (auth.ok) {
                     return
                 } else {
