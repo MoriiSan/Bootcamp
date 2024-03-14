@@ -3,6 +3,7 @@ import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import './stations.css';
 import { BsPencilSquare, BsXSquareFill } from "react-icons/bs";
+import { PiListBulletsBold } from "react-icons/pi";
 import { ReactNotifications, Store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 import 'animate.css';
@@ -485,7 +486,22 @@ const Stations: React.FC = () => {
             </div>
 
             <div className="station-note">
-                <div className="note-modal">
+                <div className="note-modal-indicator">
+                    Notes
+                </div>
+                <div className="note-contents">
+                    <label className="note-label">
+                        <div className="PiListBulletsBold">
+                            <PiListBulletsBold size={20} />
+                        </div>
+                        <label>Double-click station to edit.</label>
+                    </label>
+                    <label className="note-label">
+                        <div className="PiListBulletsBold">
+                            <PiListBulletsBold size={20} />
+                        </div>
+                        <label>Double-click on map to add a station.</label>
+                    </label>
 
                 </div>
             </div>

@@ -6,14 +6,10 @@ import { Outlet } from 'react-router-dom';
 
 const AdminPage = () => {
   return (
-    <div /* className="flex flex-col bg-gray-100 h-screen" */>
+    <div>
       <Navbar></Navbar>
       <div>
         <Outlet />
-        {/* <div className="admin-welcome">
-          <div className='welcome-text'>WELCOME TO</div>
-          <div className='mrt-text'>MRT SYSTEM</div>
-        </div> */}
       </div>
     </div>
   );
