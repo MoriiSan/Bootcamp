@@ -4,6 +4,7 @@ import { MapContainer, Marker, Popup, TileLayer, Polyline } from 'react-leaflet'
 import { Icon } from "leaflet";
 import { IoEnterOutline } from "react-icons/io5";
 import { RiUserLocationLine, RiArrowGoBackFill } from "react-icons/ri";
+import { PiListBulletsBold } from "react-icons/pi";
 import { TbCurrencyPeso } from "react-icons/tb";
 import { Store } from 'react-notifications-component';
 import MapFly from './mapFly';
@@ -673,7 +674,19 @@ const MrtMap = ({ onClick }: any) => {
 
                 </div>
             )}
-
+            <div className="station-note">
+                <div className="note-modal-indicator">
+                    Notes
+                </div>
+                <div className="note-contents">
+                    <label className="note-label">
+                        <div className="PiListBulletsBold">
+                            <PiListBulletsBold size={20} />
+                        </div>
+                        <label>Click station to board.</label>
+                    </label>
+                </div>
+            </div>
 
 
             {/* ticket ///////////////// */}
