@@ -502,7 +502,12 @@ const Stations: React.FC = () => {
                         </div>
                         <label>Double-click on map to add a station.</label>
                     </label>
-
+                    <label className="note-label">
+                        <div className="PiListBulletsBold">
+                            <PiListBulletsBold size={20} />
+                        </div>
+                        <label>Reload before toggling maintenance mode.</label>
+                    </label>
                 </div>
             </div>
 
