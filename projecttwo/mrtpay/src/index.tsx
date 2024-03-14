@@ -18,18 +18,21 @@ import About from './pages/About';
 import AdminPage from './pages/AdminPage';
 import Stations from './components/station/stations';
 import UID from './components/uid/uid';
+import Admin from './components/Admin';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<Login />} />
-
-      <Route path="admin" element={<AdminPage />}>
+      {/* <Route path="admin" element={<Admin />}></Route> */}
+      <Route path="" element={<AdminPage />}>
+        <Route path="admin" element={<Admin />} />
         <Route path="uid" element={<UID />} />
         <Route path="stations" element={<Stations />} />
       </Route>
 
-      <Route path="mrt" element={<MrtUser />}/>
+
+      <Route path="mrt" element={<MrtUser />} />
       {/* <Route path="mrt/:uid" element={<MrtUser />} /> */}
       <Route path="mrt/:stationName/:tapState" element={<MrtUser />} />
 

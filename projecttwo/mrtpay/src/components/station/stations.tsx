@@ -336,7 +336,7 @@ const Stations: React.FC = () => {
             const response = await fetch(`${process.env.REACT_APP_URL}adminConfigs/mode-setting`);
             const setting = await response.json();
             setMaintenanceMode(setting)
-            console.log("Maintenance Mode is set to: ", setting)
+            // console.log("Maintenance Mode is set to: ", setting)
         } catch (error) {
             console.error('Error fetching maintenance mode: ', error);
         }
