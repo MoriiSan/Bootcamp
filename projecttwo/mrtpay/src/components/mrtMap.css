@@ -105,7 +105,7 @@
   position: absolute;
   width: 150px;
   height: 150px;
-  top: 115px;
+  top: 275px;
   left: 295px;
   opacity: 10%;
 }
@@ -113,7 +113,7 @@
 .cancel-submit {
   position: absolute;
   left: 25px;
-  top: 160px;
+  top: 320px;
   border-radius: 50%;
   border: 1px solid #202020;
   background-color: white;
