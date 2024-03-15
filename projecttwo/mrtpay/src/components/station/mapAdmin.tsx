@@ -66,6 +66,7 @@ const MapAdmin = ({ onMapDoubleClick }: any) => {
     const [selectedId, setSelectedId] = useState('');
     const [stationsOptions, setStationsOptions] = useState<StationOption[]>([]);
     const [editStationModal, setEditStationModal] = useState(false);
+    
 
     const toggleEditStationModal = () => {
         setEditStationModal(!editStationModal);

@@ -528,3 +528,8 @@
 .PiListBulletsBold {
     margin-top: 2px;
 }
+
+.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

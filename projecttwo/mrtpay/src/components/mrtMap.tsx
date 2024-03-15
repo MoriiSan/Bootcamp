@@ -172,9 +172,11 @@ const MrtMap = ({ onClick }: any) => {
             });
             const fetchedCard = await response.json();
             if (response.ok) {
+                setUid(fetchedCard.uid)
                 setInitialBal(fetchedCard.bal)
                 setStationIn(fetchedCard.tapState)
-                traveledDistance(stationIn, selectedStation!.stationName)
+                traveledDistance(fetchedCard.tapState, selectedStation!.stationName)
+
             } else {
                 // console.error('Failed to fetch cards');
 
@@ -346,8 +348,20 @@ const MrtMap = ({ onClick }: any) => {
         }
 
         console.log('totalFare: ', totalFare, 'bal: ', initialBal)
-        if (totalFare > initialBal) {
+        if (totalFare + 1 >= initialBal) {
             console.log('Insufficient balance to tap out');
+            Store.addNotification({
+                title: "OOPS",
+                message: 'Insufficient balance to tap out',
+                type: "warning",
+                insert: "top",
+                container: "top-right",
+                animationIn: ["animate__animated animate__bounceIn"],
+                animationOut: ["animate__animated animate__slideOutRight"],
+                dismiss: {
+                    duration: 2000,
+                }
+            });
             return;
         }
 

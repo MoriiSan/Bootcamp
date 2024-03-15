@@ -187,7 +187,7 @@ const Stations: React.FC = () => {
     };
 
     const handleEditFare = async () => {
-        const parsedNewFare = parseFloat(newFare);
+        const parsedNewFare = Math.round(parseFloat(newFare));
         if (isNaN(parsedNewFare) || parsedNewFare <= 0) {
             console.error('Amount must be a positive number');
             Store.addNotification({
@@ -392,7 +392,20 @@ const Stations: React.FC = () => {
                                         <input className="edit-fare"
                                             type="number"
                                             value={newFare}
-                                            onChange={(e) => setNewFare(e.target.value)}
+                                            onChange={(e) => {
+                                                let input = e.target.value;
+                                                // Ensure only numbers are entered
+                                                let onlyNums = input.replace(/[^0-9]/g, '');
+
+                                                // Check if the input starts with zero and discard it
+                                                if (onlyNums.startsWith('0')) {
+                                                    onlyNums = onlyNums.slice(1);
+                                                }
+
+                                                // Limit to 10 digits
+                                                const limitedNums = onlyNums.slice(0, 3);
+                                                setNewFare(limitedNums);
+                                            }}
                                             placeholder='Update amount'
                                             onKeyDown={(e) => {
                                                 if (e.key === 'e' || e.key === 'E') {

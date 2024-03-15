@@ -394,9 +394,15 @@ const UID = () => {
                                         type="number"
                                         value={uid}
                                         onChange={(e) => {
-                                            const input = e.target.value;
+                                            let input = e.target.value;
                                             // Ensure only numbers are entered
-                                            const onlyNums = input.replace(/[^0-9]/g, '');
+                                            let onlyNums = input.replace(/[^0-9]/g, '');
+
+                                            // Check if the input starts with zero and discard it
+                                            if (onlyNums.startsWith('0')) {
+                                                onlyNums = onlyNums.slice(1);
+                                            }
+
                                             // Limit to 10 digits
                                             const limitedNums = onlyNums.slice(0, 10);
                                             setUid(limitedNums);
@@ -414,7 +420,17 @@ const UID = () => {
                                     <input className='input-container'
                                         type="number"
                                         value={bal}
-                                        onChange={(e) => { setBal(e.target.value) }}
+                                        onChange={(e) => {
+                                            let input = e.target.value;
+                                            let onlyNums = input.replace(/[^0-9]/g, '');
+
+                                            if (onlyNums.startsWith('0')) {
+                                                onlyNums = onlyNums.slice(1);
+                                            }
+                                            if (onlyNums !== '') {
+                                                setBal(onlyNums);
+                                            }
+                                        }}
                                         placeholder='Balance'
                                         onKeyDown={(e) => {
                                             if (e.key === 'e' || e.key === 'E') {
@@ -536,7 +552,18 @@ const UID = () => {
                                         <input className="input-container"
                                             type="number"
                                             value={newBalance}
-                                            onChange={(e) => setNewBalance(e.target.value)}
+                                            onChange={(e) => {
+                                                let input = e.target.value;
+                                                let onlyNums = input.replace(/[^0-9]/g, '');
+
+                                                if (onlyNums.startsWith('0')) {
+                                                    onlyNums = onlyNums.slice(1);
+                                                }
+
+                                                if (onlyNums !== '') {
+                                                    setNewBalance(onlyNums);
+                                                }
+                                            }}
                                             placeholder='Add amount'
                                             onKeyDown={(e) => {
                                                 if (e.key === 'e' || e.key === 'E') {

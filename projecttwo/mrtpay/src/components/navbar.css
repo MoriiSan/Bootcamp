@@ -19,7 +19,7 @@
     border-right: 2px solid #ccc;
     /* Add a vertical line */
     padding-right: 10px;
-    cursor: pointer;
+    /* cursor: pointer; */
 }
 
 .logo-name {

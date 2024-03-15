@@ -39,7 +39,7 @@ export const useAuth = () => {
 
     const login = (token: string) => {
         localStorage.setItem('TICKETING-AUTH', token);
-        navigate('/admin');
+        navigate('/admin/uid');
     };
 
     const logout = () => {
