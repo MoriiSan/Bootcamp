@@ -319,7 +319,7 @@ const Stations: React.FC = () => {
             // console.log("Cannot toggle maintenance while tapState is not empty");
             Store.addNotification({
                 title: "OOPS!",
-                message: "Cannot toggle maintenance while there is people tapped in.",
+                message: "Cannot toggle maintenance while there are people tapped in.",
                 type: "danger",
                 insert: "top",
                 container: "top-right",
